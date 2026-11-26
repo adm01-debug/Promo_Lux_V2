@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `594348f54d6a78625df4e0146bcee67bac84c26a` (2026-11-26T08:55:05-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c6c2424c184a540fac7328af8a36c6ebdcbee6a7` (2026-11-26T09:50:54-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (722), SQL (276), Markdown (87), JSON (38), JavaScript (25), Shell (20), YAML (13), Python (5)
+- linguagens: TypeScript (722), SQL (277), Markdown (87), JSON (38), JavaScript (25), Shell (20), YAML (13), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1206 |
+| arquivos_total | 1207 |
 | arquivos_codigo | 751 |
-| linhas_codigo | 130626 |
+| linhas_codigo | 130741 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -46,7 +46,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 97 |
 | edge_functions | 62 |
 | tabelas | 121 |
-| migrations | 272 |
+| migrations | 273 |
 | cron_jobs | 43 |
 | testes | 165 |
 | workflows | 11 |
@@ -259,7 +259,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8160 nós · 17577 arestas · 718 comunidades · grafo do commit `594348f5`
+- 8161 nós · 17577 arestas · 719 comunidades · grafo do commit `c6c2424c`
 - comunidades maiores: lucide-react (240), button.tsx (170), react (147), useActiveOrganization (141), utils.ts (108), cn (106), snapshot.py (102), generate.py (96), LushaIntelligenceView.tsx (86), gerar.mjs (80), req (75), NotificationsPanel.tsx (75)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), mockFramerMotion() (src/test/mockFramerMotion.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -380,6 +380,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-26 `c6c2424` feat(exportacao): guarda o CSV exportado no bucket privado e permite baixar de novo (#272)
 - 2026-11-26 `594348f` infra(functions): detector de function publicada fora do repositorio (#271)
 - 2026-11-26 `10dc090` feat(raspagem): exporta leads do job em CSV e grava historico em job_exports (#270)
 - 2026-11-26 `5f53677` infra: aposenta functions no projeto (a migrate-helper segue ativa em producao) (#269)
@@ -394,7 +395,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-26 `c5a45b8` fix(seguranca): sonda de saude publica minima e diagnostico so com credencial (etapa 035) (#250)
 - 2026-11-26 `d7ef793` fix(raspagem): grava os resultados no caminho de contingencia (etapa 051) (#259)
 - 2026-11-26 `735410e` test(mcp): trava o emissor de autenticacao no projeto oficial (#257)
-- 2026-11-25 `ab29fc2` chore(formato): alinha o teste de permissoes ao printWidth 80 do repo (#243)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

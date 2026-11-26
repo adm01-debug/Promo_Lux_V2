@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "594348f54d6a78625df4e0146bcee67bac84c26a",
+  "sha": "c6c2424c184a540fac7328af8a36c6ebdcbee6a7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 11:55 UTC",
-  "files_total": 1227,
-  "code_files": 1031,
-  "code_lines": 153191
+  "generated_at": "2026-11-26 12:53 UTC",
+  "files_total": 1228,
+  "code_files": 1032,
+  "code_lines": 153329
  },
  "version": "1.3.2",
- "facts_hash": "83bc1659160bc54d",
+ "facts_hash": "269592d30bda201d",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -256,7 +256,7 @@
   "languages": {
    ".ts": 401,
    ".tsx": 321,
-   ".sql": 276,
+   ".sql": 277,
    ".mjs": 23,
    ".py": 5,
    ".js": 4,
@@ -23702,6 +23702,7 @@
    "supabase/migrations/20261125170000_feature_flags_escrita_admin.sql",
    "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql",
    "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
+   "supabase/migrations/20261126140000_job_exports_bucket.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -29438,6 +29439,14 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update",
+    "object": "job_exports",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126140000_job_exports_bucket.sql"
    }
   ],
   "raises": [
@@ -30253,7 +30262,8 @@
    "table:qa_ingest_tokens": "Tokens de ingestao do pipeline de QA (somente hash SHA-256). Sem policies de RLS: acesso exclusivo da edge function qa-ingest-run via service_role.",
    "column:qa_ingest_tokens.token_hash": "encode(sha256(token::bytea),'hex') — mesmo formato usado por org_integrations/SCIM.",
    "column:qa_ingest_tokens.revoked_at": "Preenchido no revoke; tokens revogados sao rejeitados e nao podem ser reativados.",
-   "table:cron_http_archive": "Resposta HTTP das edge functions agendadas pelo cron, preservada por 7 dias. O pg_net mantem apenas ~6 h."
+   "table:cron_http_archive": "Resposta HTTP das edge functions agendadas pelo cron, preservada por 7 dias. O pg_net mantem apenas ~6 h.",
+   "column:job_exports.file_url": "Caminho do objeto no bucket privado job-exports. Nulo quando o upload falhou ou em exportacoes anteriores ao bucket."
   },
   "types_file": "src/integrations/supabase/types.ts"
  },
@@ -30911,7 +30921,7 @@
     "methods": [
      "OPTIONS"
     ],
-    "auth": "JWT do usuário",
+    "auth": "service_role (ignora RLS) + valida JWT do usuário",
     "tables": [
      "job_exports",
      "scrape_jobs",
@@ -30919,11 +30929,12 @@
     ],
     "env": [
      "SUPABASE_ANON_KEY",
+     "SUPABASE_SERVICE_ROLE_KEY",
      "SUPABASE_URL"
     ],
     "external": [],
     "invokes": [],
-    "doc": "Exporta os leads de um job de raspagem em CSV, respeitando a RLS do usuario. Body: { job_id: uuid, status?: \"all\" | \"processed\" | \"unprocessed\" } Grava a linha em job_exports (historico) e devolve o arquivo direto na resposta: o projeto nao tem bucket de storage (docs/qa/01-INVENTARIO.md:169), entao …",
+    "doc": "Exporta os leads de um job de raspagem em CSV, respeitando a RLS do usuario. Modo criar: body { job_id: uuid, status?: \"all\" | \"processed\" | \"unprocessed\" } Modo rebaixar: body { export_id: uuid } O CSV e gravado no bucket privado job-exports com a service role (o cliente nao tem acesso ao bucket) e …",
     "errors": [],
     "side_effects": [],
     "webhook_events": [],
@@ -33522,7 +33533,7 @@
   {
    "module": "src/components",
    "files": 322,
-   "lines": 54058,
+   "lines": 54104,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -34290,7 +34301,7 @@
   {
    "module": "supabase/functions",
    "files": 140,
-   "lines": 25711,
+   "lines": 25780,
    "tables": [
     "api_keys",
     "api_request_logs",
@@ -34504,8 +34515,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 272,
-   "lines": 20740,
+   "files": 273,
+   "lines": 20763,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -35281,6 +35292,9 @@
      "supabase/functions/export-scrape-job/index.ts"
     ],
     "insert": [
+     "supabase/functions/export-scrape-job/index.ts"
+    ],
+    "update": [
      "supabase/functions/export-scrape-job/index.ts"
     ]
    },
@@ -36453,6 +36467,7 @@
    ],
    "job_exports": [
     "created_at",
+    "file_url",
     "format",
     "id",
     "job_id",
@@ -37266,6 +37281,7 @@
     "supabase/functions/email-oauth-callback/index.ts",
     "supabase/functions/email-oauth-disconnect/index.ts",
     "supabase/functions/email-poll-replies/index.ts",
+    "supabase/functions/export-scrape-job/index.ts",
     "supabase/functions/gmaps-places-search/index.ts",
     "supabase/functions/gmaps-proxy/index.ts",
     "supabase/functions/health/index.ts",
@@ -38030,6 +38046,10 @@
    },
    {
     "file": "src/test/mockSupabaseClient.ts",
+    "count": 1
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
     "count": 1
    },
    {
@@ -39459,6 +39479,10 @@
    {
     "file": "src/components/lux/ScrapeResultsView.tsx",
     "msg": "Erro ao converter"
+   },
+   {
+    "file": "src/components/lux/ScrapeResultsView.tsx",
+    "msg": "Falha ao baixar"
    },
    {
     "file": "src/components/lux/ScrapeResultsView.tsx",
@@ -41219,6 +41243,10 @@
    {
     "file": "supabase/functions/email-oauth-disconnect/index.ts",
     "text": "Permissão: dono pode remover a sua própria; org accounts exigem admin"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "text": "quebra: o CSV continua saindo na resposta, apenas sem arquivo guardado."
    },
    {
     "file": "supabase/functions/gmaps-places-search/index.ts",
@@ -47440,6 +47468,11 @@
     "value": "1000"
    },
    {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "name": "BUCKET",
+    "value": "\"job-exports\""
+   },
+   {
     "file": "supabase/functions/gmaps-places-search/index.ts",
     "name": "GATEWAY",
     "value": "\"https://connector-gateway.lovable.dev/google_maps\""
@@ -50862,13 +50895,31 @@
    {
     "file": "supabase/functions/export-scrape-job/index.ts",
     "field": "status",
-    "value": "completed",
+    "value": "pending",
     "kind": "escreve"
    },
    {
     "file": "supabase/functions/export-scrape-job/index.ts",
     "field": "etapa",
     "value": "job_exports",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "field": "etapa",
+    "value": "storage",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "field": "status",
+    "value": "failed",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/export-scrape-job/index.ts",
+    "field": "status",
+    "value": "completed",
     "kind": "escreve"
    },
    {
@@ -68977,6 +69028,7 @@
       "escreve:src/hooks/useScheduledReports.ts",
       "escreve:src/hooks/useWebhooks.ts",
       "escreve:supabase/functions/cnpj-enrich-worker/index.ts",
+      "escreve:supabase/functions/export-scrape-job/index.ts",
       "escreve:supabase/functions/gmaps-proxy/index.ts",
       "escreve:supabase/functions/org-violation-alerts/index.ts",
       "escreve:supabase/functions/send-scheduled-reports/index.ts",
@@ -69005,6 +69057,7 @@
       "escreve:src/components/lux/monitoring/JobDetailsSheet.tsx",
       "escreve:src/hooks/useCnpjEnrich.ts",
       "escreve:supabase/functions/cnpj-enrich-worker/index.ts",
+      "escreve:supabase/functions/export-scrape-job/index.ts",
       "escreve:supabase/functions/gmaps-proxy/index.ts",
       "escreve:supabase/functions/send-scheduled-reports/index.ts",
       "escreve:supabase/functions/web-scrape-worker/index.ts",
@@ -69694,6 +69747,9 @@
     },
     "etapa": {
      "job_exports": [
+      "escreve:supabase/functions/export-scrape-job/index.ts"
+     ],
+     "storage": [
       "escreve:supabase/functions/export-scrape-job/index.ts"
      ]
     },
@@ -71645,6 +71701,7 @@
    "supabase/functions/email-oauth-callback/index.ts",
    "supabase/functions/email-oauth-disconnect/index.ts",
    "supabase/functions/email-poll-replies/index.ts",
+   "supabase/functions/export-scrape-job/index.ts",
    "supabase/functions/gmaps-places-search/index.ts",
    "supabase/functions/gmaps-proxy/index.ts",
    "supabase/functions/health/index.ts",
@@ -77636,6 +77693,14 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "select, insert, update",
+    "object": "job_exports",
+    "objkind": "table",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126140000_job_exports_bucket.sql"
    }
   ],
   "guards": [
@@ -78879,6 +78944,13 @@
    },
    {
     "kind": "status",
+    "msg": "valor `storage` para `etapa` usado no código não existe em nenhum enum do banco/TS",
+    "where": [
+     "escreve:supabase/functions/export-scrape-job/index.ts"
+    ]
+   },
+   {
+    "kind": "status",
     "msg": "valor `save` para `current_step` usado no código não existe em nenhum enum do banco/TS",
     "where": [
      "escreve:supabase/functions/workflow-engine/index.ts"
@@ -79398,6 +79470,13 @@
     "msg": "1 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
     "where": [
      "src/test/mockSupabaseClient.ts"
+    ]
+   },
+   {
+    "kind": "dinâmico",
+    "msg": "1 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
+    "where": [
+     "supabase/functions/export-scrape-job/index.ts"
     ]
    },
    {
@@ -83241,7 +83320,7 @@
   },
   "src/components/lux/ScrapeResultsView.tsx": {
    "path": "src/components/lux/ScrapeResultsView.tsx",
-   "lines": 501,
+   "lines": 547,
    "exports": [
     "const ScrapeResultsView"
    ],
@@ -83293,6 +83372,7 @@
     ],
     "job_exports": [
      "created_at",
+     "file_url",
      "format",
      "id",
      "job_id",
@@ -83308,6 +83388,7 @@
    ],
    "errors": [
     "Erro ao converter",
+    "Falha ao baixar",
     "Falha na exportacao",
     "Selecione um job",
     "Sessao expirada - entre novamente."
@@ -98253,8 +98334,16 @@
   },
   "supabase/functions/export-scrape-job/index.ts": {
    "path": "supabase/functions/export-scrape-job/index.ts",
-   "lines": 142,
+   "lines": 211,
    "tables": [
+    {
+     "table": "job_exports",
+     "op": "select"
+    },
+    {
+     "table": "scrape_jobs",
+     "op": "select"
+    },
     {
      "table": "scrape_jobs",
      "op": "select"
@@ -98266,9 +98355,22 @@
     {
      "table": "job_exports",
      "op": "insert,select"
+    },
+    {
+     "table": "job_exports",
+     "op": "update"
+    },
+    {
+     "table": "job_exports",
+     "op": "update"
     }
    ],
    "table_cols": {
+    "job_exports": [
+     "file_url",
+     "id",
+     "job_id"
+    ],
     "scrape_jobs": [
      "id",
      "name",
@@ -98281,13 +98383,12 @@
      "job_id",
      "processed",
      "raw_data"
-    ],
-    "job_exports": [
-     "id"
     ]
    },
+   "dyn_from": 1,
    "env": [
     "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
    "params": [
@@ -98298,6 +98399,10 @@
     {
      "name": "PAGE",
      "value": "1000"
+    },
+    {
+     "name": "BUCKET",
+     "value": "\"job-exports\""
     }
    ],
    "status_values": [
@@ -98308,12 +98413,27 @@
     },
     {
      "field": "status",
-     "value": "completed",
+     "value": "pending",
      "kind": "escreve"
     },
     {
      "field": "etapa",
      "value": "job_exports",
+     "kind": "escreve"
+    },
+    {
+     "field": "etapa",
+     "value": "storage",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "failed",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "completed",
      "kind": "escreve"
     },
     {
@@ -98327,7 +98447,11 @@
      "kind": "compara"
     }
    ],
-   "doc": "Exporta os leads de um job de raspagem em CSV, respeitando a RLS do usuario. Body: { job_id: uuid, status?: \"all\" | \"processed\" | \"unprocessed\" } Grava a linha em job_exports (historico) e devolve o arquivo direto na resposta: o projeto nao tem bucket de storage (docs/qa/01-INVENTARIO.md:169), entao …"
+   "rule_comments": [
+    "quebra: o CSV continua saindo na resposta, apenas sem arquivo guardado."
+   ],
+   "doc": "Exporta os leads de um job de raspagem em CSV, respeitando a RLS do usuario. Modo criar: body { job_id: uuid, status?: \"all\" | \"processed\" | \"unprocessed\" } Modo rebaixar: body { export_id: uuid } O CSV e gravado no bucket privado job-exports com a service role (o cliente nao tem acesso ao bucket) e …",
+   "uses_service_role": true
   },
   "supabase/functions/gmaps-places-search/index.ts": {
    "path": "supabase/functions/gmaps-places-search/index.ts",
@@ -104077,13 +104201,28 @@
    "path": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
    "lines": 106,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261126140000_job_exports_bucket.sql": {
+   "path": "supabase/migrations/20261126140000_job_exports_bucket.sql",
+   "lines": 23
   }
  },
  "git": {
-  "sha": "594348f54d6a78625df4e0146bcee67bac84c26a",
+  "sha": "c6c2424c184a540fac7328af8a36c6ebdcbee6a7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "c6c2424",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "feat(exportacao): guarda o CSV exportado no bucket privado e permite baixar de novo (#272)",
+    "files": [
+     "src/components/lux/ScrapeResultsView.tsx",
+     "supabase/functions/export-scrape-job/index.ts",
+     "supabase/migrations/20261126140000_job_exports_bucket.sql"
+    ]
+   },
    {
     "sha": "594348f",
     "date": "2026-11-26",
@@ -104490,33 +104629,12 @@
      "docs/qa/05-PROGRESSO.md",
      "e2e/helpers/supabase.ts"
     ]
-   },
-   {
-    "sha": "f889110",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix: leitura sem organizacao ativa falha fechada no wrapper (#225)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/components/lux/CommandPalette.tsx",
-     "src/components/lux/CompaniesView.tsx",
-     "src/components/lux/StakeholderFinderView.tsx",
-     "src/components/lux/WorkflowsView.tsx",
-     "src/components/lux/__tests__/WorkflowsView.test.tsx",
-     "src/components/lux/monitoring/JobDetailsSheet.tsx",
-     "src/hooks/__tests__/orgCacheKeys.test.ts",
-     "src/hooks/useScheduledReports.ts",
-     "src/integrations/supabase/__tests__/withOrg.readGuard.test.ts",
-     "src/integrations/supabase/withOrg.ts",
-     "src/pages/Monitoring.tsx",
-     "src/tests/multi-tenant.test.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    25
+    24
    ],
    [
     "scripts/automation.config.json",
@@ -104527,8 +104645,12 @@
     3
    ],
    [
-    "src/pages/Monitoring.tsx",
-    3
+    "src/components/lux/ScrapeResultsView.tsx",
+    2
+   ],
+   [
+    "supabase/functions/export-scrape-job/index.ts",
+    2
    ],
    [
     ".github/workflows/functions-retirement.yml",
@@ -104551,7 +104673,7 @@
     2
    ],
    [
-    "src/components/lux/CommandPalette.tsx",
+    "src/pages/Monitoring.tsx",
     2
    ],
    [
@@ -104560,10 +104682,6 @@
    ],
    [
     "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
-    2
-   ],
-   [
-    "src/components/lux/monitoring/JobDetailsSheet.tsx",
     2
    ],
    [
@@ -104579,10 +104697,6 @@
     2
    ],
    [
-    "src/components/lux/WorkflowsView.tsx",
-    2
-   ],
-   [
     "src/hooks/useOrganizations.ts",
     2
    ],
@@ -104592,6 +104706,10 @@
    ],
    [
     "src/hooks/useEmailTemplates.ts",
+    2
+   ],
+   [
+    "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
     2
    ]
   ]

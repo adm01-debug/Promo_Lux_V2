@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `594348f54d` · branch `main` · 2026-11-26 11:55 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c6c2424c18` · branch `main` · 2026-11-26 12:53 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -148,7 +148,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 209 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 210 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -181,6 +181,7 @@
 - `supabase/functions/email-oauth-callback/index.ts`
 - `supabase/functions/email-oauth-disconnect/index.ts`
 - `supabase/functions/email-poll-replies/index.ts`
+- `supabase/functions/export-scrape-job/index.ts`
 - `supabase/functions/gmaps-places-search/index.ts`
 - `supabase/functions/gmaps-proxy/index.ts`
 - `supabase/functions/health/index.ts`
@@ -299,8 +300,7 @@
 - `supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql`
 - `supabase/migrations/20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql`
 - `supabase/migrations/20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql`
-- `supabase/migrations/20260721230311_59215542-a0b3-4468-b60a-b80b411a334f.sql`
-- … +59 (lista completa em `context.json`)
+- … +60 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -534,7 +534,7 @@ Middleware matcher (Next.js): nenhum
 | grant | authenticated | select | `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `dlq_health_snapshots`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_history`, `lusha_credit_usage_log`, `lusha_credit_usage_log`, `oracle_rate_limits`, `oracle_v2_health`, `circuit_breaker_snapshots`, `circuit_breaker_alert_settings`, `circuit_breaker_alert_history`, `vault_cookie_snapshots` … +35 |
 | grant | authenticated | select, insert | `automation_execution_logs`, `instagram_scrape_results`, `cnpj_enrich_queue` |
 | grant | authenticated | select, insert, delete | `satisfaction_responses` |
-| grant | authenticated | select, insert, update | `data_subject_requests` |
+| grant | authenticated | select, insert, update | `data_subject_requests`, `job_exports` |
 | grant | authenticated | select, insert, update, delete | `email_suppressions`, `partition_policies`, `partition_advisories`, `dlq_alert_settings`, `api_latency_alert_settings`, `lusha_dm_search_history`, `lusha_contacts`, `lusha_search_sessions`, `org_scrape_rate_limits`, `company_reviews`, `org_proxies`, `instagram_scrape_queue`, `sla_alert_settings`, `lead_scores`, `dashboard_layouts` … +12 |
 | grant | authenticated | select, update | `retry_policy_advisories`, `reaper_alert_settings` |
 | grant | authenticated, service_role | execute | `pg_columns_for_insert`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `capture_db_health_snapshot`, `enqueue_scrape_task`, `replay_dead_letter`, `purge_dead_letter`, `dlq_health_metrics`, `api_latency_stats`, `api_latency_trend`, `capture_circuit_breaker_snapshots`, `evaluate_circuit_breaker_alerts` … +23 |

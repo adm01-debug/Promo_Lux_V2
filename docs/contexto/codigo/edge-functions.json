@@ -704,7 +704,7 @@
    "nome": "export-scrape-job",
    "entrada": "supabase/functions/export-scrape-job/index.ts",
    "arquivos": 1,
-   "linhas": 142,
+   "linhas": 211,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS",
@@ -718,6 +718,7 @@
    "rpcs": [],
    "env": [
     "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
     "SUPABASE_URL"
    ],
    "buckets": [],

@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "594348f54d6a78625df4e0146bcee67bac84c26a",
+  "commit": "c6c2424c184a540fac7328af8a36c6ebdcbee6a7",
   "branch": "main",
-  "data_commit": "2026-11-26T08:55:05-03:00",
+  "data_commit": "2026-11-26T09:50:54-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "c6c2424",
+    "data": "2026-11-26",
+    "assunto": "feat(exportacao): guarda o CSV exportado no bucket privado e permite baixar de novo (#272)"
+   },
    {
     "sha": "594348f",
     "data": "2026-11-26",
@@ -126,18 +131,13 @@
     "sha": "59db346",
     "data": "2026-11-25",
     "assunto": "feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)"
-   },
-   {
-    "sha": "39e3cfb",
-    "data": "2026-11-25",
-    "assunto": "fix(negocios): organizacao ativa e totais por moeda no funil (etapas 110/111/120) (#233)"
    }
   ],
-  "arquivos_mudados_7d": 410,
+  "arquivos_mudados_7d": 411,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 159
+    "mudancas": 160
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 201
+    "commits": 202
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1206,
+  "arquivos_total": 1207,
   "arquivos_codigo": 751,
-  "linhas_codigo": 130626,
+  "linhas_codigo": 130741,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,7 +322,7 @@
   "hooks": 97,
   "edge_functions": 62,
   "tabelas": 121,
-  "migrations": 272,
+  "migrations": 273,
   "cron_jobs": 43,
   "testes": 165,
   "workflows": 11,
@@ -560,7 +560,7 @@
   },
   "src/components": {
    "arquivos": 322,
-   "linhas": 54058
+   "linhas": 54104
   },
   "src/contexts": {
    "arquivos": 9,
@@ -596,7 +596,7 @@
   },
   "supabase/functions": {
    "arquivos": 140,
-   "linhas": 25711
+   "linhas": 25780
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -701,16 +701,16 @@
    "linhas": 550
   },
   {
+   "arquivo": "src/components/lux/ScrapeResultsView.tsx",
+   "linhas": 547
+  },
+  {
    "arquivo": "src/components/lux/monitoring/QaHistoryPanel.tsx",
    "linhas": 543
   },
   {
    "arquivo": "src/components/lux/OrganizationsView.tsx",
    "linhas": 542
-  },
-  {
-   "arquivo": "src/components/lux/settings/RLSVerificationPanel.tsx",
-   "linhas": 541
   }
  ],
  "qualidade": {

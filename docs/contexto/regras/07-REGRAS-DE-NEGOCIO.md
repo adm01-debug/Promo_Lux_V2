@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `594348f54d` · branch `main` · 2026-11-26 11:55 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c6c2424c18` · branch `main` · 2026-11-26 12:53 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1031,7 +1031,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `error_rate_limit` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `expired` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
-| `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +13 |
+| `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +14 |
 | `status` | `fulfilled` | compara | `src/components/lux/StakeholderFinderView.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
@@ -1040,7 +1040,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `not_found` | compara, escreve | `src/hooks/useCnpjEnrich.ts`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `ok` | compara, escreve | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/monitoring/SlaCompliancePanel.tsx`<br>`src/pages/AcceptInvite.tsx`<br>`supabase/functions/health/index.ts` |
 | `status` | `paused` | compara, escreve | `src/components/lux/AutomationsList.tsx`<br>`src/components/lux/workflows/WorkflowCard.tsx`<br>`src/lib/demoData.ts` |
-| `status` | `pending` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>`src/hooks/useScheduledReports.ts`<br>… +7 |
+| `status` | `pending` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>`src/hooks/useScheduledReports.ts`<br>… +8 |
 | `status` | `processed` | compara | `supabase/functions/export-scrape-job/index.ts` |
 | `status` | `processing` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts` |
 | `status` | `queued` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts`<br>`src/hooks/useScrapeQueue.ts`<br>… +6 |
@@ -1163,6 +1163,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `health_status` | `expired` | compara, escreve | `supabase/functions/_shared/cookies.ts`<br>`supabase/functions/lusha-cookie-health/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/oracle-cookies-preflight/index.ts` |
 | `health_status` | `expiring_soon` | compara | `supabase/functions/lusha-cookie-health/index.ts` |
 | `etapa` | `job_exports` | escreve | `supabase/functions/export-scrape-job/index.ts` |
+| `etapa` | `storage` | escreve | `supabase/functions/export-scrape-job/index.ts` |
 | `current_step` | `enrich` | escreve | `supabase/functions/workflow-engine/index.ts` |
 | `current_step` | `ipc_score` | escreve | `supabase/functions/workflow-engine/index.ts` |
 | `current_step` | `save` | escreve | `supabase/functions/workflow-engine/index.ts` |
@@ -1792,6 +1793,7 @@ _nenhum item encontrado_
 | `TTL_NOT_FOUND_MS` | `24` | `supabase/functions/cnpj-enrich-worker/index.ts` |
 | `MAX_ROWS` | `20000` | `supabase/functions/export-scrape-job/index.ts` |
 | `PAGE` | `1000` | `supabase/functions/export-scrape-job/index.ts` |
+| `BUCKET` | `"job-exports"` | `supabase/functions/export-scrape-job/index.ts` |
 | `GATEWAY` | `"https://connector-gateway.lovable.dev/google_maps"` | `supabase/functions/gmaps-places-search/index.ts` |
 | `CB_THRESHOLD` | `5` | `supabase/functions/gmaps-proxy/index.ts` |
 | `CB_RESET_TIMEOUT` | `60000` | `supabase/functions/gmaps-proxy/index.ts` |
@@ -2130,6 +2132,7 @@ _nenhum item encontrado_
 | Erro ao excluir | `src/components/lux/RecycleBinView.tsx` |
 | Erro ao restaurar | `src/components/lux/RecycleBinView.tsx` |
 | Erro ao converter | `src/components/lux/ScrapeResultsView.tsx` |
+| Falha ao baixar | `src/components/lux/ScrapeResultsView.tsx` |
 | Falha na exportacao | `src/components/lux/ScrapeResultsView.tsx` |
 | Selecione um job | `src/components/lux/ScrapeResultsView.tsx` |
 | Sessao expirada - entre novamente. | `src/components/lux/ScrapeResultsView.tsx` |
@@ -2316,8 +2319,7 @@ _nenhum item encontrado_
 | [apify-gateway ${response.status}] getDatasetItems: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
 | [apify-gateway ${response.status}] getRunStatus: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
 | [apify-gateway ${response.status}] startActorRun: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
-| [apify-gateway 429] ${stage}: rate limit exceeded (mock fault) | `supabase/functions/_shared/apify-gateway.ts` |
-| … +70 linhas — lista completa em `context.json` | |
+| … +71 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2723,6 +2725,7 @@ _nenhum item encontrado_
 | limite/minuto vigente e métricas resumidas de cache/fila. | `supabase/functions/cnpj-settings-status/index.ts` |
 | Validação básica de redirect_uri | `supabase/functions/email-oauth-connect/index.ts` |
 | Permissão: dono pode remover a sua própria; org accounts exigem admin | `supabase/functions/email-oauth-disconnect/index.ts` |
+| quebra: o CSV continua saindo na resposta, apenas sem arquivo guardado. | `supabase/functions/export-scrape-job/index.ts` |
 | Falha silenciosa: contabilidade não deve derrubar a resposta. | `supabase/functions/gmaps-places-search/index.ts` |
 | fluxo autenticado, porem sem usuario. Escopo estrito -- apenas atualiza o | `supabase/functions/gmaps-proxy/index.ts` |
 | params?: { limit?: number, correlation_id?: string, max_attempts?: number } } | `supabase/functions/instagram-enqueue/index.ts` |

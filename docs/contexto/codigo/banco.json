@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 272,
+ "migrations": 273,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1423,7 +1423,13 @@
    "chama_edge": "web-scrape-worker"
   }
  ],
- "buckets": [],
+ "buckets": [
+  {
+   "nome": "job-exports",
+   "criado_em_sql": true,
+   "usado_em": 0
+  }
+ ],
  "tabelas": {
   "agent_chat_messages": {
    "colunas": {

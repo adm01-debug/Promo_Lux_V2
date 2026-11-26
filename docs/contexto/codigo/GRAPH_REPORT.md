@@ -1,17 +1,17 @@
 # Graph Report - Promo_Lux_V2  (2026-11-26)
 
 ## Corpus Check
-- 1181 files · ~831,772 words
+- 1182 files · ~832,580 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 23 file(s) not represented in the graph (top: (none) 13, .toml 5, .css 2)
 
 ## Summary
-- 8160 nodes · 17577 edges · 718 communities (431 shown, 287 thin omitted)
+- 8161 nodes · 17577 edges · 719 communities (431 shown, 288 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 633 edges (avg confidence: 0.93)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `594348f5`
+- Built from commit: `c6c2424c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -640,7 +640,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (718 total, 287 thin omitted)
+## Communities (719 total, 288 thin omitted)
 
 ### Community 0 - "lucide-react"
 Cohesion: 0.02
@@ -2368,16 +2368,16 @@ Nodes (3): idx_retry_policy_advisories_applied_by, idx_retry_policy_advisories_r
 
 ## Knowledge Gaps
 - **2560 isolated node(s):** `session-start.sh script`, `PATH`, `version`, `sdk_version`, `path` (+2555 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3732 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **287 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3733 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **288 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `vitest` connect `vitest` to `lucide-react`, `react`, `useActiveOrganization`, `utils.ts`, `WorkflowCard.tsx`, `compareReport.ts`, `req`, `SlaHistoryCard`, `ref_node_fs`, `oracle-search-decisors/index.ts`, `orgErrorHandler.audit.test.ts`, `validation.test.ts`, `DealDetailDrawer.tsx`, `campaign-dispatch/index.ts`, `oracle-enrich-contact/index.ts`, `SlaHistoryTrendChart.tsx`, `package.json`, `gmaps-proxy/index.ts`, `AppBreadcrumbs.tsx`, `Onda 1 — Segurança e risco de perda de dado`, `lusha-client.ts`, `ErrorBoundary`, `MutationsErroAviso.test.tsx`, `@testing-library/react`, `setActiveOrgId`, `scrape-queue-worker/index.ts`, `SessionsPanel.test.tsx`, `MonitoringView.test.tsx`, `usePersistedFilters`, `DealsView.currency.test.tsx`, `useRolePermissions.test.tsx`, `lusha/departmentMap.ts`, `deliverability-check/index.ts`, `oracle-push-bitrix/index.ts`, `orgErrorHandler.ts`, `web-scrape-worker/index.ts`, `SourceComparisonReport.tsx`, `aggregations.ts`, `workflow-phases.ts`, `sanitize.ts`, `CampaignsView.test.tsx`, `getActiveOrgId`, `LushaIntelligenceView`, `DecisionMakersGrid.test.tsx`, `withOrg.switching.test.ts`, `Analisado`, `useLoginForm.ts`, `useOracleV2.ts`, `vite.config.ts`, `DemoContext.test.tsx`, `classify.ts`, `withOrg.registry.test.ts`, `StakeholderCard.tsx`, `useAuditTrail.ts`, `useEmailSuppressions.test.ts`, `useRateLimit.logic.test.ts`, `scenarios.ts`, `generateScenarios`, `groupByCurrency`, `orgErrorHandler.e2e.test.ts`, `Sidebar.test.tsx`, `downloadCSV`, `CompanyFilters.tsx`, `useDlqReplay.ts`, `autotune.ts`, `botoes-com-manipulador.test.ts`?**
-  _High betweenness centrality (0.128) - this node is a cross-community bridge._
+  _High betweenness centrality (0.126) - this node is a cross-community bridge._
 - **Why does `Onda 1 — Segurança e risco de perda de dado` connect `Onda 1 — Segurança e risco de perda de dado` to `lucide-react`, `05 — PROGRESSO DA EXECUÇÃO`, `useActiveOrganization`, `react`, `useAuditTrail.ts`, `status`, `getActiveOrgId`, `utils.ts`, `compareReport.ts`, `req`, `rls-guarantees.spec.ts`, `DealDetailDrawer.tsx`, `OAuthSandboxPanel.tsx`, `CompanyFilters.tsx`, `qa-ingest-run/index.ts`?**
-  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+  _High betweenness centrality (0.061) - this node is a cross-community bridge._
 - **Why does `status()` connect `status` to `graphify-local.mjs`, `2. Detalhamento por Categoria`, `scrape-queue-worker/index.ts`, `Lusha Intelligence — Integração LUX`, `Observabilidade`, `MonitoringView.tsx`, `Onda 1 — Segurança e risco de perda de dado`, `G20 — Regras de negócio que só existem no navegador`?**
   _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `useActiveOrganization()` (e.g. with `Etapa 011 — Condicionar as consultas do painel inicial à existência da organização ativa` and `Onda 1 — Segurança e risco de perda de dado`) actually correct?**

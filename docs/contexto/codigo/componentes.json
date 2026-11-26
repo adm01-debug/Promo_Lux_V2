@@ -2933,7 +2933,7 @@
     "ScrapeResultsView"
    ],
    "export_default": null,
-   "linhas": 501,
+   "linhas": 547,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuth"
