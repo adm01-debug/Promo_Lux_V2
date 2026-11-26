@@ -14,6 +14,7 @@ import {
   API_LATENCY_ALERT_DEFAULTS,
   type ApiLatencyAlertSettings,
 } from "@/hooks/useApiLatencyAlertSettings";
+import { PainelComEstado } from "./PainelComEstado";
 
 const clamp = (v: number, min: number, max: number) =>
   Number.isNaN(v) ? min : Math.min(Math.max(Math.trunc(v), min), max);
@@ -33,7 +34,7 @@ function fmtMs(ms: number): string {
 export function ApiLatencyAlertSettingsCard() {
   const { activeOrgId, activeOrg } = useActiveOrganization();
   const isAdmin = activeOrg?.role === "admin";
-  const { data, isLoading } = useApiLatencyAlertSettings(activeOrgId);
+  const { data, isLoading, isError, error, refetch } = useApiLatencyAlertSettings(activeOrgId);
   const { data: history } = useApiLatencyAlertHistory(activeOrgId, 20);
   const save = useSaveApiLatencyAlertSettings();
 
@@ -70,6 +71,16 @@ export function ApiLatencyAlertSettingsCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <PainelComEstado
+          carregando={isLoading}
+          falhou={isError}
+          mensagemErro={
+            error?.message
+              ? `Não foi possível carregar a configuração de alertas: ${error.message}`
+              : "Não foi possível carregar a configuração de alertas."
+          }
+          aoTentarNovamente={() => refetch()}
+        >
         <div className="flex items-center justify-between rounded-lg border border-border/50 bg-secondary/30 p-3">
           <div>
             <p className="text-sm font-medium">Alertas ativos</p>
@@ -193,6 +204,7 @@ export function ApiLatencyAlertSettingsCard() {
             </div>
           </div>
         )}
+        </PainelComEstado>
       </CardContent>
     </Card>
   );

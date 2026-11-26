@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useReaperHistory } from "@/hooks/useReaperHistory";
 import { useReaperAlerts } from "@/hooks/useReaperAlerts";
+import { PainelComEstado } from "./PainelComEstado";
 import { cn } from "@/lib/utils";
 
 /**
@@ -16,8 +17,14 @@ import { cn } from "@/lib/utils";
  * Mostra evolução de requeue/dead por fila e a última execução em detalhe.
  */
 export function ReaperHistoryPanel() {
-  const { data: runs, isLoading } = useReaperHistory(50);
-  const { data: alerts } = useReaperAlerts(10);
+  const {
+    data: runs,
+    isLoading,
+    isError: falhaRuns,
+    error: detalheRuns,
+    refetch: refetchRuns,
+  } = useReaperHistory(50);
+  const { data: alerts, isError: falhaAlerts, refetch: refetchAlerts } = useReaperAlerts(10);
 
   const kpis = useMemo(() => {
     if (!runs?.length) return { totalRequeued: 0, totalDead: 0, avgDuration: 0, runsCount: 0 };
@@ -109,9 +116,21 @@ export function ReaperHistoryPanel() {
       )}
 
 
-      {isLoading ? (
-        <Skeleton className="h-64 w-full" />
-      ) : chartData.length > 0 ? (
+      <PainelComEstado
+        carregando={isLoading}
+        falhou={falhaRuns || falhaAlerts}
+        mensagemErro={
+          detalheRuns?.message
+            ? `Não foi possível carregar o histórico do reaper: ${detalheRuns.message}`
+            : "Não foi possível carregar o histórico do reaper."
+        }
+        aoTentarNovamente={() => {
+          refetchRuns();
+          refetchAlerts();
+        }}
+        esqueleto={<Skeleton className="h-64 w-full" />}
+      >
+      {chartData.length > 0 ? (
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Ações por execução (por fila)</CardTitle>
@@ -191,6 +210,7 @@ export function ReaperHistoryPanel() {
           </ScrollArea>
         </CardContent>
       </Card>
+      </PainelComEstado>
     </div>
   );
 }

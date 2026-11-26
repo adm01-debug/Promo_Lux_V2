@@ -19,6 +19,7 @@ import {
   type DlqAlertSettings,
   type DlqQueueKind,
 } from "@/hooks/useDlqAlertSettings";
+import { PainelComEstado } from "./PainelComEstado";
 
 const clamp = (v: number, min: number, max: number) =>
   Number.isNaN(v) ? min : Math.min(Math.max(Math.trunc(v), min), max);
@@ -42,7 +43,7 @@ export function DlqAlertSettingsCard() {
   const { activeOrgId, activeOrg } = useActiveOrganization();
   const isAdmin = activeOrg?.role === "admin";
   const [queueKind, setQueueKind] = useState<DlqQueueKind>("scrape");
-  const { data, isLoading } = useDlqAlertSettings(activeOrgId, queueKind);
+  const { data, isLoading, isError, error, refetch } = useDlqAlertSettings(activeOrgId, queueKind);
   const { data: history } = useDlqAlertHistory(activeOrgId, 50, queueKind);
   const save = useSaveDlqAlertSettings();
 
@@ -158,6 +159,16 @@ export function DlqAlertSettingsCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <PainelComEstado
+          carregando={isLoading}
+          falhou={isError}
+          mensagemErro={
+            error?.message
+              ? `Não foi possível carregar a configuração de alertas da fila: ${error.message}`
+              : "Não foi possível carregar a configuração de alertas da fila."
+          }
+          aoTentarNovamente={() => refetch()}
+        >
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium text-muted-foreground">Motor:</span>
           <div className="flex items-center rounded-md border border-border/50 bg-secondary/30 p-0.5">
@@ -467,7 +478,7 @@ export function DlqAlertSettingsCard() {
             )}
           </div>
         )}
-
+        </PainelComEstado>
       </CardContent>
     </Card>
   );

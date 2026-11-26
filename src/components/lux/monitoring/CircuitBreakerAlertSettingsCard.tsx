@@ -14,6 +14,7 @@ import {
   CB_ALERT_DEFAULTS,
   type CircuitBreakerAlertSettings,
 } from "@/hooks/useCircuitBreakerAlerts";
+import { PainelComEstado } from "./PainelComEstado";
 
 const clamp = (v: number, min: number, max: number) =>
   Number.isNaN(v) ? min : Math.min(Math.max(Math.trunc(v), min), max);
@@ -35,7 +36,7 @@ const REASON_LABEL: Record<string, string> = {
 export function CircuitBreakerAlertSettingsCard() {
   const { activeOrg } = useActiveOrganization();
   const isAdmin = activeOrg?.role === "admin";
-  const { data, isLoading } = useCircuitBreakerAlertSettings();
+  const { data, isLoading, isError, error, refetch } = useCircuitBreakerAlertSettings();
   const { data: history } = useCircuitBreakerAlertHistory(20);
   const save = useSaveCircuitBreakerAlertSettings();
 
@@ -68,6 +69,16 @@ export function CircuitBreakerAlertSettingsCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <PainelComEstado
+          carregando={isLoading}
+          falhou={isError}
+          mensagemErro={
+            error?.message
+              ? `Não foi possível carregar a configuração dos disjuntores: ${error.message}`
+              : "Não foi possível carregar a configuração dos disjuntores."
+          }
+          aoTentarNovamente={() => refetch()}
+        >
         <div className="flex items-center justify-between rounded-lg border border-border/50 bg-secondary/30 p-3">
           <div>
             <p className="text-sm font-medium">Alertas ativos</p>
@@ -173,6 +184,7 @@ export function CircuitBreakerAlertSettingsCard() {
             </div>
           </div>
         )}
+        </PainelComEstado>
       </CardContent>
     </Card>
   );
