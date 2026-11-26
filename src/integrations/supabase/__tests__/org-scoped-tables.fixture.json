@@ -6,6 +6,7 @@
     "api_latency_alert_history",
     "api_latency_alert_settings",
     "api_latency_snapshots",
+    "api_org_rate_limits",
     "api_request_logs",
     "audit_logs",
     "automation_alerts",

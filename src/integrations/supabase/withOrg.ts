@@ -178,6 +178,7 @@ export const ORG_UNSCOPED_TABLES = new Set<string>([
   "api_latency_alert_history",  // leitura via supabase.from + RLS (useApiLatencyAlertSettings)
   "api_latency_alert_settings", // leitura/escrita via supabase.from + RLS (useApiLatencyAlertSettings)
   "api_latency_snapshots",      // acesso via RPC api_latency_trend/stats (SECURITY DEFINER)
+  "api_org_rate_limits",        // quota da API publica por organizacao: contada por edge function/RPC (SECURITY DEFINER), nunca pelo wrapper do front
   "automation_execution_logs", // leitura via supabase.from + RLS (useAutomationLogs)
   "automation_steps",          // leitura via supabase.from + RLS (JobDetailsSheet)
   "company_reviews",           // Rodada #27: leitura via supabase.from + RLS (useCompanyReviews)
