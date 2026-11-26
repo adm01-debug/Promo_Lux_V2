@@ -62,6 +62,7 @@ import { MonteCarloReportPanel } from "@/components/lux/monitoring/MonteCarloRep
 import { WebScrapeView } from "@/components/lux/monitoring/WebScrapeView";
 import { InstagramConnectionPanel } from "@/components/lux/monitoring/InstagramConnectionPanel";
 import { InstagramEnqueuePanel } from "@/components/lux/monitoring/InstagramEnqueuePanel";
+import { InstagramResultsPanel } from "@/components/lux/monitoring/InstagramResultsPanel";
 import { DLQReplayPanel } from "@/components/lux/monitoring/DLQReplayPanel";
 import { QaHistoryPanel } from "@/components/lux/monitoring/QaHistoryPanel";
 import { ReaperHistoryPanel } from "@/components/lux/monitoring/ReaperHistoryPanel";
@@ -754,6 +755,7 @@ const AutomationMonitoring = () => {
         <TabsContent value="instagram" className="space-y-4">
           <InstagramConnectionPanel />
           <InstagramEnqueuePanel />
+          <InstagramResultsPanel />
         </TabsContent>
 
       </Tabs>
