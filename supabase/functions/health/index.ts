@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { isCronAuthorized } from "../_shared/cron-auth.ts";
 
 const ALLOWED_ORIGINS = [
   "https://promo-lux-v2.vercel.app",
@@ -27,6 +28,18 @@ function getCorsHeaders(req: Request) {
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+
+  // Etapa 035: sonda publica barata. Sem credencial de servico o endpoint nao
+  // consulta o banco, nao gasta a Places API (paga) e nao grava em
+  // health_checks — antes cada chamada anonima fazia as tres coisas e ainda
+  // revelava quais segredos estavam ausentes. Diagnostico completo continua
+  // disponivel para quem chama com a credencial de cron/servico.
+  if (!isCronAuthorized(req)) {
+    return new Response(
+      JSON.stringify({ status: "ok", timestamp: new Date().toISOString() }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+  }
 
   const start = performance.now();
   type HealthCheckResult = {
