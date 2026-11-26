@@ -16,6 +16,11 @@
 #      mesma migration.
 #   6. Arquivo sem BOM UTF-8: com BOM o Postgres recusa o primeiro statement
 #      (SQLSTATE 42601) e qualquer replay limpo para no arquivo.
+#   7. Nenhuma migration nova cria policy dentro de guarda por NOME
+#      (`IF NOT EXISTS (SELECT 1 FROM pg_policies ... policyname = '...')`).
+#      A guarda por nome pula a criação quando já existe policy com o mesmo
+#      nome e regra diferente, então o estado final depende do que o banco já
+#      tinha. O padrão correto é `DROP POLICY IF EXISTS` + `CREATE POLICY`.
 # ---------------------------------------------------------------------------
 set -uo pipefail
 
@@ -139,6 +144,20 @@ for f in "${FILES[@]}"; do
       fail_if_new "$ts" "$base: tabela public.${t} criada sem ENABLE ROW LEVEL SECURITY."
     fi
   done
+done
+
+# --- 6: sem guarda por nome de policy ---------------------------------------
+# `IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE ... policyname = 'x')` pula
+# a criação quando já existe policy homônima com regra diferente: a migration
+# passa em silêncio e o estado final depende do que o banco tinha antes.
+# O padrão determinístico é `DROP POLICY IF EXISTS x; CREATE POLICY x ...`.
+for f in "${FILES[@]}"; do
+  base=$(basename "$f")
+  ts=$(echo "$base" | cut -c1-14)
+  FLAT=$(sed 's/--.*$//' "$f" | tr '\n' ' ')
+  if echo "$FLAT" | grep -qiE 'IF[[:space:]]+NOT[[:space:]]+EXISTS[^;]{0,200}pg_policies[^;]{0,200}policyname'; then
+    fail_if_new "$ts" "$base: guarda por nome de policy (IF NOT EXISTS sobre pg_policies/policyname) — use DROP POLICY IF EXISTS + CREATE POLICY."
+  fi
 done
 
 echo "▶ Baseline de grandfathering: $BASELINE (migrations anteriores geram apenas aviso)"
