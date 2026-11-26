@@ -6,18 +6,22 @@
  * mas nada nesta árvore de componentes ESCUTAVA esse evento — outras
  * instâncias montadas (ex.: o rótulo do switcher vs. um painel de
  * monitoramento) e outras abas ficavam com a org antiga até um re-render
- * não relacionado as resincronizar por acaso.
+ * não relacionado as resincronizar por acaso. (Hoje este provider é quem
+ * escuta o evento.)
  *
  * Convertido para Context: uma única fonte de verdade, um único listener de
  * `storage` (sincroniza entre abas de verdade), propagado para toda a
  * árvore. A API pública (`{ activeOrgId, activeOrg, setActive }`) é
  * idêntica — nenhum dos ~13 consumidores precisou mudar.
  */
-import { useEffect, useState, useCallback, useMemo, type ReactNode } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { setActiveOrgId, ACTIVE_ORG_STORAGE_KEY } from "@/integrations/supabase/withOrg";
 import { useMyOrganizations } from "@/hooks/useOrganizations";
 import { ActiveOrgContext } from "./active-org-context";
+
+/** Evento sintético de troca de organização carrega a aba de origem. */
+type OrgStorageEvent = StorageEvent & { __originTab?: string };
 
 export function ActiveOrgProvider({ children }: { children: ReactNode }) {
   const { data: orgs } = useMyOrganizations();
@@ -25,6 +29,9 @@ export function ActiveOrgProvider({ children }: { children: ReactNode }) {
   const [activeId, setActiveId] = useState<string | null>(() =>
     typeof window !== "undefined" ? localStorage.getItem(ACTIVE_ORG_STORAGE_KEY) : null
   );
+  // Identificador desta aba, só em memória, para distinguir o evento sintético
+  // que nós mesmos disparamos dos eventos vindos de outras abas.
+  const tabId = useRef(`tab-${Math.random().toString(36).slice(2)}`).current;
 
   useEffect(() => {
     if (!orgs || orgs.length === 0) return;
@@ -45,6 +52,11 @@ export function ActiveOrgProvider({ children }: { children: ReactNode }) {
     if (typeof window === "undefined") return;
     const onStorage = (e: StorageEvent) => {
       if (e.key !== ACTIVE_ORG_STORAGE_KEY) return;
+      // O evento sintético de `setActive` abaixo existe para alcançar quem
+      // ficou fora deste Context, mas `dispatchEvent` também entrega ao
+      // escutador da PRÓPRIA aba — sem esta marca, toda troca invalidava o
+      // cache duas vezes (uma em `setActive`, outra aqui).
+      if ((e as OrgStorageEvent).__originTab === tabId) return;
       const next = e.newValue;
       setActiveId(next);
       setActiveOrgId(next);
@@ -52,7 +64,7 @@ export function ActiveOrgProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
-  }, [qc]);
+  }, [qc, tabId]);
 
   const setActive = useCallback((id: string) => {
     if (id === activeId) return;
@@ -63,12 +75,16 @@ export function ActiveOrgProvider({ children }: { children: ReactNode }) {
     // Eventos `storage` só disparam em OUTRAS abas nativamente — dispara um
     // sintético aqui também para instâncias fora desta árvore específica
     // (mantido por compatibilidade; a maioria dos consumidores agora recebe
-    // o valor via este mesmo Context, então nem precisa dele).
-    window.dispatchEvent(new StorageEvent("storage", {
+    // o valor via este mesmo Context, então nem precisa dele). Vai marcado com
+    // a aba de origem para o nosso próprio escutador ignorá-lo e não invalidar
+    // o cache de novo.
+    const echo = new StorageEvent("storage", {
       key: ACTIVE_ORG_STORAGE_KEY,
       newValue: id,
-    }));
-  }, [activeId, qc]);
+    }) as OrgStorageEvent;
+    echo.__originTab = tabId;
+    window.dispatchEvent(echo);
+  }, [activeId, qc, tabId]);
 
   const active = useMemo(
     () => (orgs ?? []).find((o) => o.organization_id === activeId) ?? null,

@@ -91,4 +91,36 @@ describe("usePersistedFilters", () => {
     const parsed = JSON.parse(stored!);
     expect(parsed.tags.__set).toEqual(["x", "y", "z"]);
   });
+
+  it("instala o escutador de armazenamento uma única vez por montagem", () => {
+    const addSpy = vi.spyOn(window, "addEventListener");
+    const { rerender } = renderHook(
+      ({ defaults }: { defaults: { page: number } }) => usePersistedFilters("once-view", defaults),
+      { initialProps: { defaults: { page: 1 } } }
+    );
+
+    // Nova identidade a cada render (literal inline, como nos consumidores).
+    rerender({ defaults: { page: 1 } });
+    rerender({ defaults: { page: 1 } });
+
+    const storageListeners = addSpy.mock.calls.filter(([type]) => type === "storage").length;
+    expect(storageListeners).toBe(1);
+    addSpy.mockRestore();
+  });
+
+  it("mantém a sincronização entre abas depois de vários renders", () => {
+    const { rerender, result } = renderHook(
+      ({ defaults }: { defaults: { page: number } }) => usePersistedFilters("sync-view", defaults),
+      { initialProps: { defaults: { page: 1 } } }
+    );
+    rerender({ defaults: { page: 1 } });
+
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent("storage", { key: "lux-filters-sync-view", newValue: JSON.stringify({ page: 7 }) })
+      );
+    });
+
+    expect(result.current[0]).toEqual({ page: 7 });
+  });
 });
