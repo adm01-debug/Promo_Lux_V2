@@ -33,7 +33,11 @@ vi.mock("@/integrations/supabase/client", () => ({
       const builder = {
         select: () => builder,
         eq: () => builder,
-        order: () => Promise.resolve({ data: null, error: new Error("refetch indisponivel") }),
+        order: () =>
+          Promise.resolve({
+            data: null,
+            error: new Error("refetch indisponivel"),
+          }),
         update: () => afterUpdate,
       };
       return builder;
@@ -42,7 +46,11 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 vi.mock("@/hooks/useOrganizations", () => ({
-  useActiveOrganization: () => ({ activeOrgId: "org-1", activeOrg: null, setActive: () => {} }),
+  useActiveOrganization: () => ({
+    activeOrgId: "org-1",
+    activeOrg: null,
+    setActive: () => {},
+  }),
 }));
 
 import { useRolePermissions } from "../useRolePermissions";
@@ -84,13 +92,17 @@ describe("useRolePermissions", () => {
       value: true,
     });
     await waitFor(() =>
-      expect(qc.getQueryData<RolePermissionRow[]>(CHAVE)?.[0].can_delete).toBe(true),
+      expect(qc.getQueryData<RolePermissionRow[]>(CHAVE)?.[0].can_delete).toBe(
+        true,
+      ),
     );
     await pendente;
   });
 
   it("desfaz a mudanca otimista e avisa quando a gravacao falha", async () => {
-    gravacao.error = { message: "permission denied for table role_permissions" };
+    gravacao.error = {
+      message: "permission denied for table role_permissions",
+    };
     const { qc, result } = montar();
 
     await expect(
@@ -102,10 +114,14 @@ describe("useRolePermissions", () => {
       }),
     ).rejects.toThrow(/permission denied/);
 
-    expect(qc.getQueryData<RolePermissionRow[]>(CHAVE)?.[0].can_delete).toBe(false);
+    expect(qc.getQueryData<RolePermissionRow[]>(CHAVE)?.[0].can_delete).toBe(
+      false,
+    );
     expect(toastError).toHaveBeenCalledWith(
       expect.stringContaining("Erro ao salvar"),
-      expect.objectContaining({ description: "permission denied for table role_permissions" }),
+      expect.objectContaining({
+        description: "permission denied for table role_permissions",
+      }),
     );
   });
 
@@ -117,6 +133,8 @@ describe("useRolePermissions", () => {
       flag: "can_delete",
       value: true,
     });
-    expect(qc.getQueryData<RolePermissionRow[]>(CHAVE)?.[0].can_delete).toBe(true);
+    expect(qc.getQueryData<RolePermissionRow[]>(CHAVE)?.[0].can_delete).toBe(
+      true,
+    );
   });
 });
