@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `112265499a` · branch `main` · 2026-11-26 00:15 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `965bba8776` · branch `main` · 2026-11-26 00:41 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2470,7 +2470,7 @@ _nenhum item encontrado_
 | `e2e/oracle-decisor-flow.spec.ts` | 2 | Oracle v2 — fluxo end-to-end real (busca → decisores → enriquecimento) · busca decisores em empresa real e enriquece pelo menos um contato |
 | `e2e/oracle-v2.spec.ts` | 2 | Oracle v2 — smoke · painel resiliente: Error Boundary não derruba a aba quando preflight falha |
 | `src/contexts/__tests__/AuthContext.test.tsx` | 2 | AuthProvider.signOut · clears the React Query cache and the active org before calling supabase.auth.signOut |
-| `src/integrations/supabase/__tests__/orgScopedCallSites.test.ts` | 2 | telas do painel consultam tabelas multi-tenant pelo wrapper · ${arquivo} le ${tabela} com escopo |
+| `src/integrations/supabase/__tests__/orgScopedCallSites.test.ts` | 2 | telas do painel consultam tabelas multi-tenant pelo wrapper · ${arquivo} ${op ===  |
 | `src/test/example.test.ts` | 2 | example · should pass |
 
 ## L. Eventos de webhook tratados (contratos com sistemas externos)

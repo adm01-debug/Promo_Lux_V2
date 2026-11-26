@@ -1178,7 +1178,7 @@
     "useEmailTemplates",
     "useSaveEmailTemplate"
    ],
-   "linhas": 176,
+   "linhas": 180,
    "dominio": "hooks",
    "tabelas": [
     "email_template_stats",
@@ -2200,7 +2200,7 @@
     "useSalesGoals",
     "useUpdateGoal"
    ],
-   "linhas": 128,
+   "linhas": 129,
    "dominio": "hooks",
    "tabelas": [
     "sales_goals",
@@ -2230,7 +2230,7 @@
     "useSurveys",
     "useToggleSurvey"
    ],
-   "linhas": 153,
+   "linhas": 154,
    "dominio": "hooks",
    "tabelas": [
     "satisfaction_responses",
@@ -2421,7 +2421,7 @@
    "hooks_exportados": [
     "useTaskReminders"
    ],
-   "linhas": 63,
+   "linhas": 67,
    "dominio": "hooks",
    "tabelas": [
     "deal_tasks"

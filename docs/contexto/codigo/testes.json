@@ -864,11 +864,11 @@
   {
    "arquivo": "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
    "tipo": "unit",
-   "linhas": 54,
+   "linhas": 68,
    "testa": [
     "src/integrations/supabase/withOrg.ts"
    ],
-   "casos": 1
+   "casos": 2
   },
   {
    "arquivo": "src/integrations/supabase/__tests__/trashLabelColumns.test.ts",

@@ -2078,7 +2078,8 @@
    "src/components/lux/campaigns/CampaignFormFields.tsx",
    "src/contexts/active-org-context.ts",
    "src/integrations/supabase/client.ts",
-   "src/integrations/supabase/types.ts"
+   "src/integrations/supabase/types.ts",
+   "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useFeatureFlag.ts": [
    "src/integrations/supabase/client.ts"
@@ -2238,12 +2239,14 @@
   "src/hooks/useSalesGoals.ts": [
    "src/contexts/active-org-context.ts",
    "src/hooks/use-toast.ts",
-   "src/integrations/supabase/client.ts"
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useSatisfaction.ts": [
    "src/contexts/active-org-context.ts",
    "src/hooks/use-toast.ts",
-   "src/integrations/supabase/client.ts"
+   "src/integrations/supabase/client.ts",
+   "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useScheduledReports.ts": [
    "src/contexts/active-org-context.ts",
@@ -2263,7 +2266,6 @@
   ],
   "src/hooks/useTaskReminders.ts": [
    "src/contexts/auth-context.ts",
-   "src/integrations/supabase/client.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
   "src/hooks/useUnsavedChanges.tsx": [

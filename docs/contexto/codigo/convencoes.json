@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(dados): leituras e escritas por organizacao nos templates, chaves, lembretes e metas (etapas 206-210) (#236)",
    "fix(hooks): erros silenciados no funil, no passo a passo e nas mutacoes (etapas 195-199) (#235)",
    "feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)",
    "fix(negocios): organizacao ativa e totais por moeda no funil (etapas 110/111/120) (#233)",
-   "fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)",
-   "fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)"
+   "fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)"
   ]
  },
  "pr_template": null,

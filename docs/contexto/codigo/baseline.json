@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "112265499a868875dd604f362d6d59c4f5be952d",
+  "commit": "965bba87767deff2c255f9cc5ff9d8fc54c79160",
   "branch": "main",
-  "data_commit": "2026-11-25T21:12:46-03:00",
+  "data_commit": "2026-11-25T21:36:22-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "965bba8",
+    "data": "2026-11-25",
+    "assunto": "fix(dados): leituras e escritas por organizacao nos templates, chaves, lembretes e metas (etapas 206-210) (#236)"
+   },
    {
     "sha": "1122654",
     "data": "2026-11-25",
@@ -126,14 +131,9 @@
     "sha": "e1331fe",
     "data": "2026-11-25",
     "assunto": "chore(edge): descarta audit-logs-prune, function sem chamador (#209)"
-   },
-   {
-    "sha": "b85b5ad",
-    "data": "2026-11-25",
-    "assunto": "fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)"
    }
   ],
-  "arquivos_mudados_7d": 366,
+  "arquivos_mudados_7d": 367,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -141,7 +141,7 @@
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 28
+    "mudancas": 29
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -157,7 +157,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 17
+    "mudancas": 18
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -207,7 +207,7 @@
    },
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 17
+    "mudancas": 18
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 179
+    "commits": 180
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1182,
   "arquivos_codigo": 736,
-  "linhas_codigo": 127903,
+  "linhas_codigo": 127927,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -568,11 +568,11 @@
   },
   "src/hooks": {
    "arquivos": 108,
-   "linhas": 12313
+   "linhas": 12323
   },
   "src/integrations": {
    "arquivos": 14,
-   "linhas": 9307
+   "linhas": 9321
   },
   "src/lib": {
    "arquivos": 58,
