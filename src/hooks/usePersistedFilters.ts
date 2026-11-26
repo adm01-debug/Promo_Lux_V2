@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 
 const PREFIX = "lux-filters-";
 
@@ -23,22 +23,28 @@ export function usePersistedFilters<T extends object>(
     }
   });
 
+  // `defaultState` costuma ser um literal criado inline a cada render (nova
+  // identidade a cada desenho): mantido numa ref para o escutador de `storage`
+  // ser instalado uma única vez em vez de reinstalado a cada render.
+  const defaultsRef = useRef(defaultState);
+  defaultsRef.current = defaultState;
+
   // Sincronização entre abas
   useEffect(() => {
     const handleStorage = (e: StorageEvent) => {
       if (e.key === storageKey && e.newValue) {
         try {
           const parsed = JSON.parse(e.newValue);
-          const next = deserialize(parsed, defaultState as Record<string, unknown>) as T;
+          const next = deserialize(parsed, defaultsRef.current as Record<string, unknown>) as T;
           setStateRaw(next);
         } catch { /* valor persistido inválido: mantém estado atual */ }
       } else if (e.key === storageKey && !e.newValue) {
-        setStateRaw(defaultState);
+        setStateRaw(defaultsRef.current);
       }
     };
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
-  }, [storageKey, defaultState]);
+  }, [storageKey]);
 
   const setState = useCallback(
     (updater: T | ((prev: T) => T)) => {
@@ -55,8 +61,8 @@ export function usePersistedFilters<T extends object>(
 
   const reset = useCallback(() => {
     localStorage.removeItem(storageKey);
-    setStateRaw(defaultState);
-  }, [storageKey, defaultState]);
+    setStateRaw(defaultsRef.current);
+  }, [storageKey]);
 
   return [state, setState, reset];
 }

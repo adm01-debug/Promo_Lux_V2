@@ -116,7 +116,10 @@ function useDeadLetter() {
 function useRealtimeInvalidation() {
   const qc = useQueryClient();
   const { user } = useAuth();
-  const activeOrgId = getActiveOrgId();
+  // Pelo Context (reativo), igual a useRealtimeCompanies.ts:18-22: com
+  // getActiveOrgId() (snapshot lido só na renderização) o canal continuava
+  // filtrando a organização anterior depois da troca.
+  const { activeOrgId } = useActiveOrganization();
 
   useEffect(() => {
     if (!user?.id || !activeOrgId) return;
