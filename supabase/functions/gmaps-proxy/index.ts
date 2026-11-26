@@ -505,8 +505,12 @@ serve(async (req) => {
 
       // Fallback: o scraper externo nao devolveu external_id. Em vez de deixar
       // o job pendurado para sempre (o sintoma historico: `api_online: false`
-      // e nenhum resultado), marca o job como concluido e o `sync-results`
-      // busca direto na Places API usando as keywords gravadas no `config`.
+      // e nenhum resultado), a busca vai direto na Places API usando as
+      // keywords gravadas no `config` — e o que voltar e GRAVADO pelo mesmo
+      // gravador dos outros caminhos (`_shared/scrape-results-save.ts`), antes
+      // de concluir. Antes disto o job era marcado como concluido com
+      // `results_count` e nenhuma empresa gravada, e o `sync-results` pagava a
+      // mesma consulta de novo.
       if (!externalId) {
         const keywords = parsed.data.config.keywords ?? [];
         if (Deno.env.get("GOOGLE_MAPS_API_KEY") && keywords.length) {
@@ -516,13 +520,37 @@ serve(async (req) => {
             20,
             parsed.data.config.lang ?? "pt-BR",
           );
-          const found = fallbackResults?.length ?? 0;
-          responseBody = { id: dbJob.id, external_id: externalId, status: "completed", fallback: "places_api", results_count: found };
-          await supabase
-            .from("scrape_jobs")
-            .update({ external_id: externalId, status: "completed", completed_at: new Date().toISOString() })
-            .eq("id", dbJob.id);
-          log.info("places_fallback_create", { job_id: dbJob.id, keywords, results: found });
+          const { saved } = await saveScrapeResults(supabase, {
+            organizationId: userOrgId,
+            userId,
+            jobId: dbJob.id,
+            rows: fallbackResults ?? [],
+            ipcCriteria: await loadIpcCriteria(supabase, userId),
+            onRowError: (error, name) =>
+              log.warn("company_upsert_failed", { error: error.message, name }),
+          });
+
+          if (saved === 0) {
+            // Nada gravado = tarefa sem resultado. Nao mentir "concluido".
+            await supabase
+              .from("scrape_jobs")
+              .update({
+                external_id: externalId,
+                status: "failed",
+                error_message: "Places API nao devolveu empresas para gravar",
+                completed_at: new Date().toISOString(),
+              })
+              .eq("id", dbJob.id);
+            responseBody = { id: dbJob.id, external_id: externalId, status: "failed", fallback: "places_api", results_count: 0 };
+            log.warn("places_fallback_empty", { job_id: dbJob.id, keywords });
+          } else {
+            await supabase
+              .from("scrape_jobs")
+              .update({ external_id: externalId, status: "completed", results_count: saved, completed_at: new Date().toISOString() })
+              .eq("id", dbJob.id);
+            responseBody = { id: dbJob.id, external_id: externalId, status: "completed", fallback: "places_api", results_count: saved };
+            log.info("places_fallback_create", { job_id: dbJob.id, keywords, results: saved });
+          }
         }
       }
 
