@@ -50,3 +50,11 @@ jobs:
 
       - name: Remover as functions aposentadas
         run: bash scripts/retire-functions.sh
+
+      # Read-only. Roda depois da remocao: o que continuar publicado sem existir no
+      # repositorio e nem estar em retired.txt e a mesma deriva que manteve
+      # migrate-helper, latency-alerts, api-latency-alerts e audit-logs-prune no ar
+      # por semanas -- e ninguem era avisado. Falha o run de proposito: o aviso do
+      # GitHub e o unico canal que chega no dono sem alguem ler log.
+      - name: Detectar functions publicadas fora do repositorio
+        run: bash scripts/check-functions-orphans.sh
