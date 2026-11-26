@@ -61,11 +61,24 @@ vi.mock("@/hooks/useAuditTrail", () => ({
   useAuditTrail: () => ({ data: undefined, isLoading: false, isError: true, refetch: () => {} }),
 }));
 
+vi.mock("@/contexts/active-org-context", () => ({
+  useActiveOrganization: () => ({ activeOrgId: "org-teste", activeOrg: null, setActiveOrg: () => {} }),
+}));
+vi.mock("@/contexts/demo-context", () => ({
+  useDemo: () => ({ isDemoMode: false, demoData: null, toggleDemoMode: () => {} }),
+}));
+vi.mock("@/hooks/useRealtimeJobDetails", () => ({
+  useRealtimeJobDetails: () => {},
+}));
+
 import { SlaTrendChart } from "../SlaTrendChart";
 import { MultiQueueResilienceCard } from "../MultiQueueResilienceCard";
 import { QaHistoryPanel } from "../QaHistoryPanel";
 import { SlaCompliancePanel } from "../SlaCompliancePanel";
 import { MonitoringView } from "../MonitoringView";
+import { ChaosEngineeringPanel } from "../ChaosEngineeringPanel";
+import { JobDetailsSheet } from "../JobDetailsSheet";
+import { EnrichmentFunnel } from "@/components/lux/EnrichmentFunnel";
 
 class ResizeObserverStub {
   observe() {}
@@ -124,5 +137,25 @@ describe("painéis de monitoramento: erro não se confunde com vazio", () => {
     render(<MonitoringView />, { wrapper });
     expect(await screen.findByText("Falha ao carregar a trilha de auditoria.")).toBeInTheDocument();
     expect(screen.queryByText("Nenhum log crítico registrado recentemente.")).not.toBeInTheDocument();
+  });
+});
+describe("painéis do lote 222–225: erro não se confunde com vazio", () => {
+  it("simulador de caos mostra erro e não o estado desligado", async () => {
+    render(<ChaosEngineeringPanel />, { wrapper });
+    expect(await screen.findByText(/Falha ao carregar o estado do chaos/)).toBeInTheDocument();
+  });
+
+  it("detalhes da execução mostram erro nas etapas e não 'Nenhuma etapa encontrada'", async () => {
+    render(
+      <JobDetailsSheet jobId="job-teste" open onOpenChange={() => {}} />,
+      { wrapper },
+    );
+    expect(await screen.findByText(/Falha ao carregar as etapas/)).toBeInTheDocument();
+    expect(screen.queryByText(/Nenhuma etapa encontrada com os filtros atuais/)).not.toBeInTheDocument();
+  });
+
+  it("funil de enriquecimento mostra erro e não zeros", async () => {
+    render(<EnrichmentFunnel />, { wrapper });
+    expect(await screen.findByText(/Não foi possível carregar o funil de enriquecimento/)).toBeInTheDocument();
   });
 });

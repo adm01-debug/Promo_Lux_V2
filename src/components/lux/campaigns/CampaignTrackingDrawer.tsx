@@ -4,7 +4,9 @@ import { db } from "@/integrations/supabase/withOrg";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Mail, MousePointerClick, Eye, AlertCircle, Reply, UserMinus, Clock, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DataError } from "@/components/lux/DataError";
+import { Mail, MousePointerClick, Eye, AlertCircle, Reply, UserMinus, Clock, XCircle, RefreshCw } from "lucide-react";
 
 interface Recipient {
   id: string;
@@ -68,7 +70,12 @@ export const CampaignTrackingDrawer = ({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) => {
-  const { data: recipients = [], isLoading: loadingR } = useQuery({
+  const {
+    data: recipients = [],
+    isLoading: loadingR,
+    error: errR,
+    refetch: refetchR,
+  } = useQuery({
     queryKey: ["campaign-recipients", campaignId],
     enabled: !!campaignId && open,
     queryFn: async () => {
@@ -82,7 +89,12 @@ export const CampaignTrackingDrawer = ({
     },
   });
 
-  const { data: events = [], isLoading: loadingE } = useQuery({
+  const {
+    data: events = [],
+    isLoading: loadingE,
+    error: errE,
+    refetch: refetchE,
+  } = useQuery({
     queryKey: ["campaign-events", campaignId],
     enabled: !!campaignId && open,
     queryFn: async () => {
@@ -97,7 +109,7 @@ export const CampaignTrackingDrawer = ({
     },
   });
 
-  const { data: replies = [] } = useQuery({
+  const { data: replies = [], error: errReplies, refetch: refetchReplies } = useQuery({
     queryKey: ["campaign-replies", campaignId],
     enabled: !!campaignId && open,
     queryFn: async () => {
@@ -113,7 +125,7 @@ export const CampaignTrackingDrawer = ({
   });
 
   // Estatísticas de teste A/B por variante (via RPC segura campaign_ab_stats).
-  const { data: abStats = [] } = useQuery({
+  const { data: abStats = [], error: errAbStats } = useQuery({
     queryKey: ["campaign-ab-stats", campaignId],
     enabled: !!campaignId && open,
     queryFn: async () => {
@@ -130,7 +142,7 @@ export const CampaignTrackingDrawer = ({
   });
 
   // Configuração/estado oficial do teste A/B (vencedora auto-decidida).
-  const { data: abConfig } = useQuery({
+  const { data: abConfig, error: errAbConfig } = useQuery({
     queryKey: ["campaign-ab-config", campaignId],
     enabled: !!campaignId && open,
     queryFn: async () => {
@@ -155,6 +167,16 @@ export const CampaignTrackingDrawer = ({
       } | null;
     },
   });
+
+  // Falha de carregamento não pode virar "zero" silencioso: os KPIs abaixo
+  // derivam de recipients e ficariam mentindo com 0.
+  const loadErrors = [errR, errE, errReplies, errAbStats, errAbConfig].filter(Boolean) as Error[];
+  const loadFailed = loadErrors.length > 0;
+  const retryAll = () => {
+    void refetchR();
+    void refetchE();
+    void refetchReplies();
+  };
 
   const hasAbTest = abStats.length > 1;
   // Vencedora OFICIAL: só a decisão persistida pelo banco, que exige
@@ -190,6 +212,22 @@ export const CampaignTrackingDrawer = ({
           </SheetTitle>
           <SheetDescription>Aberturas, cliques e eventos por destinatário</SheetDescription>
         </SheetHeader>
+
+        {loadFailed && (
+          <div className="mt-4 rounded-lg border border-destructive/40 bg-destructive/10 p-3 flex flex-col gap-2">
+            <p className="text-[11px] text-destructive flex items-center gap-1.5">
+              <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+              Não foi possível carregar todos os dados desta campanha — os números abaixo podem estar
+              incompletos.
+            </p>
+            <p className="text-[10px] text-muted-foreground break-words">
+              {loadErrors.map((e) => e.message).join(" · ")}
+            </p>
+            <Button variant="outline" size="sm" className="self-start h-7 gap-1.5" onClick={retryAll}>
+              <RefreshCw className="h-3 w-3" /> Tentar novamente
+            </Button>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6">
           {[
@@ -297,7 +335,12 @@ export const CampaignTrackingDrawer = ({
 
         <section className="mt-6">
           <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Destinatários ({recipients.length})</h3>
-          {loadingR ? (
+          {errR ? (
+            <DataError
+              message={`Não foi possível carregar os destinatários: ${(errR as Error).message}`}
+              onRetry={() => refetchR()}
+            />
+          ) : loadingR ? (
             <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}</div>
           ) : recipients.length === 0 ? (
             <p className="text-xs text-muted-foreground py-6 text-center">Sem destinatários ainda.</p>
@@ -322,7 +365,12 @@ export const CampaignTrackingDrawer = ({
 
         <section className="mt-6">
           <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Timeline de eventos</h3>
-          {loadingE ? (
+          {errE ? (
+            <DataError
+              message={`Não foi possível carregar a timeline de eventos: ${(errE as Error).message}`}
+              onRetry={() => refetchE()}
+            />
+          ) : loadingE ? (
             <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-8 w-full" />)}</div>
           ) : events.length === 0 ? (
             <p className="text-xs text-muted-foreground py-6 text-center">Sem eventos ainda.</p>
@@ -348,7 +396,12 @@ export const CampaignTrackingDrawer = ({
 
         <section className="mt-6">
           <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Respostas ({replies.length})</h3>
-          {replies.length === 0 ? (
+          {errReplies ? (
+            <DataError
+              message={`Não foi possível carregar as respostas: ${(errReplies as Error).message}`}
+              onRetry={() => refetchReplies()}
+            />
+          ) : replies.length === 0 ? (
             <p className="text-xs text-muted-foreground py-6 text-center">Sem respostas detectadas. Conecte uma caixa em Integrações → Email Accounts.</p>
           ) : (
             <div className="space-y-2 max-h-[40vh] overflow-y-auto">

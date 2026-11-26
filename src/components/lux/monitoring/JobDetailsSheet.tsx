@@ -38,6 +38,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
+import { DataError } from "@/components/lux/DataError";
 import { useRealtimeJobDetails } from "@/hooks/useRealtimeJobDetails";
 import { 
   Dialog, 
@@ -110,7 +111,12 @@ export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetails
       enabled: !!runId && !jobId && open && !!activeOrgId,
     });
 
-    const { data: steps = [], isLoading: stepsLoading } = useQuery({
+    const {
+    data: steps = [],
+    isLoading: stepsLoading,
+    error: stepsError,
+    refetch: refetchSteps,
+  } = useQuery({
       queryKey: ["automation-steps", jobId, runId, activeOrgId],
       queryFn: async () => {
         if (!jobId && !runId) return [];
@@ -128,7 +134,12 @@ export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetails
       enabled: (!!jobId || !!runId) && open && !!activeOrgId,
   });
 
-  const { data: results, isLoading: resultsLoading } = useQuery({
+  const {
+    data: results,
+    isLoading: resultsLoading,
+    error: resultsError,
+    refetch: refetchResults,
+  } = useQuery({
     queryKey: ["scrape-results", jobId, activeOrgId],
     queryFn: async () => {
       if (!jobId) return [];
@@ -492,7 +503,14 @@ export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetails
                       })}
                     </AnimatePresence>
 
-                    {filteredSteps.length === 0 && !stepsLoading && (
+                    {stepsError && (
+                      <DataError
+                        message={`Falha ao carregar as etapas: ${(stepsError as Error).message}`}
+                        onRetry={() => refetchSteps()}
+                      />
+                    )}
+
+                    {!stepsError && filteredSteps.length === 0 && !stepsLoading && (
                       <div className="py-10 text-center text-muted-foreground">
                         <Filter className="h-8 w-8 mx-auto mb-2 opacity-20" />
                         <p className="text-xs">Nenhuma etapa encontrada com os filtros atuais.</p>
@@ -526,7 +544,12 @@ export const JobDetailsSheet = ({ jobId, runId, open, onOpenChange }: JobDetails
                 </div>
 
                 <div className="space-y-3">
-                  {resultsLoading ? (
+                  {resultsError ? (
+                    <DataError
+                      message={`Falha ao carregar os leads: ${(resultsError as Error).message}`}
+                      onRetry={() => refetchResults()}
+                    />
+                  ) : resultsLoading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                       <div key={i} className="h-20 w-full bg-secondary/10 rounded-2xl animate-pulse" />
                     ))
