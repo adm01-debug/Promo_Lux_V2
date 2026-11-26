@@ -83,9 +83,10 @@ RLS está ligado em **95 de 95** tabelas. Mas: **58 das 95 tabelas estão vazias
    **Decodificar essas seis é ação de produção** (entram no `db push` no merge seguinte) — só com o dono.
    Nenhum código vivo referencia esses objetos (`grep` em `src/`, `supabase/`, `scripts/` → zero), então
    não há incidente ativo: é entrega perdida, não quebra.
-8. **Guards de banco só valem com `SUPABASE_DB_URL` exportada.** `scripts/check-function-grants.sh:14-19` e
-   `scripts/check-audit-triggers.sh:13` fazem `exit 0` com um aviso quando a variável está vazia — verde sem
-   ter consultado nada. `scripts/check-anon-grants-view.sh` está em base64 e é inexecutável.
+8. **Guards de banco só valem com `SUPABASE_DB_URL` exportada.** Os cinco guards saíam com `exit 0` e um
+   aviso quando a variável estava vazia (verde sem ter consultado nada); desde 2026-11-25 (etapas 001/002 do
+   `docs/qa/04-PLANO.md`) eles saem com 1 no CI e listam o contrato de grants contra os baselines
+   versionados em `scripts/sql/*.txt`.
 9. Runbooks: `docs/runbooks/migrations.md`, `docs/runbooks/migration-template.md`,
    `docs/runbooks/disaster-recovery.md`. ERD e tabelas principais: `docs/erd.md`,
    `docs/schema-tabelas-principais.md`.

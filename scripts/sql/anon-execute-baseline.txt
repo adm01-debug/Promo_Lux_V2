@@ -1,0 +1,84 @@
+# Baseline de EXECUTE do papel 'anon' em funcoes do schema public
+#
+# Fonte: pg_proc + has_function_privilege('anon', oid, 'EXECUTE') no projeto
+# de producao pttzwlbidamjssqiqb (medido em 2026-11-25: 64 de 207 funcoes).
+#
+# Por que existe: o PostgreSQL concede EXECUTE a PUBLIC em toda funcao nova, e
+# 'anon' herda esse grant. Boa parte desta lista e default herdado, nao decisao:
+# as edge functions da API publica chamam RPCs com a anon key
+# (supabase/functions/public-api/index.ts chama verify_api_key, touch_api_key e
+# check_api_key_rate_limit) e ha endpoints sem login (pesquisa por token, status).
+#
+# Contrato do guard scripts/check-function-grants.sh:
+#   * funcao public executavel por anon FORA desta lista  -> FALHA (exposicao nova);
+#   * funcao desta lista que deixou de ser executavel     -> FALHA (linha zumbi:
+#     remova a linha junto com o REVOKE, para o baseline nao mentir);
+#   * funcao nova que nasce executavel por anon            -> FALHA (por design).
+#
+# Reduzir esta lista e endurecimento de grants em producao (DDL) e passa por
+# REVOKE EXECUTE + ajuste da linha aqui, com o chamador migrado antes. Nunca
+# edite esta lista a mao sem o REVOKE/GRANT correspondente na mesma migration.
+accept_org_invite
+archive_cron_http_results
+circuit_breaker_settings_touch
+cleanup_old_idempotency_keys
+compute_sla_backoff
+count_recent_org_violations
+default_role_permissions
+default_sla_seconds
+dlq_health_metrics
+dlq_health_trend
+dlq_top_reasons
+duplicate_email_template
+enrichment_funnel_counts
+fn_lusha_contact_cache_lookup
+fn_lux_cache_gate
+fn_mark_contact_rechecked
+fn_web_scrape_regression_check
+get_public_status
+get_public_uptime
+get_survey_by_token
+handle_new_organization
+handle_new_user
+handle_updated_at
+has_org_role
+has_role
+increment_version
+ip_in_cidr
+is_org_member
+log_audit_event
+log_audit_event_safe
+log_automation_event
+log_deal_stage_change
+log_queue_sla_change
+mark_email_template_used
+normalize_suppression_email
+notify_on_enrichment
+notify_on_workflow_complete
+pg_catalog_rls_tables
+pg_columns_for_insert
+pg_net_health
+pg_net_watchdog_should_notify
+prevent_user_id_change
+record_campaign_event
+rollback_retry_advisory
+scrape_jobs_set_config_hash
+seed_default_lost_reasons
+sla_autotune_blocked_streaks
+sla_compliance_stats
+sla_deadline
+sla_recommendations
+source_quality_report
+submit_survey_response
+sync_suppression_from_recipient
+system_recovery_health
+touch_api_key
+update_automation_steps_updated_at
+update_updated_at_column
+validate_api_latency_alert_settings
+validate_company_rating
+validate_dlq_alert_settings
+validate_ipc_score
+verify_api_key
+verify_scim_token
+web_dlq_health_metrics

@@ -60,10 +60,12 @@ A tabela abaixo cobre só os 3 originais.
    **5 guards de banco**.
 2. **Consertar o base64 não basta.** No arquivo decodificado, 2 steps leem `secrets.SUPAAASE_DB_URL`
    (três letras A) em vez de `SUPABASE_DB_URL`.
-3. **Os guards de banco passam em verde com a variável vazia.** `scripts/check-function-grants.sh:14-19` e
-   `scripts/check-audit-triggers.sh:13-18` fazem `exit 0` com um `::warning::` quando `SUPABASE_DB_URL` está
-   vazia. Typo + `exit 0` = portão reportando "Grants/RLS conforme o esperado" **sem ter consultado o
-   banco**. Ao rodar esses guards localmente, exporte `SUPABASE_DB_URL` ou a saída não vale nada.
+3. **Os guards de banco passavam em verde com a variável vazia — corrigido em 2026-11-25 (etapas 001/002 do
+   `docs/qa/04-PLANO.md`).** O `exit 0` com `::warning::` saiu dos cinco scripts: nos eventos `push`, `schedule` e `workflow_dispatch` a ausência da URL emite `::error::` e
+   sai com 1; em `pull_request` (onde o secret não chega ao runner) e localmente avisa e sai com 0. O que
+   resta é criar o secret `SUPABASE_DB_URL` no repositório: sem ele o guard nunca consulta o banco e todo
+   push para `main` fica vermelho. Ao rodar esses guards localmente, exporte `SUPABASE_DB_URL` — a saída só
+   vale com conexão real.
 4. **`scripts/check-anon-grants-view.sh` também está em base64** (2.784 bytes, 0 linhas) — inexecutável.
 5. **`edge-tests-daily.yml` roda o runner errado**: executa `deno test` sobre arquivos que são testes
    **Vitest** (`import { describe, it, expect } from "vitest"`), registrados em `vitest.config.ts`. Daí as
@@ -92,4 +94,5 @@ A tabela abaixo cobre só os 3 originais.
   Rode sempre que mexer em `AGENTS.md` ou `docs/agentes/`.
 - `npm run db:lint` (`scripts/check-migrations.sh`) — nomes, ordem e conteúdo das migrations, sem tocar banco.
 - `npm run test:grants`, `npm run test:audit-triggers`, `bash scripts/check-security-definer.sh`,
-  `bash scripts/check-queue-kind-coverage.sh` — **só com `SUPABASE_DB_URL` exportada** (ver armadilha 3).
+  `bash scripts/check-anon-grants-view.sh`, `bash scripts/check-queue-kind-coverage.sh` — **só com
+  `SUPABASE_DB_URL` exportada** (ver armadilha 3).
