@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "2c9d9fcf93c668b591fb1698c79f739131f7a997",
+  "commit": "a2f31f05a9dfbe6506b0bcbeee420a6dd4195e94",
   "branch": "main",
-  "data_commit": "2026-11-26T01:56:35-03:00",
+  "data_commit": "2026-11-26T01:59:46-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "a2f31f0",
+    "data": "2026-11-26",
+    "assunto": "fix(seguranca): fecha o worker de Instagram atras de credencial de servico (etapa 034) (#249)"
+   },
    {
     "sha": "2c9d9fc",
     "data": "2026-11-26",
@@ -126,26 +131,21 @@
     "sha": "40e6a6e",
     "data": "2026-11-25",
     "assunto": "fix: separa o cache do modo demonstracao do cache real (#221)"
-   },
-   {
-    "sha": "21eb9db",
-    "data": "2026-11-25",
-    "assunto": "fix: remove rotulo ambiguo do e2e de login (#219)"
    }
   ],
-  "arquivos_mudados_7d": 394,
+  "arquivos_mudados_7d": 395,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
     "mudancas": 158
    },
    {
-    "pasta": "src/integrations/supabase",
+    "pasta": "docs/qa/05-PROGRESSO.md",
     "mudancas": 29
    },
    {
-    "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 28
+    "pasta": "src/integrations/supabase",
+    "mudancas": 29
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 28
+    "mudancas": 29
    },
    {
     "arquivo": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 191
+    "commits": 192
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1193,
   "arquivos_codigo": 747,
-  "linhas_codigo": 129973,
+  "linhas_codigo": 129979,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -596,7 +596,7 @@
   },
   "supabase/functions": {
    "arquivos": 138,
-   "linhas": 25337
+   "linhas": 25343
   },
   "tailwind.config.ts": {
    "arquivos": 1,

@@ -964,7 +964,7 @@
    "nome": "instagram-worker",
    "entrada": "supabase/functions/instagram-worker/index.ts",
    "arquivos": 1,
-   "linhas": 198,
+   "linhas": 204,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -987,6 +987,7 @@
    "hosts_externos": [],
    "usa_shared": [
     "apify-fixtures.ts",
+    "cron-auth.ts",
     "hiker-client.ts"
    ],
    "chamada_pelo_front": [],

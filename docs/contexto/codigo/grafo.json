@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 586,
- "arestas": 1908,
+ "arestas": 1909,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -74,7 +74,7 @@
   },
   {
    "arquivo": "supabase/functions/_shared/cron-auth.ts",
-   "importado_por": 23
+   "importado_por": 24
   },
   {
    "arquivo": "src/components/lux/DataError.tsx",

@@ -4,32 +4,32 @@
  "presente": true,
  "como_gerar": "uvx --from \"graphifyy[sql]\" graphify update .  (ou: bun run graph:update); saída em graphify-out/ — graph.json e graph.html NÃO são versionados (dezenas de MB); use `graphify query/path/explain` localmente",
  "relatorio": null,
- "commit_do_grafo": "2c9d9fcf93c668b591fb1698c79f739131f7a997",
+ "commit_do_grafo": "a2f31f05a9dfbe6506b0bcbeee420a6dd4195e94",
  "grafo_atual": true,
  "nos": 8120,
- "arestas": 17514,
- "comunidades_total": 718,
+ "arestas": 17518,
+ "comunidades_total": 714,
  "relacoes": {
   "calls": 2359,
   "cites": 14,
   "contains": 6138,
   "defines": 15,
   "dynamic_import": 63,
-  "imports": 3754,
-  "imports_from": 3493,
+  "imports": 3755,
+  "imports_from": 3494,
   "indexes": 371,
-  "indirect_call": 135,
+  "indirect_call": 136,
   "inherits": 11,
   "method": 123,
   "rationale_for": 23,
   "re_exports": 16,
   "reads_from": 150,
-  "references": 740,
+  "references": 741,
   "triggers": 109
  },
  "origem": {
-  "EXTRACTED": 16891,
-  "INFERRED": 623
+  "EXTRACTED": 16893,
+  "INFERRED": 625
  },
  "comunidades": [
   {
@@ -269,23 +269,6 @@
   },
   {
    "id": 15,
-   "nome": "req",
-   "nos": 67,
-   "callables": 35,
-   "arquivos": 16,
-   "exemplos_arquivos": [
-    "docs/qa/04-PLANO.md",
-    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
-    "supabase/functions/_shared/cron-auth.ts",
-    "supabase/functions/admin-list-companies/index.ts",
-    "supabase/functions/circuit-breaker-alerts/index.ts",
-    "supabase/functions/dlq-alerts/index.ts",
-    "supabase/functions/health/index.ts",
-    "supabase/functions/hubspot-sync/index.ts"
-   ]
-  },
-  {
-   "id": 16,
    "nome": "useAuth",
    "nos": 65,
    "callables": 40,
@@ -302,7 +285,7 @@
    ]
   },
   {
-   "id": 17,
+   "id": 16,
    "nome": "dependencies",
    "nos": 65,
    "callables": 0,
@@ -312,7 +295,7 @@
    ]
   },
   {
-   "id": 18,
+   "id": 17,
    "nome": "@tanstack/react-query",
    "nos": 65,
    "callables": 39,
@@ -329,7 +312,41 @@
    ]
   },
   {
+   "id": 18,
+   "nome": "gmaps-proxy/index.ts",
+   "nos": 62,
+   "callables": 35,
+   "arquivos": 14,
+   "exemplos_arquivos": [
+    "docs/qa/04-PLANO.md",
+    "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts",
+    "supabase/functions/_shared/__tests__/places-fallback.test.ts",
+    "supabase/functions/_shared/__tests__/scrape-results-save.test.ts",
+    "supabase/functions/_shared/companies-upsert.ts",
+    "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
+    "supabase/functions/_shared/domain/ipc/scoring.ts",
+    "supabase/functions/_shared/gmaps-mapper.ts"
+   ]
+  },
+  {
    "id": 19,
+   "nome": "req",
+   "nos": 60,
+   "callables": 34,
+   "arquivos": 14,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/cron-auth.test.ts",
+    "supabase/functions/_shared/cron-auth.ts",
+    "supabase/functions/circuit-breaker-alerts/index.ts",
+    "supabase/functions/dlq-alerts/index.ts",
+    "supabase/functions/health/index.ts",
+    "supabase/functions/hubspot-sync/index.ts",
+    "supabase/functions/instagram-connection-status/index.ts",
+    "supabase/functions/org-violation-alerts/index.ts"
+   ]
+  },
+  {
+   "id": 20,
    "nome": "lib.mjs",
    "nos": 55,
    "callables": 45,
@@ -341,7 +358,7 @@
    ]
   },
   {
-   "id": 20,
+   "id": 21,
    "nome": "usePermissions.ts",
    "nos": 54,
    "callables": 23,
@@ -358,7 +375,7 @@
    ]
   },
   {
-   "id": 21,
+   "id": 22,
    "nome": "scripts",
    "nos": 54,
    "callables": 0,
@@ -368,7 +385,7 @@
    ]
   },
   {
-   "id": 22,
+   "id": 23,
    "nome": "ONDA 5 — Robustez: erros, estados e concorrência (181–232)",
    "nos": 53,
    "callables": 0,
@@ -378,7 +395,7 @@
    ]
   },
   {
-   "id": 23,
+   "id": 24,
    "nome": "package.json",
    "nos": 53,
    "callables": 0,
@@ -392,7 +409,7 @@
    ]
   },
   {
-   "id": 24,
+   "id": 25,
    "nome": "status",
    "nos": 52,
    "callables": 4,
@@ -405,7 +422,24 @@
    ]
   },
   {
-   "id": 25,
+   "id": 26,
+   "nome": "public-api/index.ts",
+   "nos": 51,
+   "callables": 33,
+   "arquivos": 8,
+   "exemplos_arquivos": [
+    "supabase/functions/_shared/__tests__/api-rate-limit.test.ts",
+    "supabase/functions/_shared/__tests__/scim-core.test.ts",
+    "supabase/functions/_shared/api-rate-limit.ts",
+    "supabase/functions/_shared/scim-core.ts",
+    "supabase/functions/public-api/index.ts",
+    "supabase/functions/rls-tests/_fixtures.ts",
+    "supabase/functions/rls-tests/index.test.ts",
+    "supabase/functions/scim/index.ts"
+   ]
+  },
+  {
+   "id": 27,
    "nome": "automation.mjs",
    "nos": 50,
    "callables": 33,
@@ -417,7 +451,7 @@
    ]
   },
   {
-   "id": 26,
+   "id": 28,
    "nome": "VaultCookiesPanel.tsx",
    "nos": 50,
    "callables": 34,
@@ -434,7 +468,7 @@
    ]
   },
   {
-   "id": 27,
+   "id": 29,
    "nome": "useAnalyticsData.ts",
    "nos": 49,
    "callables": 27,
@@ -451,7 +485,7 @@
    ]
   },
   {
-   "id": 28,
+   "id": 30,
    "nome": "ONDA 3 — Integridade de dados e regras de negócio (093–142)",
    "nos": 49,
    "callables": 1,
@@ -462,7 +496,7 @@
    ]
   },
   {
-   "id": 29,
+   "id": 31,
    "nome": "CompaniesView.tsx",
    "nos": 49,
    "callables": 20,
@@ -479,24 +513,24 @@
    ]
   },
   {
-   "id": 30,
-   "nome": "ref_npm_supabase",
-   "nos": 48,
-   "callables": 18,
-   "arquivos": 9,
+   "id": 32,
+   "nome": "ref_https",
+   "nos": 46,
+   "callables": 20,
+   "arquivos": 11,
    "exemplos_arquivos": [
-    "supabase/functions/cnpj-enrich-worker/index.ts",
-    "supabase/functions/cnpj-settings-status/index.ts",
-    "supabase/functions/gmaps-places-search/index.ts",
-    "supabase/functions/instagram-dlq-replay/index.ts",
-    "supabase/functions/mcp/index.ts",
-    "supabase/functions/web-dlq-replay/index.ts",
-    "supabase/functions/web-scrape-enqueue/index.ts",
-    "supabase/functions/web-scrape-extract/index.ts"
+    "supabase/functions/admin-list-companies/index.ts",
+    "supabase/functions/auth-rate-limit/index.ts",
+    "supabase/functions/conversation-intel/index.ts",
+    "supabase/functions/email-oauth-callback/index.ts",
+    "supabase/functions/email-oauth-connect/index.ts",
+    "supabase/functions/email-oauth-disconnect/index.ts",
+    "supabase/functions/lead-score-ai/index.ts",
+    "supabase/functions/lusha-cookie-health/index.ts"
    ]
   },
   {
-   "id": 31,
+   "id": 33,
    "nome": "gerar.unit.mjs",
    "nos": 46,
    "callables": 17,
@@ -513,7 +547,7 @@
    ]
   },
   {
-   "id": 32,
+   "id": 34,
    "nome": "lint-ratchet.mjs",
    "nos": 46,
    "callables": 42,
@@ -525,7 +559,7 @@
    ]
   },
   {
-   "id": 33,
+   "id": 35,
    "nome": "DealDetailDrawer.tsx",
    "nos": 44,
    "callables": 24,
@@ -542,7 +576,7 @@
    ]
   },
   {
-   "id": 34,
+   "id": 36,
    "nome": "supabase/types.ts",
    "nos": 43,
    "callables": 32,
@@ -559,7 +593,7 @@
    ]
   },
   {
-   "id": 35,
+   "id": 37,
    "nome": "oracle-enrich-contact/index.ts",
    "nos": 43,
    "callables": 32,
@@ -574,7 +608,7 @@
    ]
   },
   {
-   "id": 36,
+   "id": 38,
    "nome": "graphify-local.mjs",
    "nos": 42,
    "callables": 35,
@@ -586,7 +620,7 @@
    ]
   },
   {
-   "id": 37,
+   "id": 39,
    "nome": "vitest",
    "nos": 42,
    "callables": 10,
@@ -603,7 +637,7 @@
    ]
   },
   {
-   "id": 38,
+   "id": 40,
    "nome": "test_snapshot.py",
    "nos": 41,
    "callables": 17,
@@ -615,7 +649,17 @@
    ]
   },
   {
-   "id": 39,
+   "id": 41,
+   "nome": "ONDA 1 — Segurança e risco de perda de dado (001–046)",
+   "nos": 41,
+   "callables": 0,
+   "arquivos": 1,
+   "exemplos_arquivos": [
+    "docs/qa/04-PLANO.md"
+   ]
+  },
+  {
+   "id": 42,
    "nome": "ONDA 2 — Fluxos principais quebrados (047–092)",
    "nos": 39,
    "callables": 0,
@@ -625,7 +669,7 @@
    ]
   },
   {
-   "id": 40,
+   "id": 43,
    "nome": "useLostReasons.ts",
    "nos": 38,
    "callables": 28,
@@ -642,17 +686,7 @@
    ]
   },
   {
-   "id": 41,
-   "nome": "ONDA 1 — Segurança e risco de perda de dado (001–046)",
-   "nos": 38,
-   "callables": 0,
-   "arquivos": 1,
-   "exemplos_arquivos": [
-    "docs/qa/04-PLANO.md"
-   ]
-  },
-  {
-   "id": 42,
+   "id": 44,
    "nome": "apify-gateway.ts",
    "nos": 37,
    "callables": 25,
@@ -665,7 +699,7 @@
    ]
   },
   {
-   "id": 43,
+   "id": 45,
    "nome": "ONDA 4 — Funcionalidades incompletas (143–180)",
    "nos": 36,
    "callables": 0,
@@ -675,7 +709,24 @@
    ]
   },
   {
-   "id": 44,
+   "id": 46,
+   "nome": "ref_npm_supabase",
+   "nos": 36,
+   "callables": 11,
+   "arquivos": 8,
+   "exemplos_arquivos": [
+    "supabase/functions/cnpj-settings-status/index.ts",
+    "supabase/functions/gmaps-places-search/index.ts",
+    "supabase/functions/instagram-dlq-replay/index.ts",
+    "supabase/functions/mcp/index.ts",
+    "supabase/functions/web-dlq-replay/index.ts",
+    "supabase/functions/web-scrape-enqueue/index.ts",
+    "supabase/functions/web-scrape-extract/index.ts",
+    "supabase/functions/web-scrape-status/index.ts"
+   ]
+  },
+  {
+   "id": 47,
    "nome": ".collect",
    "nos": 36,
    "callables": 35,
@@ -685,7 +736,7 @@
    ]
   },
   {
-   "id": 45,
+   "id": 48,
    "nome": "tooltip.tsx",
    "nos": 36,
    "callables": 11,
@@ -702,7 +753,7 @@
    ]
   },
   {
-   "id": 46,
+   "id": 49,
    "nome": "DashboardView.tsx",
    "nos": 35,
    "callables": 22,
@@ -719,7 +770,7 @@
    ]
   },
   {
-   "id": 47,
+   "id": 50,
    "nome": "cenarios.mjs",
    "nos": 35,
    "callables": 10,
@@ -736,37 +787,37 @@
    ]
   },
   {
-   "id": 48,
+   "id": 51,
    "nome": "workflow-engine/index.ts",
    "nos": 34,
-   "callables": 12,
-   "arquivos": 4,
+   "callables": 19,
+   "arquivos": 6,
    "exemplos_arquivos": [
     "docs/pendencias/_backlog-verificado.md",
+    "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
     "supabase/functions/_shared/__tests__/workflow-phases.test.ts",
+    "supabase/functions/_shared/companies-upsert.ts",
     "supabase/functions/_shared/workflow-phases.ts",
     "supabase/functions/workflow-engine/index.ts"
    ]
   },
   {
-   "id": 49,
-   "nome": "ref_https",
+   "id": 52,
+   "nome": "deliverability-check/index.ts",
    "nos": 34,
-   "callables": 12,
-   "arquivos": 9,
+   "callables": 16,
+   "arquivos": 6,
    "exemplos_arquivos": [
-    "supabase/functions/auth-rate-limit/index.ts",
-    "supabase/functions/conversation-intel/index.ts",
-    "supabase/functions/email-oauth-callback/index.ts",
-    "supabase/functions/email-oauth-connect/index.ts",
-    "supabase/functions/email-oauth-disconnect/index.ts",
-    "supabase/functions/lead-score-ai/index.ts",
-    "supabase/functions/lusha-cookie-health/index.ts",
-    "supabase/functions/system-recovery-status/index.ts"
+    "supabase/functions/_shared/__tests__/dns-guard.test.ts",
+    "supabase/functions/_shared/__tests__/ssrf-guard.test.ts",
+    "supabase/functions/_shared/dns-guard.ts",
+    "supabase/functions/_shared/ssrf-guard.ts",
+    "supabase/functions/deliverability-check/index.ts",
+    "supabase/functions/email-verify/index.ts"
    ]
   },
   {
-   "id": 50,
+   "id": 53,
    "nome": "orgErrorHandler.ts",
    "nos": 33,
    "callables": 21,
@@ -779,7 +830,7 @@
    ]
   },
   {
-   "id": 51,
+   "id": 54,
    "nome": "Header.tsx",
    "nos": 32,
    "callables": 12,
@@ -795,7 +846,7 @@
    ]
   },
   {
-   "id": 52,
+   "id": 55,
    "nome": "devDependencies",
    "nos": 32,
    "callables": 0,
@@ -805,7 +856,7 @@
    ]
   },
   {
-   "id": 53,
+   "id": 56,
    "nome": "oracle-search-decisors/index.ts",
    "nos": 32,
    "callables": 21,
@@ -821,7 +872,7 @@
    ]
   },
   {
-   "id": 54,
+   "id": 57,
    "nome": "20260403184048_3c59e2f7-1cf4-45f9-8c02-cd5b6bddadee.sql",
    "nos": 31,
    "callables": 0,
@@ -831,7 +882,7 @@
    ]
   },
   {
-   "id": 55,
+   "id": 58,
    "nome": "scrape-queue-worker/index.ts",
    "nos": 30,
    "callables": 19,
@@ -845,7 +896,7 @@
    ]
   },
   {
-   "id": 56,
+   "id": 59,
    "nome": "ONDA 8 — Higiene: código morto, CI e observabilidade (278–300)",
    "nos": 30,
    "callables": 5,
@@ -858,7 +909,7 @@
    ]
   },
   {
-   "id": 57,
+   "id": 60,
    "nome": "InstagramEnqueuePanel.tsx",
    "nos": 30,
    "callables": 13,
@@ -874,7 +925,7 @@
    ]
   },
   {
-   "id": 58,
+   "id": 61,
    "nome": "MonitoringView.tsx",
    "nos": 29,
    "callables": 20,
@@ -889,7 +940,7 @@
    ]
   },
   {
-   "id": 59,
+   "id": 62,
    "nome": "active-org-context.ts",
    "nos": 29,
    "callables": 18,
@@ -905,7 +956,7 @@
    ]
   },
   {
-   "id": 60,
+   "id": 63,
    "nome": "lusha-client.ts",
    "nos": 29,
    "callables": 25,
@@ -917,7 +968,7 @@
    ]
   },
   {
-   "id": 61,
+   "id": 64,
    "nome": "20260404121540_8d61fd97-fcb0-424b-852c-ddb647e09dc2.sql",
    "nos": 29,
    "callables": 0,
@@ -927,7 +978,7 @@
    ]
   },
   {
-   "id": 62,
+   "id": 65,
    "nome": "Fase 1 — 22 Dimensões (nota + evidências + gaps + ações)",
    "nos": 28,
    "callables": 0,
@@ -937,24 +988,7 @@
    ]
   },
   {
-   "id": 63,
-   "nome": "scrape-results-save.ts",
-   "nos": 28,
-   "callables": 19,
-   "arquivos": 8,
-   "exemplos_arquivos": [
-    "docs/qa/04-PLANO.md",
-    "supabase/functions/_shared/__tests__/companies-upsert.test.ts",
-    "supabase/functions/_shared/__tests__/scrape-results-save.test.ts",
-    "supabase/functions/_shared/companies-upsert.ts",
-    "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts",
-    "supabase/functions/_shared/domain/ipc/scoring.ts",
-    "supabase/functions/_shared/gmaps-mapper.ts",
-    "supabase/functions/_shared/scrape-results-save.ts"
-   ]
-  },
-  {
-   "id": 64,
+   "id": 66,
    "nome": "App.tsx",
    "nos": 28,
    "callables": 9,
@@ -971,7 +1005,7 @@
    ]
   },
   {
-   "id": 65,
+   "id": 67,
    "nome": "20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql",
    "nos": 28,
    "callables": 0,
@@ -981,7 +1015,7 @@
    ]
   },
   {
-   "id": 66,
+   "id": 68,
    "nome": "auth",
    "nos": 27,
    "callables": 0,
@@ -993,7 +1027,7 @@
    ]
   },
   {
-   "id": 67,
+   "id": 69,
    "nome": "SourceComparisonSummary.tsx",
    "nos": 27,
    "callables": 20,
@@ -1007,7 +1041,7 @@
    ]
   },
   {
-   "id": 68,
+   "id": 70,
    "nome": "CampaignsView.test.tsx",
    "nos": 27,
    "callables": 8,
@@ -1021,7 +1055,7 @@
    ]
   },
   {
-   "id": 69,
+   "id": 71,
    "nome": "retry-policy-tuner/index.ts",
    "nos": 26,
    "callables": 7,
@@ -1032,7 +1066,7 @@
    ]
   },
   {
-   "id": 70,
+   "id": 72,
    "nome": "DlqHealthCard.tsx",
    "nos": 26,
    "callables": 14,
@@ -1046,7 +1080,7 @@
    ]
   },
   {
-   "id": 71,
+   "id": 73,
    "nome": "hiker-client.ts",
    "nos": 26,
    "callables": 24,
@@ -1057,7 +1091,7 @@
    ]
   },
   {
-   "id": 72,
+   "id": 74,
    "nome": "web-scrape-worker/index.ts",
    "nos": 26,
    "callables": 21,
@@ -1071,7 +1105,7 @@
    ]
   },
   {
-   "id": 73,
+   "id": 75,
    "nome": "OnboardingTour.tsx",
    "nos": 25,
    "callables": 11,
@@ -1088,7 +1122,7 @@
    ]
   },
   {
-   "id": 74,
+   "id": 76,
    "nome": "useOracleV2.ts",
    "nos": 25,
    "callables": 20,
@@ -1101,7 +1135,7 @@
    ]
   },
   {
-   "id": 75,
+   "id": 77,
    "nome": "bitrix-client.ts",
    "nos": 25,
    "callables": 17,
@@ -1112,7 +1146,7 @@
    ]
   },
   {
-   "id": 76,
+   "id": 78,
    "nome": "LushaIntelligenceView",
    "nos": 24,
    "callables": 14,
@@ -1127,37 +1161,13 @@
    ]
   },
   {
-   "id": 77,
+   "id": 79,
    "nome": "LUX IA — Análise Executiva de Funcionalidades",
    "nos": 24,
    "callables": 0,
    "arquivos": 1,
    "exemplos_arquivos": [
     "docs/FUNCIONALIDADES.md"
-   ]
-  },
-  {
-   "id": 78,
-   "nome": "gmaps-proxy/index.ts",
-   "nos": 24,
-   "callables": 11,
-   "arquivos": 5,
-   "exemplos_arquivos": [
-    "docs/qa/04-PLANO.md",
-    "supabase/functions/_shared/org-membership.ts",
-    "supabase/functions/_shared/schemas.ts",
-    "supabase/functions/_shared/tracing.ts",
-    "supabase/functions/gmaps-proxy/index.ts"
-   ]
-  },
-  {
-   "id": 79,
-   "nome": "ONDA 7 — Experiência de uso e consistência (251–277)",
-   "nos": 24,
-   "callables": 0,
-   "arquivos": 1,
-   "exemplos_arquivos": [
-    "docs/qa/04-PLANO.md"
    ]
   }
  ],
@@ -2734,10 +2744,10 @@
   "supabase/functions/_shared/__tests__/chaos.chi2.test.ts": "shouldInjectChaos",
   "supabase/functions/_shared/__tests__/chaos.stress.test.ts": "shouldInjectChaos",
   "supabase/functions/_shared/__tests__/chaos.test.ts": "shouldInjectChaos",
-  "supabase/functions/_shared/__tests__/companies-upsert.test.ts": "scrape-results-save.ts",
+  "supabase/functions/_shared/__tests__/companies-upsert.test.ts": "workflow-engine/index.ts",
   "supabase/functions/_shared/__tests__/cron-auth.test.ts": "req",
   "supabase/functions/_shared/__tests__/dns-guard.test.ts": "deliverability-check/index.ts",
-  "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts": "gmaps-mapper.ts",
+  "supabase/functions/_shared/__tests__/gmaps-mapper.test.ts": "gmaps-proxy/index.ts",
   "supabase/functions/_shared/__tests__/hiker-normalize-extra.test.ts": "NormalizedInstagramItem",
   "supabase/functions/_shared/__tests__/hiker-normalize.test.ts": "NormalizedInstagramItem",
   "supabase/functions/_shared/__tests__/instagram-config-hash.test.ts": "instagram-config-hash.ts",
@@ -2747,10 +2757,10 @@
   "supabase/functions/_shared/__tests__/lusha-client.test.ts": "lusha-client.ts",
   "supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts": "scrape-queue-worker/index.ts",
   "supabase/functions/_shared/__tests__/phone-br.test.ts": "oracle-enrich-contact/index.ts",
-  "supabase/functions/_shared/__tests__/places-fallback.test.ts": "gmaps-mapper.ts",
-  "supabase/functions/_shared/__tests__/scim-core.test.ts": "scim/index.ts",
-  "supabase/functions/_shared/__tests__/scrape-results-save.test.ts": "scrape-results-save.ts",
-  "supabase/functions/_shared/__tests__/ssrf-guard.test.ts": "ssrf-guard.ts",
+  "supabase/functions/_shared/__tests__/places-fallback.test.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/__tests__/scim-core.test.ts": "public-api/index.ts",
+  "supabase/functions/_shared/__tests__/scrape-results-save.test.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/__tests__/ssrf-guard.test.ts": "deliverability-check/index.ts",
   "supabase/functions/_shared/__tests__/tracking-links.test.ts": "campaign-dispatch/index.ts",
   "supabase/functions/_shared/__tests__/tracking-signature.test.ts": "campaign-dispatch/index.ts",
   "supabase/functions/_shared/__tests__/web-scrape.test.ts": "web-scrape-worker/index.ts",
@@ -2764,16 +2774,16 @@
   "supabase/functions/_shared/apollo-departments.ts": "oracle-search-decisors/index.ts",
   "supabase/functions/_shared/bitrix-client.ts": "bitrix-client.ts",
   "supabase/functions/_shared/circuit-breaker.ts": "oracle-push-bitrix/index.ts",
-  "supabase/functions/_shared/companies-upsert.ts": "scrape-results-save.ts",
+  "supabase/functions/_shared/companies-upsert.ts": "gmaps-proxy/index.ts",
   "supabase/functions/_shared/company-domain.ts": "oracle-search-decisors/index.ts",
   "supabase/functions/_shared/cookies.ts": "oracle-enrich-contact/index.ts",
   "supabase/functions/_shared/cron-auth.ts": "req",
   "supabase/functions/_shared/departmentMap.ts": "lusha-search/index.ts",
   "supabase/functions/_shared/dns-guard.ts": "deliverability-check/index.ts",
-  "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts": "scrape-results-save.ts",
-  "supabase/functions/_shared/domain/ipc/scoring.ts": "scrape-results-save.ts",
+  "supabase/functions/_shared/domain/ipc/__tests__/scoring.test.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/domain/ipc/scoring.ts": "gmaps-proxy/index.ts",
   "supabase/functions/_shared/domain/scrape-job-machine.ts": "scrape-job-machine.ts",
-  "supabase/functions/_shared/gmaps-mapper.ts": "gmaps-mapper.ts",
+  "supabase/functions/_shared/gmaps-mapper.ts": "gmaps-proxy/index.ts",
   "supabase/functions/_shared/hiker-client.ts": "instagram-worker/index.ts",
   "supabase/functions/_shared/instagram-config-hash.ts": "instagram-config-hash.ts",
   "supabase/functions/_shared/lead-identity.ts": "lead-identity.ts",
@@ -2783,15 +2793,15 @@
   "supabase/functions/_shared/lusha-departments.ts": "lusha-departments.ts",
   "supabase/functions/_shared/omkar-gmaps-config.ts": "scrape-queue-worker/index.ts",
   "supabase/functions/_shared/oracle-logger.ts": "oracle-logger.ts",
-  "supabase/functions/_shared/org-membership.ts": "Regras de domínio que o código não deixa óbvio — referência para agentes",
+  "supabase/functions/_shared/org-membership.ts": "gmaps-proxy/index.ts",
   "supabase/functions/_shared/phone-br.ts": "oracle-enrich-contact/index.ts",
-  "supabase/functions/_shared/places-fallback.ts": "gmaps-mapper.ts",
+  "supabase/functions/_shared/places-fallback.ts": "gmaps-proxy/index.ts",
   "supabase/functions/_shared/rlsTableRegistry.ts": "rls-tests/index.ts",
   "supabase/functions/_shared/safe-update.ts": "oracle-logger.ts",
   "supabase/functions/_shared/schemas.ts": "gmaps-proxy/index.ts",
-  "supabase/functions/_shared/scim-core.ts": "scim/index.ts",
-  "supabase/functions/_shared/scrape-results-save.ts": "scrape-results-save.ts",
-  "supabase/functions/_shared/ssrf-guard.ts": "ssrf-guard.ts",
+  "supabase/functions/_shared/scim-core.ts": "public-api/index.ts",
+  "supabase/functions/_shared/scrape-results-save.ts": "gmaps-proxy/index.ts",
+  "supabase/functions/_shared/ssrf-guard.ts": "deliverability-check/index.ts",
   "supabase/functions/_shared/tracing.ts": "gmaps-proxy/index.ts",
   "supabase/functions/_shared/tracking-links.ts": "campaign-dispatch/index.ts",
   "supabase/functions/_shared/tracking-signature.ts": "campaign-dispatch/index.ts",
@@ -2800,12 +2810,12 @@
   "supabase/functions/_shared/web-scrape/html-to-markdown.ts": "web-scrape-worker/index.ts",
   "supabase/functions/_shared/web-scrape/robots.ts": "web-scrape-worker/index.ts",
   "supabase/functions/_shared/workflow-phases.ts": "workflow-engine/index.ts",
-  "supabase/functions/admin-list-companies/index.ts": "req",
+  "supabase/functions/admin-list-companies/index.ts": "ref_https",
   "supabase/functions/ai-agent/index.ts": "ai-agent/index.ts",
   "supabase/functions/auth-rate-limit/index.ts": "ref_https",
   "supabase/functions/campaign-dispatch/index.ts": "campaign-dispatch/index.ts",
   "supabase/functions/circuit-breaker-alerts/index.ts": "req",
-  "supabase/functions/cnpj-enrich-worker/index.ts": "ref_npm_supabase",
+  "supabase/functions/cnpj-enrich-worker/index.ts": "cnpj-enrich-worker/index.ts",
   "supabase/functions/cnpj-enrich/index.ts": "cnpj-enrich/index.ts",
   "supabase/functions/cnpj-settings-status/index.ts": "ref_npm_supabase",
   "supabase/functions/conversation-intel/index.ts": "ref_https",
@@ -2815,7 +2825,7 @@
   "supabase/functions/email-oauth-connect/index.ts": "ref_https",
   "supabase/functions/email-oauth-disconnect/index.ts": "ref_https",
   "supabase/functions/email-poll-replies/index.ts": "email-poll-replies/index.ts",
-  "supabase/functions/email-verify/index.ts": "email-verify/index.ts",
+  "supabase/functions/email-verify/index.ts": "deliverability-check/index.ts",
   "supabase/functions/gmaps-places-search/index.ts": "ref_npm_supabase",
   "supabase/functions/gmaps-proxy/__tests__/contingencia-grava.test.ts": "vitest",
   "supabase/functions/gmaps-proxy/index.ts": "oracle-push-bitrix/index.ts",
@@ -2829,7 +2839,7 @@
   "supabase/functions/lead-score-ai/index.ts": "ref_https",
   "supabase/functions/lusha-cookie-health/index.ts": "ref_https",
   "supabase/functions/lusha-decision-makers/index.ts": "lusha-decision-makers/index.ts",
-  "supabase/functions/lusha-reveal/index.ts": "oracle-cookies-preflight/index.ts",
+  "supabase/functions/lusha-reveal/index.ts": "ref_https",
   "supabase/functions/lusha-search/index.ts": "lusha-search/index.ts",
   "supabase/functions/mcp-query/index.ts": "mcp-query/index.ts",
   "supabase/functions/mcp/index.ts": "ref_npm_supabase",
@@ -2845,10 +2855,10 @@
   "supabase/functions/qa-ingest-run/index.ts": "qa-ingest-run/index.ts",
   "supabase/functions/reaper-alerts/index.ts": "req",
   "supabase/functions/retry-policy-tuner/index.ts": "retry-policy-tuner/index.ts",
-  "supabase/functions/rls-tests/_fixtures.ts": "index.test.ts",
-  "supabase/functions/rls-tests/index.test.ts": "index.test.ts",
+  "supabase/functions/rls-tests/_fixtures.ts": "public-api/index.ts",
+  "supabase/functions/rls-tests/index.test.ts": "public-api/index.ts",
   "supabase/functions/rls-tests/index.ts": "rls-tests/index.ts",
-  "supabase/functions/scim/index.ts": "scim/index.ts",
+  "supabase/functions/scim/index.ts": "public-api/index.ts",
   "supabase/functions/scrape-queue-worker/index.ts": "scrape-queue-worker/index.ts",
   "supabase/functions/send-scheduled-reports/index.ts": "send-scheduled-reports/index.ts",
   "supabase/functions/sla-alerts/index.ts": "req",

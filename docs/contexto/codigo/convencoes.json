@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(seguranca): fecha o worker de Instagram atras de credencial de servico (etapa 034) (#249)",
    "fix(seguranca): exige pertencimento a organizacao em campanhas, webhooks e proxies (etapas 031/032/033) (#248)",
    "fix(seguranca): sonda de saude publica minima e diagnostico so com credencial (etapa 035) (#250)",
    "fix(raspagem): grava os resultados no caminho de contingencia (etapa 051) (#259)",
-   "test(mcp): trava o emissor de autenticacao no projeto oficial (#257)",
-   "chore(formato): alinha o teste de permissoes ao printWidth 80 do repo (#243)"
+   "test(mcp): trava o emissor de autenticacao no projeto oficial (#257)"
   ]
  },
  "pr_template": null,
