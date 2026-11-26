@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { Globe, RotateCw, PlayCircle, Copy, CheckCircle2, XCircle, Clock, AlertTriangle } from "lucide-react";
+import { PainelComEstado } from "./PainelComEstado";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -43,7 +44,13 @@ export function WebScrapeView() {
 
   const enqueue = useEnqueueWebScrape();
   const replay = useReplayWebDlq();
-  const { data: tasks = [], isLoading } = useWebScrapeTasks(100);
+  const {
+    data: tasks = [],
+    isLoading,
+    isError: tasksError,
+    error: tasksErrorObj,
+    refetch: refetchTasks,
+  } = useWebScrapeTasks(100);
   const { data: statusData } = useWebScrapeStatus(selectedTaskId);
   const { data: health } = useWebDlqHealth();
 
@@ -122,7 +129,7 @@ export function WebScrapeView() {
             <div>
               <CardTitle className="text-base">Tarefas recentes</CardTitle>
               <CardDescription>
-                {isLoading ? "Carregando…" : `${tasks.length} tarefa(s)`}
+                {isLoading ? "Carregando…" : tasksError ? "Falha ao carregar" : `${tasks.length} tarefa(s)`}
                 {health && ` · DLQ pendente: ${(health as { pending_items: number }).pending_items ?? 0}`}
               </CardDescription>
             </div>
@@ -137,6 +144,25 @@ export function WebScrapeView() {
             </Button>
           </CardHeader>
           <CardContent>
+            <PainelComEstado
+              carregando={isLoading}
+              falhou={tasksError}
+              mensagemErro={
+                tasksErrorObj?.message
+                  ? `Não foi possível carregar as tarefas de scrape: ${tasksErrorObj.message}`
+                  : "Não foi possível carregar as tarefas de scrape."
+              }
+              aoTentarNovamente={() => refetchTasks()}
+              vazio={tasks.length === 0}
+              mensagemVazio="Nenhuma tarefa ainda. Enfileire uma URL acima."
+              esqueleto={
+                <>
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-16 w-full rounded-lg bg-muted/50 animate-pulse" />
+                  ))}
+                </>
+              }
+            >
             <ScrollArea className="h-[420px]">
               <div className="space-y-2">
                 {tasks.map((t) => (
@@ -164,13 +190,9 @@ export function WebScrapeView() {
                     </div>
                   </button>
                 ))}
-                {tasks.length === 0 && !isLoading && (
-                  <div className="text-center text-sm text-muted-foreground py-8">
-                    Nenhuma tarefa ainda. Enfileire uma URL acima.
-                  </div>
-                )}
               </div>
             </ScrollArea>
+            </PainelComEstado>
           </CardContent>
         </Card>
 

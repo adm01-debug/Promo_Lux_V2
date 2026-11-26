@@ -83,6 +83,11 @@ export function useRolePermissions() {
     },
     onError: (e: Error, _input, ctx) => {
       // Desfaz a alteração otimista: a matriz não pode divergir do banco.
+      // PADRAO DE REFERENCIA para toda atualizacao otimista do repositorio:
+      // guardar o valor anterior no onMutate e devolve-lo aqui quando a
+      // gravacao falha (mesmo padrao em src/hooks/useDeals.ts). Sem isto a
+      // tela mostra uma permissao que o banco recusou. Coberto por
+      // src/hooks/__tests__/useRolePermissions.test.tsx.
       if (ctx?.previous) qc.setQueryData(key, ctx.previous);
       toast.error("Erro ao salvar permissão", { description: e.message });
     },

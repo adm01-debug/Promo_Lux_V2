@@ -17,6 +17,7 @@ import {
   type PartitionPolicy,
   type PartitionAdvisory,
 } from "@/hooks/usePartitionAdvisories";
+import { PainelComEstado } from "./PainelComEstado";
 
 function pct(current: number, threshold: number): number {
   if (threshold <= 0) return 0;
@@ -77,8 +78,20 @@ function PolicyCard({ policy, advisories }: { policy: PartitionPolicy; advisorie
 }
 
 export function PartitionAdvisoryPanel() {
-  const { data: policies = [], isLoading: loadingPolicies } = usePartitionPolicies();
-  const { data: advisories = [], isLoading: loadingAdvisories } = usePartitionAdvisories();
+  const {
+    data: policies = [],
+    isLoading: loadingPolicies,
+    isError: falhaPolicies,
+    error: detalhePolicies,
+    refetch: refetchPolicies,
+  } = usePartitionPolicies();
+  const {
+    data: advisories = [],
+    isLoading: loadingAdvisories,
+    isError: falhaAdvisories,
+    error: detalheAdvisories,
+    refetch: refetchAdvisories,
+  } = usePartitionAdvisories();
   const evaluate = useEvaluatePartitions();
   const ack = useAcknowledgeAdvisory();
 
@@ -108,12 +121,25 @@ export function PartitionAdvisoryPanel() {
         </Button>
       </div>
 
-      {loadingPolicies ? (
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="h-48 rounded-lg bg-muted/40 animate-pulse" />
-          <div className="h-48 rounded-lg bg-muted/40 animate-pulse" />
-        </div>
-      ) : (
+      <PainelComEstado
+        carregando={loadingPolicies || loadingAdvisories}
+        falhou={falhaPolicies || falhaAdvisories}
+        mensagemErro={
+          (detalhePolicies ?? detalheAdvisories)?.message
+            ? `Não foi possível carregar a estratégia de particionamento: ${(detalhePolicies ?? detalheAdvisories)?.message}`
+            : "Não foi possível carregar a estratégia de particionamento."
+        }
+        aoTentarNovamente={() => {
+          refetchPolicies();
+          refetchAdvisories();
+        }}
+        esqueleto={
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="h-48 rounded-lg bg-muted/40 animate-pulse" />
+            <div className="h-48 rounded-lg bg-muted/40 animate-pulse" />
+          </div>
+        }
+      >
         <div className="grid gap-4 md:grid-cols-2">
           {policies.map((p) => (
             <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -121,7 +147,6 @@ export function PartitionAdvisoryPanel() {
             </motion.div>
           ))}
         </div>
-      )}
 
       <Card className="glass-card">
         <CardHeader className="pb-3">
@@ -175,6 +200,7 @@ export function PartitionAdvisoryPanel() {
           )}
         </CardContent>
       </Card>
+      </PainelComEstado>
     </div>
   );
 }

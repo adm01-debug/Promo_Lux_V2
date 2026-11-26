@@ -22,6 +22,7 @@ import {
   type CircuitBreaker,
   type CircuitBreakerState,
 } from "@/hooks/useCircuitBreakers";
+import { PainelComEstado } from "./PainelComEstado";
 
 const STATE_META: Record<
   CircuitBreakerState,
@@ -158,7 +159,7 @@ function BreakerCard({ cb }: { cb: CircuitBreaker }) {
 }
 
 export function CircuitBreakerPanel() {
-  const { data: breakers, isLoading, refetch, isFetching } = useCircuitBreakers();
+  const { data: breakers, isLoading, isError, error, refetch, isFetching } = useCircuitBreakers();
 
   return (
     <motion.div
@@ -189,31 +190,43 @@ export function CircuitBreakerPanel() {
         </Button>
       </div>
 
-      {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2">
-          {[0, 1].map((i) => (
-            <div key={i} className="h-56 animate-pulse rounded-xl bg-secondary/30" />
-          ))}
-        </div>
-      ) : !breakers || breakers.length === 0 ? (
-        <Card className="glass-card">
-          <CardContent className="flex flex-col items-center justify-center gap-2 py-12 text-center">
+      <PainelComEstado
+        carregando={isLoading}
+        falhou={isError}
+        mensagemErro={
+          error?.message
+            ? `Não foi possível carregar os disjuntores: ${error.message}`
+            : "Não foi possível carregar os disjuntores."
+        }
+        aoTentarNovamente={() => refetch()}
+        esqueleto={
+          <div className="grid gap-4 md:grid-cols-2">
+            {[0, 1].map((i) => (
+              <div key={i} className="h-56 animate-pulse rounded-xl bg-secondary/30" />
+            ))}
+          </div>
+        }
+        vazio={!breakers || breakers.length === 0}
+        conteudoVazio={
+          <Card className="glass-card">
+            <CardContent className="flex flex-col items-center justify-center gap-2 py-12 text-center">
             <ShieldCheck className="h-10 w-10 text-emerald-400" />
-            <p className="font-medium">Nenhum disjuntor registrado ainda</p>
-            <p className="text-sm text-muted-foreground">
-              Os disjuntores aparecem automaticamente na primeira chamada a um serviço externo.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
+              <p className="font-medium">Nenhum disjuntor registrado ainda</p>
+              <p className="text-sm text-muted-foreground">
+                Os disjuntores aparecem automaticamente na primeira chamada a um serviço externo.
+              </p>
+            </CardContent>
+          </Card>
+        }
+      >
         <ScrollArea className="max-h-[70vh]">
           <div className="grid gap-4 md:grid-cols-2">
-            {breakers.map((cb) => (
+            {breakers?.map((cb) => (
               <BreakerCard key={cb.service_name} cb={cb} />
             ))}
           </div>
         </ScrollArea>
-      )}
+      </PainelComEstado>
     </motion.div>
   );
 }

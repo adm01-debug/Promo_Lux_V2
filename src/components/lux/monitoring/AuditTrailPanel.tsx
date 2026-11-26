@@ -22,6 +22,7 @@ import {
   type AuditTrailFilters,
   type AuditActionFilter,
 } from "@/hooks/useAuditTrail";
+import { PainelComEstado } from "./PainelComEstado";
 
 const ACTION_LABELS: Record<string, string> = {
   create: "Criação",
@@ -44,7 +45,7 @@ const ACTION_VARIANTS: Record<string, "default" | "secondary" | "destructive" | 
  */
 export function AuditTrailPanel() {
   const [filters, setFilters] = useState<AuditTrailFilters>(DEFAULT_AUDIT_FILTERS);
-  const { data, isLoading, isFetching, refetch } = useAuditTrail(filters);
+  const { data, isLoading, isError, error, isFetching, refetch } = useAuditTrail(filters);
   const { data: tables } = useAuditTables();
 
   const rows = data?.rows ?? [];
@@ -160,18 +161,28 @@ export function AuditTrailPanel() {
       </CardHeader>
 
       <CardContent className="p-0">
+        <PainelComEstado
+          carregando={isLoading}
+          falhou={isError}
+          mensagemErro={
+            error?.message
+              ? `Não foi possível carregar a trilha de auditoria: ${error.message}`
+              : "Não foi possível carregar a trilha de auditoria."
+          }
+          aoTentarNovamente={() => refetch()}
+          vazio={rows.length === 0}
+          mensagemVazio="Nenhum registro de auditoria encontrado para os filtros atuais."
+          esqueleto={
+            <>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-20 w-full bg-muted/50 animate-pulse" />
+              ))}
+            </>
+          }
+        >
         <ScrollArea className="h-[560px]">
           <div className="divide-y divide-border/20">
-            {isLoading ? (
-              [1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-20 w-full bg-muted/50 animate-pulse" />
-              ))
-            ) : rows.length === 0 ? (
-              <div className="p-10 text-center text-muted-foreground">
-                Nenhum registro de auditoria encontrado para os filtros atuais.
-              </div>
-            ) : (
-              rows.map((log) => (
+            {rows.map((log) => (
                 <div
                   key={log.id}
                   className="flex items-start gap-4 p-4 hover:bg-secondary/10 transition-colors"
@@ -218,10 +229,10 @@ export function AuditTrailPanel() {
                     )}
                   </div>
                 </div>
-              ))
-            )}
+              ))}
           </div>
         </ScrollArea>
+        </PainelComEstado>
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/30 bg-secondary/10 px-4 py-3">
           <p className="text-xs text-muted-foreground">
