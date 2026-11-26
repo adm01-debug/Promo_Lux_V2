@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { DataError } from "@/components/lux/DataError";
 import { useDemo } from "@/contexts/demo-context";
 import { DEMO_FUNNEL } from "@/lib/demoData";
 import { useEffect, useRef } from "react";
@@ -31,7 +32,7 @@ const FunnelCounter = ({ value }: { value: number }) => {
 export const EnrichmentFunnel = () => {
   const { isDemoMode } = useDemo();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["enrichment-funnel", isDemoMode],
     queryFn: isDemoMode
       ? () => DEMO_FUNNEL
@@ -49,6 +50,17 @@ export const EnrichmentFunnel = () => {
         },
     staleTime: isDemoMode ? Infinity : 15_000,
   });
+
+  if (error) {
+    return (
+      <div className="glass rounded-lg p-5">
+        <DataError
+          message={`Não foi possível carregar o funil de enriquecimento: ${(error as Error).message}`}
+          onRetry={() => refetch()}
+        />
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

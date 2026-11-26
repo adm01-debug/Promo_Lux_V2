@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { Zap, Activity } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { DataError } from "@/components/lux/DataError";
 
 interface FeatureFlag {
   id: string;
@@ -17,28 +18,38 @@ export function ChaosEngineeringPanel() {
   const qc = useQueryClient();
   const { toast } = useToast();
 
-  const { data: flag } = useQuery({
+  const {
+    data: flag,
+    error: flagError,
+    refetch: refetchFlag,
+  } = useQuery({
     queryKey: ["chaos-scrape-flag"],
     queryFn: async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("feature_flags")
         .select("id, is_enabled, updated_at")
         .eq("flag_key", "chaos_scrape_enabled")
         .is("organization_id", null)
         .maybeSingle();
+      if (error) throw error;
       return data as FeatureFlag | null;
     },
   });
 
-  const { data: recent } = useQuery({
+  const {
+    data: recent,
+    error: recentError,
+    refetch: refetchRecent,
+  } = useQuery({
     queryKey: ["chaos-recent-events"],
     queryFn: async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("automation_execution_logs")
         .select("id, status, message, created_at")
         .eq("failure_reason", "chaos_synthetic")
         .order("created_at", { ascending: false })
         .limit(20);
+      if (error) throw error;
       return data ?? [];
     },
     refetchInterval: 15000,
@@ -85,6 +96,12 @@ export function ChaosEngineeringPanel() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {flagError ? (
+            <DataError
+              message={`Falha ao carregar o estado do chaos: ${(flagError as Error).message}`}
+              onRetry={() => refetchFlag()}
+            />
+          ) : (
           <div className="flex items-center justify-between rounded-lg border border-border/50 bg-secondary/30 p-3">
             <div>
               <Label htmlFor="chaos-switch" className="text-sm font-medium cursor-pointer">
@@ -101,12 +118,18 @@ export function ChaosEngineeringPanel() {
               disabled={!flag || toggle.isPending}
             />
           </div>
+          )}
 
           <div>
             <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1.5">
               <Activity className="h-3 w-3" /> Últimas injeções (auto-refresh 15s)
             </p>
-            {(recent?.length ?? 0) === 0 ? (
+            {recentError ? (
+              <DataError
+                message={`Falha ao carregar as injeções recentes: ${(recentError as Error).message}`}
+                onRetry={() => refetchRecent()}
+              />
+            ) : (recent?.length ?? 0) === 0 ? (
               <p className="text-xs text-muted-foreground italic">Nenhum evento chaos ainda.</p>
             ) : (
               <div className="space-y-1 max-h-64 overflow-auto">

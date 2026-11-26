@@ -29,7 +29,7 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
   const [search, setSearch] = useState("");
   const { activeOrgId } = useActiveOrganization();
 
-  const { data: companies = [], isLoading: companiesLoading } = useQuery({
+  const { data: companies = [], isLoading: companiesLoading, isError: companiesError } = useQuery({
     queryKey: ["command-palette-companies", activeOrgId],
     queryFn: async () => {
       const { data, error } = await db.from("companies").select("id, name, sector, location, ipc_score").order("ipc_score", { ascending: false }).limit(100);
@@ -40,7 +40,7 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
     staleTime: 30_000,
   });
 
-  const { data: stakeholders = [] } = useQuery({
+  const { data: stakeholders = [], isError: stakeholdersError } = useQuery({
     queryKey: ["command-palette-stakeholders", activeOrgId],
     queryFn: async () => {
       const { data, error } = await db.from("stakeholders").select("id, full_name, role, company_id, email").order("created_at", { ascending: false }).limit(100);
@@ -51,7 +51,7 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
     staleTime: 30_000,
   });
 
-  const { data: workflows = [] } = useQuery({
+  const { data: workflows = [], isError: workflowsError } = useQuery({
     queryKey: ["command-palette-workflows", activeOrgId],
     queryFn: async () => {
       const { data, error } = await db.from("workflows").select("id, name, status, description").order("created_at", { ascending: false }).limit(50);
@@ -97,6 +97,8 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
 
   useEffect(() => { if (!open) setSearch(""); }, [open]);
 
+  const searchFailed = companiesError || stakeholdersError || workflowsError;
+
   const handleSelect = (view: View) => { onNavigate(view); setOpen(false); };
   const handleAction = (action: () => void) => { action(); setOpen(false); };
 
@@ -106,7 +108,11 @@ export const CommandPalette = ({ onNavigate, recentViews = [] }: CommandPaletteP
       <CommandList className="max-h-[400px]">
         <CommandEmpty>
           <div className="flex flex-col items-center gap-2 py-6">
-            <p className="text-sm text-muted-foreground">Nenhum resultado encontrado.</p>
+            <p className="text-sm text-muted-foreground">
+              {searchFailed
+                ? "Não foi possível buscar agora — a lista pode estar incompleta."
+                : "Nenhum resultado encontrado."}
+            </p>
           </div>
         </CommandEmpty>
 
