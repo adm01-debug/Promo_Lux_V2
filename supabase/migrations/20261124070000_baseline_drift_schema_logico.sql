@@ -524,32 +524,27 @@ $drift$;
 -- DRIFT RESIDUAL 3/5: policies de DELETE/UPDATE ausentes em producao.
 -- Existem no historico de migrations mas nunca foram aplicadas.
 -- ============================================================================
-DO $drift$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='ipc_config' AND policyname='Users can delete own ipc_config') THEN
-    CREATE POLICY "Users can delete own ipc_config" ON public.ipc_config
-      FOR DELETE TO authenticated USING (user_id = auth.uid());
-  END IF;
+-- Guarda por nome removida (achado G14-3): IF NOT EXISTS sobre policyname pulava
+-- a criacao quando ja existia policy homonima com regra diferente, entao o estado
+-- final dependia do que o banco tinha. DROP + CREATE e idempotente e determinista.
+DROP POLICY IF EXISTS "Users can delete own ipc_config" ON public.ipc_config;
+CREATE POLICY "Users can delete own ipc_config" ON public.ipc_config
+  FOR DELETE TO authenticated USING (user_id = auth.uid());
 
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='scrape_results' AND policyname='Users can delete own scrape_results') THEN
-    CREATE POLICY "Users can delete own scrape_results" ON public.scrape_results
-      FOR DELETE TO authenticated USING (user_id = auth.uid());
-  END IF;
+DROP POLICY IF EXISTS "Users can delete own scrape_results" ON public.scrape_results;
+CREATE POLICY "Users can delete own scrape_results" ON public.scrape_results
+  FOR DELETE TO authenticated USING (user_id = auth.uid());
 
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='workflow_runs' AND policyname='Users can delete own workflow_runs') THEN
-    CREATE POLICY "Users can delete own workflow_runs" ON public.workflow_runs
-      FOR DELETE TO authenticated USING (user_id = auth.uid());
-  END IF;
+DROP POLICY IF EXISTS "Users can delete own workflow_runs" ON public.workflow_runs;
+CREATE POLICY "Users can delete own workflow_runs" ON public.workflow_runs
+  FOR DELETE TO authenticated USING (user_id = auth.uid());
 
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='webhook_deliveries' AND policyname='Admins replay deliveries') THEN
-    CREATE POLICY "Admins replay deliveries" ON public.webhook_deliveries
-      FOR UPDATE TO authenticated
-      USING (public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role))
-      WITH CHECK (public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role)
-                  AND status = 'pending' AND attempts = 0);
-  END IF;
-END
-$drift$;
+DROP POLICY IF EXISTS "Admins replay deliveries" ON public.webhook_deliveries;
+CREATE POLICY "Admins replay deliveries" ON public.webhook_deliveries
+  FOR UPDATE TO authenticated
+  USING (public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role))
+  WITH CHECK (public.has_org_role(organization_id, auth.uid(), 'admin'::public.app_role)
+              AND status = 'pending' AND attempts = 0);
 
 -- ============================================================================
 -- DRIFT RESIDUAL 4/5: unicidade de linkedin_url por organizacao.
@@ -585,14 +580,9 @@ $drift$;
 -- DRIFT RESIDUAL 5/5: policy de leitura global de feature flags.
 -- Existe em producao mas nao no historico de migrations.
 -- ============================================================================
-DO $drift$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='feature_flags' AND policyname='Authenticated users view global feature flags') THEN
-    CREATE POLICY "Authenticated users view global feature flags" ON public.feature_flags
-      FOR SELECT TO authenticated USING (organization_id IS NULL);
-  END IF;
-END
-$drift$;
+DROP POLICY IF EXISTS "Authenticated users view global feature flags" ON public.feature_flags;
+CREATE POLICY "Authenticated users view global feature flags" ON public.feature_flags
+  FOR SELECT TO authenticated USING (organization_id IS NULL);
 
 -- ============================================================================
 -- DRIFT RESIDUAL 6/6: grants das funcoes SECURITY DEFINER.
