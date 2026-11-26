@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (108)",
+   "co-localizado (__tests__) (109)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(interface): paineis de monitoramento distinguem falha de vazio (etapas 217-221) (#239)",
    "fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)",
    "fix(estado): uma invalidacao por troca de organizacao e canais seguindo a organizacao nova (etapas 211-213) (#237)",
    "fix(dados): leituras e escritas por organizacao nos templates, chaves, lembretes e metas (etapas 206-210) (#236)",
-   "fix(hooks): erros silenciados no funil, no passo a passo e nas mutacoes (etapas 195-199) (#235)",
-   "feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)"
+   "fix(hooks): erros silenciados no funil, no passo a passo e nas mutacoes (etapas 195-199) (#235)"
   ]
  },
  "pr_template": null,

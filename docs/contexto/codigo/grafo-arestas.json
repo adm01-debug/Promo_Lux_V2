@@ -1360,6 +1360,7 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/monitoring/MonitoringView.tsx": [
+   "src/components/lux/DataError.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/card.tsx",
    "src/hooks/useApiLatency.ts",
@@ -1375,6 +1376,7 @@
    "src/hooks/useResilienceComparison.ts"
   ],
   "src/components/lux/monitoring/MultiQueueResilienceCard.tsx": [
+   "src/components/lux/DataError.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/card.tsx",
    "src/integrations/supabase/client.ts"
@@ -1397,6 +1399,7 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/monitoring/QaHistoryPanel.tsx": [
+   "src/components/lux/DataError.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/card.tsx",
    "src/components/ui/skeleton.tsx",
@@ -1479,6 +1482,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/components/lux/monitoring/SlaCompliancePanel.tsx": [
+   "src/components/lux/DataError.tsx",
    "src/components/lux/monitoring/SlaAlertSettingsCard.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -1513,7 +1517,9 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/monitoring/SlaTrendChart.tsx": [
+   "src/components/lux/DataError.tsx",
    "src/components/ui/card.tsx",
+   "src/components/ui/skeleton.tsx",
    "src/integrations/supabase/client.ts"
   ],
   "src/components/lux/monitoring/SourceComparisonReport.tsx": [

@@ -870,7 +870,7 @@
     "src/components/lux/monitoring/DbHealthDashboard.tsx",
     "src/components/lux/monitoring/MonitoringView.tsx"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   },
   {
    "arquivo": "src/hooks/useDealPredictions.ts",
@@ -988,7 +988,7 @@
     "src/components/lux/monitoring/DlqHealthCard.tsx",
     "src/components/lux/monitoring/MonitoringView.tsx"
    ],
-   "coberto_por_testes": 2
+   "coberto_por_testes": 3
   },
   {
    "arquivo": "src/hooks/useDlqItems.ts",
@@ -2394,7 +2394,7 @@
     "src/components/lux/monitoring/MonitoringView.tsx",
     "src/pages/StatusPage.tsx"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   },
   {
    "arquivo": "src/hooks/useSwipeGesture.ts",

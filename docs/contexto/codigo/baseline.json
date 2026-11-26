@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e0e485ee1ba9756de7c5633b8c0118edacee5e94",
+  "commit": "44f05b1c7e36a4e63c8dbbd1151ef6a14d560b39",
   "branch": "main",
-  "data_commit": "2026-11-25T21:57:00-03:00",
+  "data_commit": "2026-11-25T22:06:52-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "44f05b1",
+    "data": "2026-11-25",
+    "assunto": "fix(interface): paineis de monitoramento distinguem falha de vazio (etapas 217-221) (#239)"
+   },
    {
     "sha": "e0e485e",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "81ab63d",
     "data": "2026-11-25",
     "assunto": "chore(deps): sobe framer-motion para 14.14.0 (#213)"
-   },
-   {
-    "sha": "121479c",
-    "data": "2026-11-25",
-    "assunto": "infra: avisa quando deploy de edge functions fica preso aguardando aprovacao (#211)"
    }
   ],
-  "arquivos_mudados_7d": 374,
+  "arquivos_mudados_7d": 378,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 133
+    "mudancas": 139
    },
    {
     "pasta": "src/integrations/supabase",
@@ -148,12 +148,12 @@
     "mudancas": 26
    },
    {
-    "pasta": "package.json",
+    "pasta": "docs/qa/05-PROGRESSO.md",
     "mudancas": 21
    },
    {
-    "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 20
+    "pasta": "package.json",
+    "mudancas": 21
    },
    {
     "pasta": "package-lock.json",
@@ -198,12 +198,12 @@
   ],
   "arquivos_mais_mudados_90d": [
    {
-    "arquivo": "package.json",
+    "arquivo": "docs/qa/05-PROGRESSO.md",
     "mudancas": 21
    },
    {
-    "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 20
+    "arquivo": "package.json",
+    "mudancas": 21
    },
    {
     "arquivo": "package-lock.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 182
+    "commits": 183
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1185,
-  "arquivos_codigo": 739,
-  "linhas_codigo": 128493,
+  "arquivos_total": 1186,
+  "arquivos_codigo": 740,
+  "linhas_codigo": 128686,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 155,
+  "testes": 156,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -559,8 +559,8 @@
    "linhas": 124
   },
   "src/components": {
-   "arquivos": 319,
-   "linhas": 53224
+   "arquivos": 320,
+   "linhas": 53417
   },
   "src/contexts": {
    "arquivos": 9,
@@ -701,16 +701,16 @@
    "linhas": 550
   },
   {
+   "arquivo": "src/components/lux/monitoring/QaHistoryPanel.tsx",
+   "linhas": 543
+  },
+  {
    "arquivo": "src/components/lux/OrganizationsView.tsx",
    "linhas": 542
   },
   {
    "arquivo": "src/components/lux/settings/RLSVerificationPanel.tsx",
    "linhas": 541
-  },
-  {
-   "arquivo": "src/components/lux/monitoring/QaHistoryPanel.tsx",
-   "linhas": 527
   }
  ],
  "qualidade": {

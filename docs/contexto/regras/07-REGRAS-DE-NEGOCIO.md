@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e0e485ee1b` · branch `main` · 2026-11-26 01:03 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `44f05b1c7e` · branch `main` · 2026-11-26 01:12 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2332,7 +2332,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1335 testes em 139 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1342 testes em 140 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2404,6 +2404,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/ErrorBoundary.test.tsx` | 7 | ErrorBoundary · renders children when no error · renders error UI when child throws · shows error message in details … |
 | `src/components/lux/lusha/constants.test.ts` | 7 | DEPT_GROUPS (R34) — estrutura e invariantes · expõe exatamente 5 grupos · labels PT-BR canônicos em ordem estável · grupo  … |
 | `src/components/lux/monitoring/__tests__/DlqAlertSettingsCard.test.tsx` | 7 | DlqAlertSettingsCard · renderiza título e campos de configuração · chama a mutação de salvar com valores saneados ao clicar em Salvar · desabilita edição para não-administradores … |
+| `src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx` | 7 | painéis de monitoramento: erro não se confunde com vazio · tendência de SLA mostra erro e não a mensagem de vazio · tendência de SLA: nova tentativa dispara outra leitura · resiliência multi-fila mostra erro e não  … |
 | `src/components/lux/monitoring/__tests__/slaRiskAnalysis.test.ts` | 7 | detectSlaRisk · sinaliza fila cujo p95 excede o SLA configurado · não sinaliza quando o p95 está dentro do SLA · respeita a tolerância percentual … |
 | `src/hooks/__tests__/useDealsSeed.test.ts` | 7 | useDealStages - auto-preenchimento (etapas 195/196) · cria as etapas padrao uma unica vez mesmo com lista vazia nova a cada render · avisa o usuario e nao repete a tentativa quando a funcao do banco falha · nao semeia quando o funil ja tem etapas … |
 | `src/hooks/__tests__/useRecentViews.test.ts` | 7 | useRecentViews · starts with empty recent views · tracks a viewed page · deduplicates on revisit and moves to front … |

@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "e0e485ee1ba9756de7c5633b8c0118edacee5e94",
+  "sha": "44f05b1c7e36a4e63c8dbbd1151ef6a14d560b39",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 01:03 UTC",
-  "files_total": 1206,
-  "code_files": 1017,
-  "code_lines": 150920
+  "generated_at": "2026-11-26 01:12 UTC",
+  "files_total": 1207,
+  "code_files": 1018,
+  "code_lines": 151113
  },
  "version": "1.3.2",
- "facts_hash": "6b30ba0ca7c94bfe",
+ "facts_hash": "9245e2ba6b6320e6",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -247,7 +247,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 393,
-   ".tsx": 317,
+   ".tsx": 318,
    ".sql": 274,
    ".mjs": 23,
    ".py": 5,
@@ -32466,7 +32466,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 319,
+  "components_count": 320,
   "hooks": [
    {
     "name": "useContacts",
@@ -33493,8 +33493,8 @@
   },
   {
    "module": "src/components",
-   "files": 319,
-   "lines": 53224,
+   "files": 320,
+   "lines": 53417,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -54988,6 +54988,34 @@
    {
     "file": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
     "name": "mostra "
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "painéis de monitoramento: erro não se confunde com vazio"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "tendência de SLA mostra erro e não a mensagem de vazio"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "tendência de SLA: nova tentativa dispara outra leitura"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "resiliência multi-fila mostra erro e não "
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "histórico de QA mostra erro e não a mensagem de nenhuma rodada"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "conformidade de SLA mostra erro e não "
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    "name": "painel de auditoria mostra erro e não "
    },
    {
     "file": "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts",
@@ -85900,7 +85928,7 @@
   },
   "src/components/lux/monitoring/MonitoringView.tsx": {
    "path": "src/components/lux/monitoring/MonitoringView.tsx",
-   "lines": 354,
+   "lines": 369,
    "exports": [
     "const MonitoringView"
    ],
@@ -85946,7 +85974,7 @@
   },
   "src/components/lux/monitoring/MultiQueueResilienceCard.tsx": {
    "path": "src/components/lux/monitoring/MultiQueueResilienceCard.tsx",
-   "lines": 167,
+   "lines": 180,
    "exports": [
     "function MultiQueueResilienceCard"
    ],
@@ -86033,7 +86061,7 @@
   },
   "src/components/lux/monitoring/QaHistoryPanel.tsx": {
    "path": "src/components/lux/monitoring/QaHistoryPanel.tsx",
-   "lines": 527,
+   "lines": 543,
    "exports": [
     "const QaHistoryPanel"
    ],
@@ -86228,7 +86256,7 @@
   },
   "src/components/lux/monitoring/SlaCompliancePanel.tsx": {
    "path": "src/components/lux/monitoring/SlaCompliancePanel.tsx",
-   "lines": 222,
+   "lines": 234,
    "exports": [
     "function SlaCompliancePanel"
    ],
@@ -86399,7 +86427,7 @@
   },
   "src/components/lux/monitoring/SlaTrendChart.tsx": {
    "path": "src/components/lux/monitoring/SlaTrendChart.tsx",
-   "lines": 132,
+   "lines": 141,
    "exports": [
     "function SlaTrendChart"
    ],
@@ -86622,6 +86650,20 @@
     "saturação de conexões do banco derruba o selo mesmo com demais fontes saudáveis",
     "todas as fontes saudáveis: selo verde com dados reais",
     "mostra "
+   ]
+  },
+  "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx": {
+   "path": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+   "lines": 128,
+   "is_test": true,
+   "tests": [
+    "painéis de monitoramento: erro não se confunde com vazio",
+    "tendência de SLA mostra erro e não a mensagem de vazio",
+    "tendência de SLA: nova tentativa dispara outra leitura",
+    "resiliência multi-fila mostra erro e não ",
+    "histórico de QA mostra erro e não a mensagem de nenhuma rodada",
+    "conformidade de SLA mostra erro e não ",
+    "painel de auditoria mostra erro e não "
    ]
   },
   "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts": {
@@ -103248,10 +103290,25 @@
   }
  },
  "git": {
-  "sha": "e0e485ee1ba9756de7c5633b8c0118edacee5e94",
+  "sha": "44f05b1c7e36a4e63c8dbbd1151ef6a14d560b39",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "44f05b1",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "fix(interface): paineis de monitoramento distinguem falha de vazio (etapas 217-221) (#239)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/monitoring/MonitoringView.tsx",
+     "src/components/lux/monitoring/MultiQueueResilienceCard.tsx",
+     "src/components/lux/monitoring/QaHistoryPanel.tsx",
+     "src/components/lux/monitoring/SlaCompliancePanel.tsx",
+     "src/components/lux/monitoring/SlaTrendChart.tsx",
+     "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx"
+    ]
+   },
    {
     "sha": "e0e485e",
     "date": "2026-11-25",
@@ -103667,21 +103724,12 @@
     "files": [
      "supabase/functions/api-latency-alerts/index.ts"
     ]
-   },
-   {
-    "sha": "f60d5cf",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "feat(cron): arquiva 7 dias do resultado HTTP das edge functions agendadas (#205)",
-    "files": [
-     "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    19
+    20
    ],
    [
     "src/components/lux/CampaignsView.tsx",
@@ -103732,6 +103780,10 @@
     3
    ],
    [
+    "src/components/lux/monitoring/MonitoringView.tsx",
+    2
+   ],
+   [
     "src/hooks/useOrganizations.ts",
     2
    ],
@@ -103753,10 +103805,6 @@
    ],
    [
     "src/components/lux/CompanyDetailModal.tsx",
-    2
-   ],
-   [
-    "src/components/lux/__tests__/AutomationsList.test.tsx",
     2
    ]
   ]

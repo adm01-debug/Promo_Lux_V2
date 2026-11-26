@@ -936,7 +936,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 12,
+   "usado_por": 17,
    "orfao": false
   },
   {
@@ -2082,7 +2082,7 @@
     "MonitoringView"
    ],
    "export_default": null,
-   "linhas": 354,
+   "linhas": 369,
    "dominio": "components/lux",
    "hooks_locais": [
     "useApiLatency",
@@ -2120,7 +2120,7 @@
     "MultiQueueResilienceCard"
    ],
    "export_default": null,
-   "linhas": 167,
+   "linhas": 180,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [
@@ -2174,7 +2174,7 @@
     "QaHistoryPanel"
    ],
    "export_default": null,
-   "linhas": 527,
+   "linhas": 543,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [
@@ -2340,7 +2340,7 @@
     "SlaCompliancePanel"
    ],
    "export_default": null,
-   "linhas": 222,
+   "linhas": 234,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [
@@ -2419,7 +2419,7 @@
     "SlaTrendChart"
    ],
    "export_default": null,
-   "linhas": 132,
+   "linhas": 141,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [
@@ -4106,7 +4106,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 31,
+   "usado_por": 32,
    "orfao": false
   },
   {

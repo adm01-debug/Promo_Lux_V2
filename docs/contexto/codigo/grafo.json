@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 584,
- "arestas": 1880,
+ "arestas": 1886,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -58,7 +58,7 @@
   },
   {
    "arquivo": "src/components/ui/skeleton.tsx",
-   "importado_por": 31
+   "importado_por": 32
   },
   {
    "arquivo": "src/components/ui/tooltip.tsx",
@@ -85,6 +85,10 @@
    "importado_por": 19
   },
   {
+   "arquivo": "src/components/lux/DataError.tsx",
+   "importado_por": 18
+  },
+  {
    "arquivo": "src/contexts/demo-context.ts",
    "importado_por": 18
   },
@@ -103,10 +107,6 @@
   {
    "arquivo": "src/hooks/useNavigationHistory.ts",
    "importado_por": 15
-  },
-  {
-   "arquivo": "src/components/lux/DataError.tsx",
-   "importado_por": 13
   },
   {
    "arquivo": "src/components/ui/alert-dialog.tsx",
