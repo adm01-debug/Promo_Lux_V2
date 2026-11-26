@@ -2,6 +2,7 @@ import { memo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { DataError } from "@/components/lux/DataError";
 import {
   Activity,
   Database,
@@ -74,7 +75,7 @@ export const MonitoringView = memo(() => {
   const { data: dlq, isLoading: loadingDlq } = useDlqHealth();
   const { data: latencyStats, isLoading: loadingLatency } = useApiLatency(24, 20);
   const { data: latencyTrend } = useApiLatencyTrend(24, 60);
-  const { data: auditTrail } = useAuditTrail({ ...DEFAULT_AUDIT_FILTERS, pageSize: 10 });
+  const { data: auditTrail, isLoading: loadingAudit, isError: auditFailed, refetch: refetchAudit } = useAuditTrail({ ...DEFAULT_AUDIT_FILTERS, pageSize: 10 });
   const auditLogs = auditTrail?.rows ?? [];
 
   const dbAlerts = computeAlerts(dbSnapshots ?? []);
@@ -236,7 +237,19 @@ export const MonitoringView = memo(() => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {auditLogs.map((log) => (
+              {auditFailed ? (
+                <DataError
+                  message="Falha ao carregar a trilha de auditoria."
+                  onRetry={() => refetchAudit()}
+                />
+              ) : loadingAudit ? (
+                <div className="space-y-2" aria-busy="true">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="h-10 animate-pulse rounded-lg bg-secondary/40" />
+                  ))}
+                </div>
+              ) : null}
+              {!loadingAudit && !auditFailed && auditLogs.map((log) => (
                 <div key={log.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-secondary/30 transition-colors">
                   <div className="h-2 w-2 rounded-full bg-primary mt-2" />
                   <div className="flex-1 min-w-0">
@@ -250,7 +263,9 @@ export const MonitoringView = memo(() => {
                   <Badge variant="outline" className="text-[10px]">{log.table_name}</Badge>
                 </div>
               ))}
-              {auditLogs.length === 0 && <EmptyPanel text="Nenhum log crítico registrado recentemente." />}
+              {auditLogs.length === 0 && !loadingAudit && !auditFailed && (
+                <EmptyPanel text="Nenhum log crítico registrado recentemente." />
+              )}
             </div>
           </CardContent>
         </Card>

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Timer, RefreshCw, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DataError } from "@/components/lux/DataError";
 import { SlaAlertSettingsCard } from "./SlaAlertSettingsCard";
 
 type Row = {
@@ -37,7 +38,7 @@ function fmt(v: number | null | undefined) {
 
 export function SlaCompliancePanel() {
   const [hours, setHours] = useState<number>(24);
-  const { data, isLoading, refetch, isFetching } = useQuery({
+  const { data, isLoading, error, refetch, isFetching } = useQuery({
     queryKey: ["sla-compliance-stats", hours],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("sla_compliance_stats", { p_hours: hours });
@@ -47,7 +48,7 @@ export function SlaCompliancePanel() {
     refetchInterval: 60_000,
   });
 
-  const { data: alerts } = useQuery({
+  const { data: alerts, isError: alertsFailed } = useQuery({
     queryKey: ["sla-alert-history"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -103,6 +104,11 @@ export function SlaCompliancePanel() {
               <div key={i} className="h-40 rounded-lg bg-secondary/20 animate-pulse" />
             ))}
           </div>
+        ) : error ? (
+          <DataError
+            message={`Falha ao carregar a conformidade de SLA: ${(error as Error).message}`}
+            onRetry={() => refetch()}
+          />
         ) : !data || data.length === 0 ? (
           <p className="text-sm text-muted-foreground">Sem execuções concluídas na janela selecionada.</p>
         ) : (
@@ -184,6 +190,12 @@ export function SlaCompliancePanel() {
               );
             })}
           </div>
+        )}
+
+        {alertsFailed && (
+          <p className="mt-6 border-t border-border/30 pt-4 text-xs text-muted-foreground">
+            Não foi possível carregar os últimos alertas de SLA.
+          </p>
         )}
 
         {alerts && alerts.length > 0 && (

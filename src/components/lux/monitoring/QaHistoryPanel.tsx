@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DataError } from "@/components/lux/DataError";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle2, XCircle, Clock, TrendingUp, ShieldCheck, AlertTriangle, Copy, KeyRound, Trash2 } from "lucide-react";
 import {
@@ -62,7 +63,7 @@ const passRate = (r: QaRun) =>
 export const QaHistoryPanel = memo(() => {
   const [kind, setKind] = useState<QaKind>("all");
 
-  const { data: runs = [], isLoading } = useQuery({
+  const { data: runs = [], isLoading, error, refetch } = useQuery({
     queryKey: ["qa-test-runs", kind],
     queryFn: async () => {
       let q = supabase
@@ -203,6 +204,11 @@ export const QaHistoryPanel = memo(() => {
           <CardContent className="h-64">
             {isLoading ? (
               <Skeleton className="h-full w-full" />
+            ) : error ? (
+              <DataError
+                message={`Falha ao carregar o histórico de QA: ${(error as Error).message}`}
+                onRetry={() => refetch()}
+              />
             ) : chartData.length === 0 ? (
               <EmptyHint />
             ) : (
@@ -233,6 +239,11 @@ export const QaHistoryPanel = memo(() => {
           <CardContent className="h-64">
             {isLoading ? (
               <Skeleton className="h-full w-full" />
+            ) : error ? (
+              <DataError
+                message={`Falha ao carregar o histórico de QA: ${(error as Error).message}`}
+                onRetry={() => refetch()}
+              />
             ) : byKind.length === 0 ? (
               <EmptyHint />
             ) : (
@@ -259,6 +270,11 @@ export const QaHistoryPanel = memo(() => {
         <CardContent>
           {isLoading ? (
             <Skeleton className="h-40 w-full" />
+          ) : error ? (
+            <DataError
+              message={`Falha ao carregar as rodadas de QA: ${(error as Error).message}`}
+              onRetry={() => refetch()}
+            />
           ) : runs.length === 0 ? (
             <EmptyHint />
           ) : (

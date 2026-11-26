@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DataError } from "@/components/lux/DataError";
 import { TrendingUp } from "lucide-react";
 import {
   LineChart,
@@ -33,7 +35,7 @@ const LABELS: Record<Snapshot["queue_kind"], string> = {
 };
 
 export function SlaTrendChart() {
-  const { data } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["sla-snapshots-trend"],
     queryFn: async () => {
       const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
@@ -73,7 +75,14 @@ export function SlaTrendChart() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {chartData.length === 0 ? (
+        {isLoading ? (
+          <Skeleton className="h-72 w-full" />
+        ) : error ? (
+          <DataError
+            message={`Falha ao carregar a tendência de SLA: ${(error as Error).message}`}
+            onRetry={() => refetch()}
+          />
+        ) : chartData.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             Sem snapshots ainda — o primeiro é gerado às 03:00 UTC.
           </p>

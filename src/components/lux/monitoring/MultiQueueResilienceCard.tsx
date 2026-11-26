@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { DataError } from "@/components/lux/DataError";
 import { Badge } from "@/components/ui/badge";
 import { Layers, Globe, Gauge, AlertTriangle, CheckCircle2 } from "lucide-react";
 
@@ -58,6 +59,11 @@ async function fetchSnapshot(kind: QueueKind): Promise<QueueSnapshot> {
 
   let success24h: number | null = null;
   let sample24h = 0;
+  // Sem esta checagem uma falha de leitura virava snapshot "vazio", indistinguível de fila zerada.
+  if (snap.error) throw snap.error;
+  if (adv.error) throw adv.error;
+  const web24Error = (web24 as { error?: unknown }).error;
+  if (kind === "web" && web24Error) throw web24Error;
   if (kind === "web" && Array.isArray((web24 as { data: unknown }).data)) {
     const rows = (web24 as { data: { status: string }[] }).data;
     sample24h = rows.length;
@@ -131,7 +137,7 @@ function QueueRow({ s }: { s: QueueSnapshot }) {
 }
 
 export function MultiQueueResilienceCard() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["multi-queue-resilience"],
     queryFn: async () => {
       const [scrape, web] = await Promise.all([fetchSnapshot("scrape"), fetchSnapshot("web")]);
@@ -152,8 +158,15 @@ export function MultiQueueResilienceCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        {isLoading || !data ? (
+        {isLoading ? (
           <div className="text-sm text-muted-foreground">Carregando snapshots…</div>
+        ) : error ? (
+          <DataError
+            message={`Falha ao carregar a resiliência das filas: ${(error as Error).message}`}
+            onRetry={() => refetch()}
+          />
+        ) : !data ? (
+          <div className="text-sm text-muted-foreground">Sem snapshots de resiliência registrados.</div>
         ) : (
           <>
             <QueueRow s={data.scrape} />
