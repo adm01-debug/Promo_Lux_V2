@@ -210,15 +210,15 @@
     "mudancas": 20
    },
    {
-    "arquivo": "supabase/config.toml",
-    "mudancas": 11
-   },
-   {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 10
    },
    {
     "arquivo": "scripts/automation.config.json",
+    "mudancas": 10
+   },
+   {
+    "arquivo": "supabase/config.toml",
     "mudancas": 10
    },
    {
