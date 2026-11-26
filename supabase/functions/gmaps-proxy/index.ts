@@ -283,23 +283,23 @@ serve(async (req) => {
           for (const job of externalJobs) {
             const status = (job.Status as string) === "ok" ? "completed" : job.Status as string;
             
+            // G16-3 / etapa 054: a listagem do fornecedor e COMPARTILHADA entre
+            // clientes (o endpoint nao aceita credencial), entao ela so serve
+            // para ATUALIZAR o estado dos jobs que a organizacao ja tem. Antes,
+            // todo job devolvido era inserido como se fosse do solicitante e o
+            // cliente passava a ver o nome e a config das buscas de outro
+            // cliente. Filtrar por nome nao resolve — nomes colidem entre
+            // clientes: o vinculo e o `external_id` ja associado aqui na base.
             const { data: existing } = await supabase
               .from("scrape_jobs")
               .select("id, status, auto_sync")
               .eq("external_id", job.ID as string)
-              .eq("user_id", userId)
+              .eq("organization_id", userOrgId)
               .maybeSingle();
-              
+
             if (!existing) {
-              await supabase.from("scrape_jobs").insert({
-                user_id: userId,
-                organization_id: userOrgId,
+              log.warn("external_job_sem_vinculo_local", {
                 external_id: job.ID as string,
-                name: job.Name as string,
-                status: status,
-                source: "gmaps",
-                config: job.Data as Record<string, unknown>,
-                started_at: job.Date as string,
               });
             } else {
               // If status changed to completed and auto_sync is true, we could trigger sync
@@ -313,11 +313,14 @@ serve(async (req) => {
                 // or we can do it right here since we have the data.
               }
 
+              // Atualiza o job LOCAL (por id): o `external_id` sozinho nao
+              // identifica uma linha e o filtro por `user_id` errava quando
+              // outro membro da organizacao foi quem criou a busca.
               await supabase
                 .from("scrape_jobs")
                 .update({ status: status })
-                .eq("external_id", job.ID as string)
-                .eq("user_id", userId);
+                .eq("id", existing.id)
+                .eq("organization_id", userOrgId);
             }
           }
         }
