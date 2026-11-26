@@ -1,0 +1,14 @@
+# Edge functions APOSENTADAS: sairam do repositorio mas continuam publicadas no
+# projeto, porque `supabase functions deploy` roda sem --prune, de proposito --
+# function publicada fora do repo fica intacta.
+#
+# Um nome de function por linha. Linhas vazias e linhas comecando com # sao
+# ignoradas. O workflow "Functions Retirement" (scripts/retire-functions.sh)
+# remove cada nome do projeto alvo rodando no Environment `production`, ou seja:
+# a remocao passa por revisao de PR e por aprovacao de environment, igual ao
+# deploy. O nome pode ficar aqui depois da remocao -- a operacao e idempotente e
+# a lista serve de historico do que estava publicado fora do repositorio.
+#
+# migrate-helper -- devolvia a service_role key no corpo da resposta HTTP; saiu
+#                   do repositorio na PR #229 (etapa 003).
+migrate-helper

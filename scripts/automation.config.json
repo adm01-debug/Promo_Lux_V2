@@ -204,6 +204,14 @@
       "reason": "Guarda de ambiente para deploy de edge functions (novo workflow edge-functions-deploy.yml). O dispatcher não executa esta operação."
     },
     {
+      "id": "fn-retirement",
+      "kind": "legacy",
+      "files": ["scripts/retire-functions.sh"],
+      "manual": ["bash", "scripts/retire-functions.sh"],
+      "triggers": ["manual"],
+      "reason": "Remove do projeto as edge functions listadas em supabase/functions/retired.txt (o deploy roda sem --prune, então o repo não é a fonte do que está publicado). Roda no workflow functions-retirement.yml, no Environment production. O dispatcher não executa esta operação."
+    },
+    {
       "id": "legacy-2d7c4232a46150c6",
       "kind": "legacy",
       "files": ["scripts/check-queue-kind-coverage.sh"],
