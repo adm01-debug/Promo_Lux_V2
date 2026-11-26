@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `9036246667e0b6986039746bf652c4630ebaee9e` (2026-11-25T23:02:04-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `ab29fc224578cff4a4dc89b0662cbb72c15c8266` (2026-11-25T23:09:47-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1189 |
 | arquivos_codigo | 743 |
-| linhas_codigo | 129372 |
+| linhas_codigo | 129391 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -259,7 +259,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8102 nós · 17466 arestas · 715 comunidades · grafo do commit `90362466`
+- 8102 nós · 17466 arestas · 715 comunidades · grafo do commit `ab29fc22`
 - comunidades maiores: react (204), button.tsx (158), cn (98), utils.ts (95), JobDetailsSheet.tsx (93), lucide-react (89), gerar.mjs (80), DealsView.tsx (74), generate.py (73), lushaMocks.ts (70), StakeholderFinderView.tsx (70), @tanstack/react-query (70)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), mockFramerMotion() (src/test/mockFramerMotion.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
@@ -379,6 +379,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `ab29fc2` chore(formato): alinha o teste de permissoes ao printWidth 80 do repo (#243)
 - 2026-11-25 `9036246` feat(interface): aplica estado de falha aos paineis de monitoramento restantes e cobre o desfazimento das permissoes (et
 - 2026-11-25 `6d4546e` feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)
 - 2026-11-25 `068b4ca` fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (e
@@ -393,7 +394,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `488f67c` fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)
 - 2026-11-25 `ec5349f` feat(ci): fixture multi-tenant passa a vir das migrations (etapa 008) (#227)
 - 2026-11-25 `580b952` fix(e2e): suite de RLS para de passar verde sem backend real (#226)
-- 2026-11-25 `f889110` fix: leitura sem organizacao ativa falha fechada no wrapper (#225)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

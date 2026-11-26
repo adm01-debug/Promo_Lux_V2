@@ -901,7 +901,7 @@
   {
    "arquivo": "src/hooks/__tests__/useRolePermissions.test.tsx",
    "tipo": "unit",
-   "linhas": 122,
+   "linhas": 141,
    "testa": [
     "src/hooks/useRolePermissions.ts"
    ],

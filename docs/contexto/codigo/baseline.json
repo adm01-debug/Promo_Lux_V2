@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9036246667e0b6986039746bf652c4630ebaee9e",
+  "commit": "ab29fc224578cff4a4dc89b0662cbb72c15c8266",
   "branch": "main",
-  "data_commit": "2026-11-25T23:02:04-03:00",
+  "data_commit": "2026-11-25T23:09:47-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "ab29fc2",
+    "data": "2026-11-25",
+    "assunto": "chore(formato): alinha o teste de permissoes ao printWidth 80 do repo (#243)"
+   },
    {
     "sha": "9036246",
     "data": "2026-11-25",
@@ -126,11 +131,6 @@
     "sha": "b0e85af",
     "data": "2026-11-25",
     "assunto": "fix: liga os botoes do card de Automacoes no painel inicial (#216)"
-   },
-   {
-    "sha": "b4dc737",
-    "data": "2026-11-25",
-    "assunto": "chore(config): versiona o verify_jwt das 62 edge functions (#215)"
    }
   ],
   "arquivos_mudados_7d": 390,
@@ -164,11 +164,11 @@
     "mudancas": 10
    },
    {
-    "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 9
+    "pasta": "src/hooks/__tests__",
+    "mudancas": 10
    },
    {
-    "pasta": "src/hooks/__tests__",
+    "pasta": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 186
+    "commits": 187
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1189,
   "arquivos_codigo": 743,
-  "linhas_codigo": 129372,
+  "linhas_codigo": 129391,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -568,7 +568,7 @@
   },
   "src/hooks": {
    "arquivos": 110,
-   "linhas": 12577
+   "linhas": 12596
   },
   "src/integrations": {
    "arquivos": 14,
