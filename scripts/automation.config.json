@@ -212,6 +212,14 @@
       "reason": "Remove do projeto as edge functions listadas em supabase/functions/retired.txt (o deploy roda sem --prune, então o repo não é a fonte do que está publicado). Roda no workflow functions-retirement.yml, no Environment production. O dispatcher não executa esta operação."
     },
     {
+      "id": "fn-orphans",
+      "kind": "legacy",
+      "files": ["scripts/check-functions-orphans.sh"],
+      "manual": ["bash", "scripts/check-functions-orphans.sh"],
+      "triggers": ["manual"],
+      "reason": "Compara o que está publicado no projeto (Management API, read-only) com o que existe no repositório e falha quando sobra function publicada fora das duas listas. Roda depois da remoção no workflow functions-retirement.yml, no Environment production. O dispatcher não executa esta operação."
+    },
+    {
       "id": "legacy-2d7c4232a46150c6",
       "kind": "legacy",
       "files": ["scripts/check-queue-kind-coverage.sh"],
