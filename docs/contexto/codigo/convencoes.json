@@ -7,7 +7,7 @@
    "src/pages (11)"
   ],
   "componentes": [
-   "src/components (251)",
+   "src/components (252)",
    "src/pages (11)",
    "src/contexts (3)"
   ],
@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (109)",
+   "co-localizado (__tests__) (110)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -47,7 +47,7 @@
  },
  "barrels_index": 0,
  "extensao_componentes": [
-  ".tsx (268)"
+  ".tsx (269)"
  ],
  "alias_imports": {
   "(raiz)": {
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)",
    "fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (etapas 222-225) (#240)",
    "fix(interface): paineis de monitoramento distinguem falha de vazio (etapas 217-221) (#239)",
    "fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)",
-   "fix(estado): uma invalidacao por troca de organizacao e canais seguindo a organizacao nova (etapas 211-213) (#237)",
-   "fix(dados): leituras e escritas por organizacao nos templates, chaves, lembretes e metas (etapas 206-210) (#236)"
+   "fix(estado): uma invalidacao por troca de organizacao e canais seguindo a organizacao nova (etapas 211-213) (#237)"
   ]
  },
  "pr_template": null,

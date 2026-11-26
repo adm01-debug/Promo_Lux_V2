@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 268,
+ "total": 269,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -2028,7 +2028,7 @@
     "InstagramEnqueuePanel"
    ],
    "export_default": null,
-   "linhas": 177,
+   "linhas": 184,
    "dominio": "components/lux",
    "hooks_locais": [],
    "tabelas": [],
@@ -2150,6 +2150,20 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/monitoring/PainelComEstado.tsx",
+   "exports": [
+    "PainelComEstado"
+   ],
+   "export_default": null,
+   "linhas": 82,
+   "dominio": "components/lux",
+   "hooks_locais": [],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 4,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx",
    "exports": [
     "PartitionAdvisoryPanel"
@@ -2255,7 +2269,7 @@
     "RetryPolicyAdvisoriesPanel"
    ],
    "export_default": null,
-   "linhas": 330,
+   "linhas": 339,
    "dominio": "components/lux",
    "hooks_locais": [
     "useToast"
@@ -2495,7 +2509,7 @@
     "VaultCookiesPanel"
    ],
    "export_default": null,
-   "linhas": 475,
+   "linhas": 501,
    "dominio": "components/lux",
    "hooks_locais": [
     "useToast"
@@ -3554,7 +3568,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 140,
+   "usado_por": 141,
    "orfao": false
   },
   {
@@ -4455,7 +4469,7 @@
     "AutomationMonitoring"
    ],
    "export_default": "AutomationMonitoring",
-   "linhas": 756,
+   "linhas": 771,
    "dominio": "pages",
    "hooks_locais": [
     "useActiveOrganization",

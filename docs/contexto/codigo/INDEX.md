@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `068b4ca297ad2c84e75e354d56b31974b902c3d0` (2026-11-25T22:26:35-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `6d4546e5545344e017d753aa056ec7b7fb9a0697` (2026-11-25T22:37:30-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (711), SQL (274), Markdown (87), JSON (38), JavaScript (25), Shell (16), YAML (12), Python (5)
+- linguagens: TypeScript (713), SQL (274), Markdown (87), JSON (38), JavaScript (25), Shell (16), YAML (12), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,31 +34,31 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1186 |
-| arquivos_codigo | 740 |
-| linhas_codigo | 128837 |
+| arquivos_total | 1188 |
+| arquivos_codigo | 742 |
+| linhas_codigo | 129118 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
 | itens_menu | 28 |
 | modulos | 23 |
-| componentes | 268 |
+| componentes | 269 |
 | hooks | 97 |
 | edge_functions | 62 |
 | tabelas | 121 |
 | migrations | 270 |
 | cron_jobs | 43 |
-| testes | 156 |
+| testes | 157 |
 | workflows | 10 |
 | scripts | 54 |
 | docs_md | 87 |
 
 ## Onde ficam as coisas
 - telas: src/components (23), src/pages (11)
-- componentes: src/components (251), src/pages (11), src/contexts (3)
+- componentes: src/components (252), src/pages (11), src/contexts (3)
 - hooks: src/hooks (90), src/components (4), src/contexts (3)
 - servicos_logica: src/lib (41), src/integrations (4), src/contexts (3)
-- testes: co-localizado (__tests__) (109), e2e/ (19), co-localizado (*.test) (16)
+- testes: co-localizado (__tests__) (110), e2e/ (19), co-localizado (*.test) (16)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
@@ -69,7 +69,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Módulos (menu → domínio)
 | módulo | itens de menu | telas/rotas | arquivos | hooks locais | edges | tabelas |
 |---|---|---|---|---|---|---|
-| components/lux | 26 | 23 | 220 | 153 | 33 | 93 |
+| components/lux | 26 | 23 | 221 | 153 | 33 | 93 |
 | components/ui | 0 | 0 | 54 | 4 | 0 | 0 |
 | contexts | 0 | 0 | 6 | 10 | 0 | 4 |
 | hooks | 0 | 0 | 91 | 157 | 28 | 83 |
@@ -236,7 +236,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - env de integração (só nomes): APIFY_API_KEY, APIFY_TOKEN, APOLLO_API_KEY, BITRIX_WEBHOOK_BASE, BRIGHTDATA_API_TOKEN, CNPJA_API_KEY, GMAPS_OMKAR_API_KEY, GOOGLE_MAPS_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, HIKER_API_KEY, LOVABLE_API_KEY, LUSHA_API_KEY, MCP_SECRET, MS_OAUTH_CLIENT_ID, MS_OAUTH_CLIENT_SECRET, QA_INGEST_TOKEN, TRACKING_SIGNING_SECRET
 
 ## Permissões / papéis
-- papéis no código: admin (14), alert (11), status (11), user (6), button (4), dialog (4), system (4), group (3), main (3), viewer (3), CEO (2), CTO (2), navigation (2), presentation (2), region (2), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), owner (1), progressbar (1), sdr (1), separator (1)
+- papéis no código: admin (14), alert (12), status (11), user (6), button (4), dialog (4), system (4), group (3), main (3), viewer (3), CEO (2), CTO (2), navigation (2), presentation (2), region (2), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), owner (1), progressbar (1), sdr (1), separator (1)
 - enums de papel: app_role: admin|sdr|viewer
 - guards: nenhum · rotas protegidas: 5 · públicas: /*, /invite/:token, /login, /reset-password, /status, /survey/:token
 - feature flags: oracle_v2
@@ -259,13 +259,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8090 nós · 17401 arestas · 705 comunidades · grafo do commit `068b4ca2`
-- comunidades maiores: lucide-react (226), react (190), @tanstack/react-query (140), cn (123), framer-motion (119), vitest (97), CompaniesView.tsx (88), ref_node_fs (86), gerar.mjs (80), generate.py (75), SettingsView.tsx (73), withOrg.ts (70)
+- 8096 nós · 17433 arestas · 697 comunidades · grafo do commit `6d4546e5`
+- comunidades maiores: lucide-react (209), react (158), cn (148), JobDetailsSheet.tsx (137), badge.tsx (123), snapshot.py (108), DashboardView.tsx (92), ref_node_fs (82), gerar.mjs (80), OrganizationsView.tsx (78), generate.py (75), DealsView.tsx (68)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), mockFramerMotion() (src/test/mockFramerMotion.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- docs/qa/05-PROGRESSO.md (22)
+- docs/qa/05-PROGRESSO.md (23)
 - package.json (21)
 - package-lock.json (20)
 - docs/GAPS-ENTERPRISE.md (10)
@@ -273,9 +273,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - supabase/config.toml (9)
 - AGENTS.md (8)
 - src/integrations/supabase/types.ts (8)
+- src/pages/Monitoring.tsx (8)
 - scripts/automation.config.json (7)
 - src/integrations/supabase/withOrg.ts (7)
-- src/pages/Monitoring.tsx (7)
 - supabase/functions/gmaps-proxy/index.ts (7)
 - supabase/functions/public-api/index.ts (7)
 - .github/workflows/edge-tests-daily.yml (6)
@@ -379,6 +379,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `6d4546e` feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)
 - 2026-11-25 `068b4ca` fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (e
 - 2026-11-25 `44f05b1` fix(interface): paineis de monitoramento distinguem falha de vazio (etapas 217-221) (#239)
 - 2026-11-25 `e0e485e` fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)
@@ -393,7 +394,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `580b952` fix(e2e): suite de RLS para de passar verde sem backend real (#226)
 - 2026-11-25 `f889110` fix: leitura sem organizacao ativa falha fechada no wrapper (#225)
 - 2026-11-25 `8c4a8f1` fix: escopo de organizacao nas consultas e no cache do front (#224)
-- 2026-11-25 `d7c7ccf` fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

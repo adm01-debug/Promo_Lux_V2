@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "068b4ca297ad2c84e75e354d56b31974b902c3d0",
+  "commit": "6d4546e5545344e017d753aa056ec7b7fb9a0697",
   "branch": "main",
-  "data_commit": "2026-11-25T22:26:35-03:00",
+  "data_commit": "2026-11-25T22:37:30-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "6d4546e",
+    "data": "2026-11-25",
+    "assunto": "feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)"
+   },
    {
     "sha": "068b4ca",
     "data": "2026-11-25",
@@ -126,18 +131,13 @@
     "sha": "b5ca5ec",
     "data": "2026-11-25",
     "assunto": "fix(config): botao de custo Places API para de mentir (#214)"
-   },
-   {
-    "sha": "f5c5bab",
-    "data": "2026-11-25",
-    "assunto": "feat: audita as 5 tabelas criticas fora da trilha (#212)"
    }
   ],
-  "arquivos_mudados_7d": 379,
+  "arquivos_mudados_7d": 383,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 145
+    "mudancas": 150
    },
    {
     "pasta": "src/integrations/supabase",
@@ -149,7 +149,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 22
+    "mudancas": 23
    },
    {
     "pasta": "package.json",
@@ -180,15 +180,15 @@
     "mudancas": 8
    },
    {
+    "pasta": "src/pages/Monitoring.tsx",
+    "mudancas": 8
+   },
+   {
     "pasta": "supabase/config.toml",
     "mudancas": 8
    },
    {
     "pasta": "scripts/automation.config.json",
-    "mudancas": 7
-   },
-   {
-    "pasta": "src/pages/Monitoring.tsx",
     "mudancas": 7
    },
    {
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 22
+    "mudancas": 23
    },
    {
     "arquivo": "package.json",
@@ -230,15 +230,15 @@
     "mudancas": 8
    },
    {
+    "arquivo": "src/pages/Monitoring.tsx",
+    "mudancas": 8
+   },
+   {
     "arquivo": "scripts/automation.config.json",
     "mudancas": 7
    },
    {
     "arquivo": "src/integrations/supabase/withOrg.ts",
-    "mudancas": 7
-   },
-   {
-    "arquivo": "src/pages/Monitoring.tsx",
     "mudancas": 7
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 184
+    "commits": 185
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1186,
-  "arquivos_codigo": 740,
-  "linhas_codigo": 128837,
+  "arquivos_total": 1188,
+  "arquivos_codigo": 742,
+  "linhas_codigo": 129118,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 28,
   "modulos": 23,
-  "componentes": 268,
+  "componentes": 269,
   "hooks": 97,
   "edge_functions": 62,
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 156,
+  "testes": 157,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -559,8 +559,8 @@
    "linhas": 124
   },
   "src/components": {
-   "arquivos": 320,
-   "linhas": 53568
+   "arquivos": 322,
+   "linhas": 53834
   },
   "src/contexts": {
    "arquivos": 9,
@@ -584,7 +584,7 @@
   },
   "src/pages": {
    "arquivos": 11,
-   "linhas": 2292
+   "linhas": 2307
   },
   "src/test": {
    "arquivos": 4,
@@ -657,16 +657,16 @@
    "linhas": 841
   },
   {
+   "arquivo": "src/pages/Monitoring.tsx",
+   "linhas": 771
+  },
+  {
    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
    "linhas": 769
   },
   {
    "arquivo": "supabase/functions/lusha-decision-makers/index.ts",
    "linhas": 759
-  },
-  {
-   "arquivo": "src/pages/Monitoring.tsx",
-   "linhas": 756
   },
   {
    "arquivo": "supabase/functions/oracle-search-decisors/index.ts",
@@ -719,7 +719,7 @@
   "ts_ignore": 0,
   "eslint_disable": 0,
   "todos": 5,
-  "arquivos_acima_500_linhas": 26
+  "arquivos_acima_500_linhas": 27
  },
  "todos": [
   {

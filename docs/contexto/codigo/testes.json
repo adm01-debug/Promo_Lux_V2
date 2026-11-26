@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 156,
+ "total": 157,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 134
+  "unit": 135
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 109
+   "arquivos": 110
   },
   {
    "padrao": "e2e/",
@@ -659,6 +659,18 @@
     "src/hooks/useStatusPage.ts"
    ],
    "casos": 9
+  },
+  {
+   "arquivo": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+   "tipo": "unit",
+   "linhas": 142,
+   "testa": [
+    "src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
+    "src/components/lux/monitoring/PainelComEstado.tsx",
+    "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx",
+    "src/components/lux/monitoring/VaultCookiesPanel.tsx"
+   ],
+   "casos": 7
   },
   {
    "arquivo": "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts",
@@ -1537,12 +1549,16 @@
   "src/components/lux/monitoring/ChaosEngineeringPanel.tsx": 2,
   "src/components/lux/monitoring/DlqAlertSettingsCard.tsx": 1,
   "src/components/lux/monitoring/DlqHealthCard.tsx": 1,
+  "src/components/lux/monitoring/InstagramEnqueuePanel.tsx": 1,
   "src/components/lux/monitoring/JobDetailsSheet.tsx": 1,
   "src/components/lux/monitoring/MonitoringView.tsx": 2,
   "src/components/lux/monitoring/MultiQueueResilienceCard.tsx": 1,
+  "src/components/lux/monitoring/PainelComEstado.tsx": 1,
   "src/components/lux/monitoring/QaHistoryPanel.tsx": 1,
+  "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx": 1,
   "src/components/lux/monitoring/SlaCompliancePanel.tsx": 1,
   "src/components/lux/monitoring/SlaTrendChart.tsx": 1,
+  "src/components/lux/monitoring/VaultCookiesPanel.tsx": 1,
   "src/components/lux/monitoring/slaHistoryChartData.ts": 1,
   "src/components/lux/monitoring/slaRiskAnalysis.ts": 1,
   "src/components/lux/stakeholders/StakeholderCard.tsx": 1,

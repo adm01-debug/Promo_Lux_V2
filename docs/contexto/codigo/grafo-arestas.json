@@ -1333,6 +1333,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/components/lux/monitoring/InstagramEnqueuePanel.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/alert.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -1394,6 +1395,9 @@
    "src/components/ui/textarea.tsx",
    "src/hooks/useOrgRateLimit.ts"
   ],
+  "src/components/lux/monitoring/PainelComEstado.tsx": [
+   "src/components/ui/button.tsx"
+  ],
   "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx": [
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -1453,6 +1457,7 @@
    "src/lib/utils.ts"
   ],
   "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/alert-dialog.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
@@ -1555,6 +1560,7 @@
    "src/integrations/supabase/client.ts"
   ],
   "src/components/lux/monitoring/VaultCookiesPanel.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
@@ -2490,6 +2496,7 @@
    "src/components/lux/monitoring/MonteCarloReportPanel.tsx",
    "src/components/lux/monitoring/MultiQueueResilienceCard.tsx",
    "src/components/lux/monitoring/OrgRateLimitsView.tsx",
+   "src/components/lux/monitoring/PainelComEstado.tsx",
    "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx",
    "src/components/lux/monitoring/QaHistoryPanel.tsx",
    "src/components/lux/monitoring/ReaperHistoryPanel.tsx",

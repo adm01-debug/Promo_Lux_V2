@@ -144,9 +144,9 @@
   },
   {
    "modulo": "components/lux",
-   "arquivos": 220,
-   "testes": 42,
-   "linhas": 43957,
+   "arquivos": 221,
+   "testes": 43,
+   "linhas": 44081,
    "itens_menu": [
     "Agente IA",
     "Analytics",
@@ -201,7 +201,7 @@
     "workflows"
    ],
    "rotas_http": [],
-   "componentes": 201,
+   "componentes": 202,
    "hooks_locais": [
     "useAcknowledgeAdvisory",
     "useActiveOrganization",
@@ -2257,7 +2257,7 @@
    "modulo": "pages",
    "arquivos": 11,
    "testes": 0,
-   "linhas": 2292,
+   "linhas": 2307,
    "itens_menu": [
     "Empresas (Admin)",
     "Monitoramento"

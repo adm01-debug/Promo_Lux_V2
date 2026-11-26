@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `068b4ca297` · branch `main` · 2026-11-26 01:34 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `6d4546e554` · branch `main` · 2026-11-26 01:38 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2170,6 +2170,7 @@ _nenhum item encontrado_
 | Falha ao executar ação. | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
 | Falha ao reiniciar etapa. | `src/components/lux/monitoring/JobDetailsSheet.tsx` |
 | Falha ao salvar: ${e instanceof Error ? e.message :  | `src/components/lux/monitoring/OrgRateLimitsView.tsx` |
+|          className= | `src/components/lux/monitoring/PainelComEstado.tsx` |
 | Falha ao aplicar | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
 | Falha ao dispensar | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
 | Falha ao reverter | `src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx` |
@@ -2308,8 +2309,7 @@ _nenhum item encontrado_
 | [apify-gateway timeout] getDatasetItems: exceeded ${fault.timeoutMs ?? 50}ms (mock fault) | `supabase/functions/_shared/apify-gateway.ts` |
 | [apify-gateway timeout] startActorRun: exceeded ${fault.timeoutMs ?? 50}ms (mock fault) | `supabase/functions/_shared/apify-gateway.ts` |
 | ${method}: ${code} — ${desc} | `supabase/functions/_shared/bitrix-client.ts` |
-| ${method}: HTTP ${res.status} — ${text.slice(0, 180)} | `supabase/functions/_shared/bitrix-client.ts` |
-| … +68 linhas — lista completa em `context.json` | |
+| … +69 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2332,7 +2332,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1346 testes em 140 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1355 testes em 141 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2381,6 +2381,7 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/scim-core.test.ts` | 10 | normalizeScimPath strips gateway prefix · normalizeScimPath strips bare /scim mount · normalizeScimPath keeps /v2 paths and normalizes leading slash · parseUserNameFilter extracts quoted value … |
 | `src/components/lux/lusha/DecisionMakersGrid.test.tsx` | 9 | DecisionMakersGrid · renderiza header do domínio + badge com total quando não há erro · renderiza badge de erro e não desenha a tabela quando r.error existe · renderiza linha por decisor com nome, cargo e link do LinkedIn … |
 | `src/components/lux/lusha/types.test.ts` | 9 | types.ts (R34) — contratos · DeptGroup: label + items · LushaContact aceita nullables e recusa campos ausentes · LushaSession: arrays nullable e status nullable … |
+| `src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx` | 9 | PainelComEstado · mostra a falha com nova tentativa e esconde o conteudo · mostra o esqueleto enquanto carrega · mostra o vazio no lugar do conteudo … |
 | `src/hooks/__tests__/useAuditTrail.test.ts` | 9 | fetchAuditTrail · pagina via range() com base em page/pageSize (1-indexada) · filtra apenas automações com .in() no conjunto esperado · filtra por tabela específica com .eq(table_name) … |
 | `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` | 9 | db (withOrg) — bulk DELETE scope guards · injeta organization_id ANTES de filtros adicionais (.in) · soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org · soft delete cobre TODAS as tabelas da lixeira — nenhuma delas emite DELETE real … |
 | `src/integrations/supabase/__tests__/withOrg.switching.test.ts` | 9 | withOrg — E2E switching de organização ativa · fluxo completo: opera em Org A, troca para Org B, e o filtro de leitura acompanha · bloqueia leitura cross-org: estando em Org A, cliente NÃO consegue forçar SELECT em Org B · bloqueia escrita cross-org após switch: tentar inserir com org antiga é interceptado … |

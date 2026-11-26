@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "068b4ca297ad2c84e75e354d56b31974b902c3d0",
+  "sha": "6d4546e5545344e017d753aa056ec7b7fb9a0697",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 01:34 UTC",
-  "files_total": 1207,
-  "code_files": 1018,
-  "code_lines": 151264
+  "generated_at": "2026-11-26 01:38 UTC",
+  "files_total": 1209,
+  "code_files": 1020,
+  "code_lines": 151545
  },
  "version": "1.3.2",
- "facts_hash": "f2f3fe3c1169367c",
+ "facts_hash": "49eb4d3837d7d5a6",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -247,7 +247,7 @@
   "package_manager": "bun",
   "languages": {
    ".ts": 393,
-   ".tsx": 318,
+   ".tsx": 320,
    ".sql": 274,
    ".mjs": 23,
    ".py": 5,
@@ -30360,7 +30360,7 @@
      "sla_recommendations",
      "source_quality_report"
     ],
-    "deps_count": 122
+    "deps_count": 123
    },
    {
     "path": "",
@@ -32466,7 +32466,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 320,
+  "components_count": 322,
   "hooks": [
    {
     "name": "useContacts",
@@ -33493,8 +33493,8 @@
   },
   {
    "module": "src/components",
-   "files": 320,
-   "lines": 53568,
+   "files": 322,
+   "lines": 53834,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -34155,7 +34155,7 @@
   {
    "module": "src/pages",
    "files": 11,
-   "lines": 2292,
+   "lines": 2307,
    "tables": [
     "automation_alerts",
     "scrape_jobs"
@@ -39586,6 +39586,10 @@
    {
     "file": "src/components/lux/monitoring/OrgRateLimitsView.tsx",
     "msg": "Falha ao salvar: ${e instanceof Error ? e.message : "
+   },
+   {
+    "file": "src/components/lux/monitoring/PainelComEstado.tsx",
+    "msg": "\n        className="
    },
    {
     "file": "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx",
@@ -55036,6 +55040,42 @@
    {
     "file": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
     "name": "funil de enriquecimento mostra erro e não zeros"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+    "name": "PainelComEstado"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+    "name": "mostra a falha com nova tentativa e esconde o conteudo"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+    "name": "mostra o esqueleto enquanto carrega"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+    "name": "mostra o vazio no lugar do conteudo"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+    "name": "mostra o conteudo quando ha dados"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+    "name": "paineis que adotaram o envelopamento de estado"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+    "name": "InstagramEnqueuePanel nao anuncia fila vazia quando a leitura falha"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+    "name": "RetryPolicyAdvisoriesPanel nao anuncia politica calibrada quando a leitura falha"
+   },
+   {
+    "file": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+    "name": "VaultCookiesPanel aponta falha nos cards e no historico de alertas"
    },
    {
     "file": "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts",
@@ -85722,7 +85762,7 @@
   },
   "src/components/lux/monitoring/InstagramEnqueuePanel.tsx": {
    "path": "src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
-   "lines": 177,
+   "lines": 184,
    "exports": [
     "function InstagramEnqueuePanel"
    ],
@@ -86075,6 +86115,16 @@
     }
    ]
   },
+  "src/components/lux/monitoring/PainelComEstado.tsx": {
+   "path": "src/components/lux/monitoring/PainelComEstado.tsx",
+   "lines": 82,
+   "exports": [
+    "function PainelComEstado"
+   ],
+   "errors": [
+    "\n        className="
+   ]
+  },
   "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx": {
    "path": "src/components/lux/monitoring/PartitionAdvisoryPanel.tsx",
    "lines": 181,
@@ -86157,7 +86207,7 @@
   },
   "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx": {
    "path": "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx",
-   "lines": 330,
+   "lines": 339,
    "exports": [
     "function RetryPolicyAdvisoriesPanel"
    ],
@@ -86541,7 +86591,7 @@
   },
   "src/components/lux/monitoring/VaultCookiesPanel.tsx": {
    "path": "src/components/lux/monitoring/VaultCookiesPanel.tsx",
-   "lines": 475,
+   "lines": 501,
    "exports": [
     "function VaultCookiesPanel"
    ],
@@ -86691,6 +86741,26 @@
     "simulador de caos mostra erro e não o estado desligado",
     "detalhes da execução mostram erro nas etapas e não ",
     "funil de enriquecimento mostra erro e não zeros"
+   ]
+  },
+  "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx": {
+   "path": "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+   "lines": 142,
+   "is_test": true,
+   "errors": [
+    ")).not.toBeInTheDocument();\n  });\n});\n\ndescribe(",
+    ")).toBeInTheDocument();\n    expect(screen.getByText("
+   ],
+   "tests": [
+    "PainelComEstado",
+    "mostra a falha com nova tentativa e esconde o conteudo",
+    "mostra o esqueleto enquanto carrega",
+    "mostra o vazio no lugar do conteudo",
+    "mostra o conteudo quando ha dados",
+    "paineis que adotaram o envelopamento de estado",
+    "InstagramEnqueuePanel nao anuncia fila vazia quando a leitura falha",
+    "RetryPolicyAdvisoriesPanel nao anuncia politica calibrada quando a leitura falha",
+    "VaultCookiesPanel aponta falha nos cards e no historico de alertas"
    ]
   },
   "src/components/lux/monitoring/__tests__/slaHistoryChartData.test.ts": {
@@ -94282,7 +94352,7 @@
   },
   "src/pages/Monitoring.tsx": {
    "path": "src/pages/Monitoring.tsx",
-   "lines": 756,
+   "lines": 771,
    "exports": [
     "default AutomationMonitoring"
    ],
@@ -103317,10 +103387,25 @@
   }
  },
  "git": {
-  "sha": "068b4ca297ad2c84e75e354d56b31974b902c3d0",
+  "sha": "6d4546e5545344e017d753aa056ec7b7fb9a0697",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "6d4546e",
+    "date": "2026-11-25",
+    "author": "adm01-debug",
+    "subject": "feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
+     "src/components/lux/monitoring/PainelComEstado.tsx",
+     "src/components/lux/monitoring/RetryPolicyAdvisoriesPanel.tsx",
+     "src/components/lux/monitoring/VaultCookiesPanel.tsx",
+     "src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx",
+     "src/pages/Monitoring.tsx"
+    ]
+   },
    {
     "sha": "068b4ca",
     "date": "2026-11-25",
@@ -103748,21 +103833,16 @@
     "files": [
      "supabase/functions/audit-logs-prune/index.ts"
     ]
-   },
-   {
-    "sha": "b85b5ad",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(cron): warmup da API publica nao e agendado quando a chave falta no Vault (#207)",
-    "files": [
-     "supabase/migrations/20261125140000_warmup_nao_agenda_sem_chave.sql"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    21
+    22
+   ],
+   [
+    "src/pages/Monitoring.tsx",
+    4
    ],
    [
     "src/components/lux/CampaignsView.tsx",
@@ -103774,10 +103854,6 @@
    ],
    [
     "src/components/lux/WorkflowsView.tsx",
-    3
-   ],
-   [
-    "src/pages/Monitoring.tsx",
     3
    ],
    [
