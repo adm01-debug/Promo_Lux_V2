@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 165,
+ "total": 166,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 143
+  "unit": 144
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 118
+   "arquivos": 119
   },
   {
    "padrao": "e2e/",
@@ -1558,6 +1558,15 @@
    "casos": 3
   },
   {
+   "arquivo": "supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts",
+   "tipo": "unit",
+   "linhas": 48,
+   "testa": [
+    "supabase/functions/prune-job-exports/regras.ts"
+   ],
+   "casos": 5
+  },
+  {
    "arquivo": "supabase/functions/rls-tests/index.test.ts",
    "tipo": "unit",
    "linhas": 208,
@@ -1727,6 +1736,7 @@
   "supabase/functions/_shared/web-scrape/html-to-markdown.ts": 1,
   "supabase/functions/_shared/web-scrape/robots.ts": 1,
   "supabase/functions/_shared/workflow-phases.ts": 1,
+  "supabase/functions/prune-job-exports/regras.ts": 1,
   "supabase/functions/rls-tests/_fixtures.ts": 1
  },
  "sem_teste": {

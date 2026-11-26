@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c6c2424c18` · branch `main` · 2026-11-26 12:53 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7389012b9b` · branch `main` · 2026-11-26 15:30 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -930,7 +930,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `email_sync_log` | `status` | `error`, `refresh_failed`, `skipped`, `success` |  |
 | `health_checks` | `status` | `degraded`, `healthy`, `unhealthy` |  |
 | `circuit_breakers` | `state` | `closed`, `half-open`, `open` | `closed` |
-| `job_exports` | `status` | `failed`, `pending`, `processing`, `ready` | `pending` |
+| `job_exports` | `status` | `completed`, `expired`, `failed`, `pending`, `processing`, `ready` | `pending` |
 | `automation_steps` | `status` | `pending`, `running`, `completed`, `failed`, `cancelled` | `pending` |
 | `scrape_queue` | `status` | `queued`, `processing`, `succeeded`, `dead` | `queued` |
 | `automation_execution_logs` | `step_name` | **livre (sem enum/CHECK)** |  |
@@ -1029,7 +1029,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `error_bitrix` | compara, escreve | `supabase/functions/oracle-push-bitrix/index.ts` |
 | `status` | `error_other` | compara, escreve | `supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `error_rate_limit` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
-| `status` | `expired` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts` |
+| `status` | `expired` | compara, escreve | `src/components/lux/ScrapeResultsView.tsx`<br>`src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts`<br>`supabase/functions/prune-job-exports/index.ts` |
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
 | `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +14 |
 | `status` | `fulfilled` | compara | `src/components/lux/StakeholderFinderView.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
@@ -1162,8 +1162,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `health_status` | `error` | compara | `supabase/functions/lusha-cookie-health/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/oracle-cookies-preflight/index.ts` |
 | `health_status` | `expired` | compara, escreve | `supabase/functions/_shared/cookies.ts`<br>`supabase/functions/lusha-cookie-health/index.ts`<br>`supabase/functions/lusha-search/index.ts`<br>`supabase/functions/oracle-cookies-preflight/index.ts` |
 | `health_status` | `expiring_soon` | compara | `supabase/functions/lusha-cookie-health/index.ts` |
+| `etapa` | `geral` | escreve | `supabase/functions/prune-job-exports/index.ts` |
 | `etapa` | `job_exports` | escreve | `supabase/functions/export-scrape-job/index.ts` |
-| `etapa` | `storage` | escreve | `supabase/functions/export-scrape-job/index.ts` |
+| `etapa` | `storage` | escreve | `supabase/functions/export-scrape-job/index.ts`<br>`supabase/functions/prune-job-exports/index.ts` |
 | `current_step` | `enrich` | escreve | `supabase/functions/workflow-engine/index.ts` |
 | `current_step` | `ipc_score` | escreve | `supabase/functions/workflow-engine/index.ts` |
 | `current_step` | `save` | escreve | `supabase/functions/workflow-engine/index.ts` |
@@ -1803,6 +1804,14 @@ _nenhum item encontrado_
 | `ALERT_EVENT` | `"security.org_violation_threshold"` | `supabase/functions/org-violation-alerts/index.ts` |
 | `ERROR_RATE_THRESHOLD` | `5.0` | `supabase/functions/pg-net-watchdog/index.ts` |
 | `BACKLOG_THRESHOLD` | `100` | `supabase/functions/pg-net-watchdog/index.ts` |
+| `BUCKET` | `"job-exports"` | `supabase/functions/prune-job-exports/index.ts` |
+| `RETENCAO_DIAS_PADRAO` | `90` | `supabase/functions/prune-job-exports/index.ts` |
+| `LOTE` | `500` | `supabase/functions/prune-job-exports/index.ts` |
+| `FATIA` | `100` | `supabase/functions/prune-job-exports/index.ts` |
+| `PAGINA_LIST` | `1000` | `supabase/functions/prune-job-exports/index.ts` |
+| `PAGINA_DB` | `1000` | `supabase/functions/prune-job-exports/index.ts` |
+| `MAX_PROFUNDIDADE` | `5` | `supabase/functions/prune-job-exports/index.ts` |
+| `MAX_ENTRADAS` | `50` | `supabase/functions/prune-job-exports/index.ts` |
 | `API_RATE_LIMIT_PER_HOUR` | `600` | `supabase/functions/public-api/index.ts` |
 | `SCIM_ERROR_SCHEMA` | `"urn:ietf:params:scim:api:messages:2.0:Error"` | `supabase/functions/scim/index.ts` |
 | `SCIM_CONTENT_TYPE` | `"application/scim+json"` | `supabase/functions/scim/index.ts` |
@@ -2319,7 +2328,7 @@ _nenhum item encontrado_
 | [apify-gateway ${response.status}] getDatasetItems: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
 | [apify-gateway ${response.status}] getRunStatus: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
 | [apify-gateway ${response.status}] startActorRun: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
-| … +71 linhas — lista completa em `context.json` | |
+| … +72 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2343,7 +2352,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 | `admin` | `supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql` |
 
-## K. Testes como especificação (1396 testes em 149 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1401 testes em 150 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2452,6 +2461,7 @@ _nenhum item encontrado_
 | `supabase/functions/_shared/__tests__/hiker-normalize.test.ts` | 5 | normalize(profile) — business + creator sem undefined · normalize(posts) — image, reel, carousel, sponsored sem undefined · normalize(hashtag) — inclui tag e cobre reel/carousel · normalize(comments) — root + reply sem undefined … |
 | `supabase/functions/gmaps-proxy/__tests__/contingencia-grava.test.ts` | 5 | gmaps-proxy: contingencia com Places grava antes de concluir · usa o gravador compartilhado da etapa 051 · grava antes de dar o job como concluido · nao conclui a tarefa quando nada foi gravado … |
 | `supabase/functions/gmaps-proxy/__tests__/nao-importa-jobs-alheios.test.ts` | 5 | gmaps-proxy: listagem do fornecedor nao importa jobs alheios · nao insere job novo a partir da listagem compartilhada · casa o job local pela organizacao, nao pelo usuario que pediu · atualiza o estado do job local pelo id … |
+| `supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts` | 5 | arquivo com linha no banco nunca e candidato · orfao mais velho que a retencao e candidato · orfao dentro da retencao espera a proxima janela · pasta (uuid sem extensao) nunca e apagada, nem se estiver orfa … |
 | `e2e/instagram-dlq-replay.spec.ts` | 4 | Instagram motor — enqueue → resultados → DLQ replay · ciclo completo: sucesso + DLQ + replay bem-sucedido · Monitoring → aba Instagram (UI) · renderiza painel de conexão e expõe ação de testar credenciais |
 | `e2e/invite-accept.spec.ts` | 4 | Convite — /invite/:token · redireciona visitante não autenticado para /login preservando o token · página de login continua funcional após vir de um convite · não aceita o convite automaticamente (requer ação do usuário) |
 | `src/components/lux/SafeHTML.test.tsx` | 4 | SafeHTML XSS Protection · should escape script tags · should escape event handlers · should convert newlines to <br /> |
@@ -2744,6 +2754,10 @@ _nenhum item encontrado_
 | limite configurado de OrgMismatchError dentro da janela definida | `supabase/functions/org-violation-alerts/index.ts` |
 | limite e está fora do cooldown: | `supabase/functions/org-violation-alerts/index.ts` |
 | * O endpoint não retorna dados sensíveis: apenas resumo agregado. | `supabase/functions/org-violation-alerts/index.ts` |
+| continua intacto; some apenas o arquivo. | `supabase/functions/prune-job-exports/index.ts` |
+| apenas se forem mais velhos que a retencao - um upload feito entre a | `supabase/functions/prune-job-exports/index.ts` |
+| * Regra de selecao dos arquivos orfaos do bucket `job-exports`. | `supabase/functions/prune-job-exports/regras.ts` |
+| @param corte      ISO do limite de retencao; arquivo mais novo nunca entra | `supabase/functions/prune-job-exports/regras.ts` |
 | GET    /companies?limit=&offset= | `supabase/functions/public-api/index.ts` |
 | GET    /events?limit=&after=&table=&action=  (Zapier polling trigger) | `supabase/functions/public-api/index.ts` |
 | Limite de requisições por API key por hora (janela fixa, server-side) | `supabase/functions/public-api/index.ts` |

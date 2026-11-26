@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "pasta": "supabase/functions",
- "total": 62,
+ "total": 63,
  "verify_jwt_false": [
   "admin-list-companies",
   "campaign-dispatch",
@@ -15,6 +15,7 @@
   "mcp",
   "mcp-query",
   "pg-net-watchdog",
+  "prune-job-exports",
   "public-api",
   "purge-soft-deleted",
   "qa-ingest-run",
@@ -1544,6 +1545,35 @@
    "chamada_por_sql_ou_cron": true,
    "orfa": false,
    "testes": 0
+  },
+  {
+   "nome": "prune-job-exports",
+   "entrada": "supabase/functions/prune-job-exports/index.ts",
+   "arquivos": 2,
+   "linhas": 331,
+   "verify_jwt": false,
+   "metodos": [
+    "POST"
+   ],
+   "tabelas": [
+    "job_exports"
+   ],
+   "rpcs": [],
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "buckets": [],
+   "chama_edges": [],
+   "hosts_externos": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
+   "chamada_pelo_front": [],
+   "chamada_por_edges": [],
+   "chamada_por_sql_ou_cron": true,
+   "orfa": false,
+   "testes": 1
   },
   {
    "nome": "public-api",

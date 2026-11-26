@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "c6c2424c184a540fac7328af8a36c6ebdcbee6a7",
+  "commit": "7389012b9bc7a6247a2252a2d1e41152ec163501",
   "branch": "main",
-  "data_commit": "2026-11-26T09:50:54-03:00",
+  "data_commit": "2026-11-26T12:30:11-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "7389012",
+    "data": "2026-11-26",
+    "assunto": "infra: expurgo dos CSVs de exportacao depois de 90 dias (#273)"
+   },
    {
     "sha": "c6c2424",
     "data": "2026-11-26",
@@ -126,18 +131,13 @@
     "sha": "1122654",
     "data": "2026-11-25",
     "assunto": "fix(hooks): erros silenciados no funil, no passo a passo e nas mutacoes (etapas 195-199) (#235)"
-   },
-   {
-    "sha": "59db346",
-    "data": "2026-11-25",
-    "assunto": "feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)"
    }
   ],
-  "arquivos_mudados_7d": 411,
+  "arquivos_mudados_7d": 415,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 160
+    "mudancas": 161
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
@@ -176,11 +176,11 @@
     "mudancas": 10
    },
    {
-    "pasta": ".github/workflows/db-migrations.yml",
-    "mudancas": 9
+    "pasta": "supabase/config.toml",
+    "mudancas": 10
    },
    {
-    "pasta": "supabase/config.toml",
+    "pasta": ".github/workflows/db-migrations.yml",
     "mudancas": 9
    },
    {
@@ -210,15 +210,15 @@
     "mudancas": 20
    },
    {
+    "arquivo": "supabase/config.toml",
+    "mudancas": 11
+   },
+   {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 10
    },
    {
     "arquivo": "scripts/automation.config.json",
-    "mudancas": 10
-   },
-   {
-    "arquivo": "supabase/config.toml",
     "mudancas": 10
    },
    {
@@ -290,18 +290,18 @@
     "mudancas": 5
    },
    {
-    "arquivo": ".github/workflows/edge-functions-deploy.yml",
-    "mudancas": 4
+    "arquivo": "vitest.config.ts",
+    "mudancas": 5
    },
    {
-    "arquivo": ".github/workflows/inventario-estado-semanal.yml",
+    "arquivo": ".github/workflows/edge-functions-deploy.yml",
     "mudancas": 4
    }
   ],
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 202
+    "commits": 203
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1207,
-  "arquivos_codigo": 751,
-  "linhas_codigo": 130741,
+  "arquivos_total": 1211,
+  "arquivos_codigo": 754,
+  "linhas_codigo": 131121,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -320,11 +320,11 @@
   "modulos": 23,
   "componentes": 269,
   "hooks": 97,
-  "edge_functions": 62,
+  "edge_functions": 63,
   "tabelas": 121,
-  "migrations": 273,
-  "cron_jobs": 43,
-  "testes": 165,
+  "migrations": 274,
+  "cron_jobs": 44,
+  "testes": 166,
   "workflows": 11,
   "scripts": 58,
   "docs_md": 87
@@ -595,8 +595,8 @@
    "linhas": 170
   },
   "supabase/functions": {
-   "arquivos": 140,
-   "linhas": 25780
+   "arquivos": 143,
+   "linhas": 26159
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -608,7 +608,7 @@
   },
   "vitest.config.ts": {
    "arquivos": 1,
-   "linhas": 74
+   "linhas": 75
   }
  },
  "maiores_arquivos": [

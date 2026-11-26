@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c6c2424c18` · branch `main` · 2026-11-26 12:53 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7389012b9b` · branch `main` · 2026-11-26 15:30 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -275,7 +275,7 @@ _nenhum item encontrado_
 | status | valor `string` para `state` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/email-oauth-callback/index.ts` |
 | status | valor `expiring_soon` para `health_status` usado no código não existe em nenhum enum do banco/TS | `compara:supabase/functions/lusha-cookie-health/index.ts` |
 | status | valor `job_exports` para `etapa` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/export-scrape-job/index.ts` |
-| status | valor `storage` para `etapa` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/export-scrape-job/index.ts` |
+| status | valor `storage` para `etapa` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/export-scrape-job/index.ts`<br>`escreve:supabase/functions/prune-job-exports/index.ts` |
 | status | valor `save` para `current_step` usado no código não existe em nenhum enum do banco/TS | `escreve:supabase/functions/workflow-engine/index.ts` |
 | coluna | coluna `error_reason` usada no código não existe no schema de `instagram_scrape_dead_letter` |  |
 | coluna | coluna `score` usada no código não existe no schema de `intent_signals` |  |
@@ -362,6 +362,7 @@ _nenhum item encontrado_
 | dinâmico | 2 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` |
 | dinâmico | 1 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `src/test/mockSupabaseClient.ts` |
 | dinâmico | 1 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `supabase/functions/export-scrape-job/index.ts` |
+| dinâmico | 1 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `supabase/functions/prune-job-exports/index.ts` |
 | dinâmico | 5 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `supabase/functions/public-api/index.ts` |
 | dinâmico | 5 chamada(s) `.from(variável)` — tabela só conhecida em runtime | `supabase/functions/rls-tests/index.ts` |
 | segurança | função `prune_auth_rate_limits` é SECURITY DEFINER sem `set search_path` (risco de escalação) | `supabase/migrations/20260513164237_24ec468e-ca67-40db-a840-89690b09ca42.sql` |

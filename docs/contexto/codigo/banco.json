@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 273,
+ "migrations": 274,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -1264,6 +1264,12 @@
    "agenda": "* * * * *",
    "migration": "20261122280000_cron_instagram_worker.sql",
    "chama_edge": "instagram-worker"
+  },
+  {
+   "nome": "job-exports-retencao-diaria",
+   "agenda": "20 4 * * *",
+   "migration": "20261126180000_job_exports_retencao.sql",
+   "chama_edge": "prune-job-exports"
   },
   {
    "nome": "latency-alerts-15min",
@@ -10481,6 +10487,11 @@
    ],
    "indices": [
     {
+     "nome": "idx_job_exports_expiravel",
+     "colunas": "created_at",
+     "unico": false
+    },
+    {
      "nome": "idx_job_exports_job",
      "colunas": "job_id",
      "unico": false
@@ -10518,7 +10529,8 @@
    },
    "usada_no_front": 1,
    "usada_em_edges": [
-    "export-scrape-job"
+    "export-scrape-job",
+    "prune-job-exports"
    ],
    "triggers": [],
    "sem_rls": false,

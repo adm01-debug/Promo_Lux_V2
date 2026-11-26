@@ -2695,6 +2695,10 @@
   "supabase/functions/pg-net-watchdog/index.ts": [
    "supabase/functions/_shared/cron-auth.ts"
   ],
+  "supabase/functions/prune-job-exports/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts",
+   "supabase/functions/prune-job-exports/regras.ts"
+  ],
   "supabase/functions/public-api/index.ts": [
    "supabase/functions/_shared/api-rate-limit.ts"
   ],

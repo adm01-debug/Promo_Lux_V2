@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "c6c2424c184a540fac7328af8a36c6ebdcbee6a7",
+  "sha": "7389012b9bc7a6247a2252a2d1e41152ec163501",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 12:53 UTC",
-  "files_total": 1228,
-  "code_files": 1032,
-  "code_lines": 153329
+  "generated_at": "2026-11-26 15:30 UTC",
+  "files_total": 1232,
+  "code_files": 1036,
+  "code_lines": 153791
  },
  "version": "1.3.2",
- "facts_hash": "269592d30bda201d",
+ "facts_hash": "5a270a31a73cf026",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -254,9 +254,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 401,
+   ".ts": 404,
    ".tsx": 321,
-   ".sql": 277,
+   ".sql": 278,
    ".mjs": 23,
    ".py": 5,
    ".js": 4,
@@ -283,6 +283,7 @@
     "email-poll-replies",
     "gmaps-proxy",
     "pg-net-watchdog",
+    "prune-job-exports",
     "purge-soft-deleted",
     "reaper-alerts",
     "retry-policy-tuner",
@@ -4409,7 +4410,7 @@
      }
     ],
     "constraints": [
-     "constraint job_exports_status_check CHECK (status IN ('pending','processing','ready','failed'))"
+     "constraint job_exports_status_check check (status in ('pending','processing','ready','completed','expired','failed'))"
     ],
     "src": "supabase/migrations/20260522200911_96423cf5-4046-4014-8614-32fdce9f43da.sql",
     "comment": "",
@@ -23343,6 +23344,14 @@
     "unique": false,
     "where": "where status_code >= 500 or timed_out",
     "src": "supabase/migrations/20261125123000_cron_http_archive_7dias.sql"
+   },
+   {
+    "name": "idx_job_exports_expiravel",
+    "table": "job_exports",
+    "columns": "created_at",
+    "unique": false,
+    "where": "where file_url is not null",
+    "src": "supabase/migrations/20261126180000_job_exports_retencao.sql"
    }
   ],
   "cron_jobs": [
@@ -23381,6 +23390,12 @@
     "schedule": "* * * * *",
     "body": "SELECT net.http_post( url := 'https://pttzwlbidamibjssqiqb.supabase.co/functions/v1/instagram-worker', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', (select decrypted_secret from vault.decrypted_secrets where name = 'SUPABASE_SERVICE_ROLE_KEY'), 'Authorization', 'Beare …",
     "src": "supabase/migrations/20261122280000_cron_instagram_worker.sql"
+   },
+   {
+    "job": "job-exports-retencao-diaria",
+    "schedule": "20 4 * * *",
+    "body": "select net.http_post( url := 'https://pttzwlbidamibjssqiqb.supabase.co/functions/v1/prune-job-exports', headers := jsonb_build_object( 'Content-Type', 'application/json', 'apikey', (select decrypted_secret from vault.decrypted_secrets where name = 'SUPABASE_SERVICE_ROLE_KEY'), 'Authorization', 'Bear …",
+    "src": "supabase/migrations/20261126180000_job_exports_retencao.sql"
    }
   ],
   "views": {
@@ -23703,6 +23718,7 @@
    "supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql",
    "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
    "supabase/migrations/20261126140000_job_exports_bucket.sql",
+   "supabase/migrations/20261126180000_job_exports_retencao.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -30263,7 +30279,7 @@
    "column:qa_ingest_tokens.token_hash": "encode(sha256(token::bytea),'hex') — mesmo formato usado por org_integrations/SCIM.",
    "column:qa_ingest_tokens.revoked_at": "Preenchido no revoke; tokens revogados sao rejeitados e nao podem ser reativados.",
    "table:cron_http_archive": "Resposta HTTP das edge functions agendadas pelo cron, preservada por 7 dias. O pg_net mantem apenas ~6 h.",
-   "column:job_exports.file_url": "Caminho do objeto no bucket privado job-exports. Nulo quando o upload falhou ou em exportacoes anteriores ao bucket."
+   "column:job_exports.file_url": "Caminho do CSV no bucket privado job-exports. NULL quando o arquivo nunca foi gravado ou ja foi expurgado pela retencao (status = expired)."
   },
   "types_file": "src/integrations/supabase/types.ts"
  },
@@ -31522,6 +31538,30 @@
     "invokes": [],
     "doc": "pg-net-watchdog — Rodada #25 - Advisory lock impede execuções concorrentes (idempotência sob overlap de cron). - Dedup por cooldown (60 min) evita tempestade de notificações.",
     "errors": [],
+    "side_effects": [],
+    "webhook_events": [],
+    "idempotency": true
+   },
+   {
+    "name": "prune-job-exports",
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "methods": [
+     "POST?"
+    ],
+    "auth": "PÚBLICA (verify_jwt=false em config.toml)",
+    "tables": [
+     "job_exports"
+    ],
+    "env": [
+     "SUPABASE_SERVICE_ROLE_KEY",
+     "SUPABASE_URL"
+    ],
+    "external": [],
+    "invokes": [],
+    "doc": "",
+    "errors": [
+     "job_exports: ${leituraErro.message}"
+    ],
     "side_effects": [],
     "webhook_events": [],
     "idempotency": true
@@ -33216,7 +33256,7 @@
   {
    "module": "(raiz)",
    "files": 9,
-   "lines": 348,
+   "lines": 349,
    "tables": [],
    "exports": [
     "eslint.config.js: tseslint",
@@ -34300,8 +34340,8 @@
   },
   {
    "module": "supabase/functions",
-   "files": 140,
-   "lines": 25780,
+   "files": 143,
+   "lines": 26159,
    "tables": [
     "api_keys",
     "api_request_logs",
@@ -34422,6 +34462,7 @@
    ],
    "deps": [
     "https:",
+    "jsr:@std",
     "node:fs",
     "npm:@lovable.dev",
     "npm:@supabase",
@@ -34515,8 +34556,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 273,
-   "lines": 20763,
+   "files": 274,
+   "lines": 20845,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -35289,13 +35330,15 @@
    "job_exports": {
     "select": [
      "src/components/lux/ScrapeResultsView.tsx",
-     "supabase/functions/export-scrape-job/index.ts"
+     "supabase/functions/export-scrape-job/index.ts",
+     "supabase/functions/prune-job-exports/index.ts"
     ],
     "insert": [
      "supabase/functions/export-scrape-job/index.ts"
     ],
     "update": [
-     "supabase/functions/export-scrape-job/index.ts"
+     "supabase/functions/export-scrape-job/index.ts",
+     "supabase/functions/prune-job-exports/index.ts"
     ]
    },
    "lead_scores": {
@@ -37300,6 +37343,7 @@
     "supabase/functions/oracle-search-decisors/index.ts",
     "supabase/functions/org-violation-alerts/index.ts",
     "supabase/functions/pg-net-watchdog/index.ts",
+    "supabase/functions/prune-job-exports/index.ts",
     "supabase/functions/public-api/index.ts",
     "supabase/functions/purge-soft-deleted/index.ts",
     "supabase/functions/qa-ingest-run/index.ts",
@@ -37369,6 +37413,7 @@
     "supabase/functions/oracle-search-decisors/index.ts",
     "supabase/functions/org-violation-alerts/index.ts",
     "supabase/functions/pg-net-watchdog/index.ts",
+    "supabase/functions/prune-job-exports/index.ts",
     "supabase/functions/public-api/index.ts",
     "supabase/functions/purge-soft-deleted/index.ts",
     "supabase/functions/qa-ingest-run/index.ts",
@@ -38050,6 +38095,10 @@
    },
    {
     "file": "supabase/functions/export-scrape-job/index.ts",
+    "count": 1
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
     "count": 1
    },
    {
@@ -40397,6 +40446,10 @@
     "msg": "vault HTTP ${res.status}: ${body.slice(0, 200)}"
    },
    {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "msg": "job_exports: ${leituraErro.message}"
+   },
+   {
     "file": "supabase/functions/purge-soft-deleted/index.ts",
     "msg": "Unauthorized"
    },
@@ -41319,6 +41372,22 @@
    {
     "file": "supabase/functions/org-violation-alerts/index.ts",
     "text": "* O endpoint não retorna dados sensíveis: apenas resumo agregado."
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "text": "continua intacto; some apenas o arquivo."
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "text": "apenas se forem mais velhos que a retencao - um upload feito entre a"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/regras.ts",
+    "text": "* Regra de selecao dos arquivos orfaos do bucket `job-exports`."
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/regras.ts",
+    "text": "@param corte      ISO do limite de retencao; arquivo mais novo nunca entra"
    },
    {
     "file": "supabase/functions/public-api/index.ts",
@@ -43338,7 +43407,7 @@
    {
     "table": "job_exports",
     "column": "(tabela)",
-    "rule": "constraint job_exports_status_check CHECK (status IN ('pending','processing','ready','failed'))"
+    "rule": "constraint job_exports_status_check check (status in ('pending','processing','ready','completed','expired','failed'))"
    },
    {
     "table": "automation_steps",
@@ -47518,6 +47587,46 @@
     "value": "100"
    },
    {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "name": "BUCKET",
+    "value": "\"job-exports\""
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "name": "RETENCAO_DIAS_PADRAO",
+    "value": "90"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "name": "LOTE",
+    "value": "500"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "name": "FATIA",
+    "value": "100"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "name": "PAGINA_LIST",
+    "value": "1000"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "name": "PAGINA_DB",
+    "value": "1000"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "name": "MAX_PROFUNDIDADE",
+    "value": "5"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "name": "MAX_ENTRADAS",
+    "value": "50"
+   },
+   {
     "file": "supabase/functions/public-api/index.ts",
     "name": "API_RATE_LIMIT_PER_HOUR",
     "value": "600"
@@ -48280,6 +48389,12 @@
     "file": "src/components/lux/ScrapeResultsView.tsx",
     "field": "status",
     "value": "completed",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/ScrapeResultsView.tsx",
+    "field": "status",
+    "value": "expired",
     "kind": "compara"
    },
    {
@@ -52067,6 +52182,24 @@
     "field": "role",
     "value": "admin",
     "kind": "filtra"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "field": "etapa",
+    "value": "geral",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "field": "etapa",
+    "value": "storage",
+    "kind": "escreve"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/index.ts",
+    "field": "status",
+    "value": "expired",
+    "kind": "escreve"
    },
    {
     "file": "supabase/functions/qa-ingest-run/index.ts",
@@ -59083,6 +59216,26 @@
    {
     "file": "supabase/functions/gmaps-proxy/__tests__/sync-sem-consulta-dupla.test.ts",
     "name": "devolve o sync reconciliado, sem inventar empresas criadas"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts",
+    "name": "arquivo com linha no banco nunca e candidato"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts",
+    "name": "orfao mais velho que a retencao e candidato"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts",
+    "name": "orfao dentro da retencao espera a proxima janela"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts",
+    "name": "pasta (uuid sem extensao) nunca e apagada, nem se estiver orfa"
+   },
+   {
+    "file": "supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts",
+    "name": "respeita o lote e mantem a ordem da varredura"
    },
    {
     "file": "supabase/functions/rls-tests/index.test.ts",
@@ -68523,6 +68676,8 @@
      "column": "status",
      "enum": "",
      "allowed": [
+      "completed",
+      "expired",
       "failed",
       "pending",
       "processing",
@@ -69106,6 +69261,12 @@
      "CLOSED": [
       "compara:src/components/lux/LushaIntelligenceView.tsx"
      ],
+     "expired": [
+      "compara:src/components/lux/ScrapeResultsView.tsx",
+      "compara:src/components/lux/lusha/LushaCookieHealthBanner.tsx",
+      "escreve:supabase/functions/lusha-cookie-health/index.ts",
+      "escreve:supabase/functions/prune-job-exports/index.ts"
+     ],
      "connected": [
       "escreve:src/components/lux/SettingsView.tsx"
      ],
@@ -69190,10 +69351,6 @@
      ],
      "expiring_soon": [
       "compara:src/components/lux/lusha/LushaCookieHealthBanner.tsx"
-     ],
-     "expired": [
-      "compara:src/components/lux/lusha/LushaCookieHealthBanner.tsx",
-      "escreve:supabase/functions/lusha-cookie-health/index.ts"
      ],
      "enriching": [
       "compara:src/components/lux/lusha/OracleV2Panel.tsx"
@@ -69750,7 +69907,11 @@
       "escreve:supabase/functions/export-scrape-job/index.ts"
      ],
      "storage": [
-      "escreve:supabase/functions/export-scrape-job/index.ts"
+      "escreve:supabase/functions/export-scrape-job/index.ts",
+      "escreve:supabase/functions/prune-job-exports/index.ts"
+     ],
+     "geral": [
+      "escreve:supabase/functions/prune-job-exports/index.ts"
      ]
     },
     "current_step": {
@@ -71721,6 +71882,7 @@
    "supabase/functions/oracle-search-decisors/index.ts",
    "supabase/functions/org-violation-alerts/index.ts",
    "supabase/functions/pg-net-watchdog/index.ts",
+   "supabase/functions/prune-job-exports/index.ts",
    "supabase/functions/public-api/index.ts",
    "supabase/functions/purge-soft-deleted/index.ts",
    "supabase/functions/qa-ingest-run/index.ts",
@@ -71879,7 +72041,8 @@
    "supabase/migrations/20261124230000_public_api_list_roundtrip_unico.sql",
    "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
    "supabase/migrations/20261125160000_auditoria_tabelas_criticas.sql",
-   "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
+   "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
+   "supabase/migrations/20261126180000_job_exports_retencao.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -72075,6 +72238,7 @@
    "email-poll-replies",
    "gmaps-proxy",
    "pg-net-watchdog",
+   "prune-job-exports",
    "purge-soft-deleted",
    "reaper-alerts",
    "retry-policy-tuner",
@@ -78946,7 +79110,8 @@
     "kind": "status",
     "msg": "valor `storage` para `etapa` usado no código não existe em nenhum enum do banco/TS",
     "where": [
-     "escreve:supabase/functions/export-scrape-job/index.ts"
+     "escreve:supabase/functions/export-scrape-job/index.ts",
+     "escreve:supabase/functions/prune-job-exports/index.ts"
     ]
    },
    {
@@ -79481,6 +79646,13 @@
    },
    {
     "kind": "dinâmico",
+    "msg": "1 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
+    "where": [
+     "supabase/functions/prune-job-exports/index.ts"
+    ]
+   },
+   {
+    "kind": "dinâmico",
     "msg": "5 chamada(s) `.from(variável)` — tabela só conhecida em runtime",
     "where": [
      "supabase/functions/public-api/index.ts"
@@ -79576,7 +79748,7 @@
   },
   "vitest.config.ts": {
    "path": "vitest.config.ts",
-   "lines": 74,
+   "lines": 75,
    "exports": [
     "default defineConfig"
    ]
@@ -83397,6 +83569,11 @@
     {
      "field": "status",
      "value": "completed",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "expired",
      "kind": "compara"
     }
    ],
@@ -100682,6 +100859,135 @@
    "doc": "pg-net-watchdog — Rodada #25 - Advisory lock impede execuções concorrentes (idempotência sob overlap de cron). - Dedup por cooldown (60 min) evita tempestade de notificações.",
    "uses_service_role": true
   },
+  "supabase/functions/prune-job-exports/index.ts": {
+   "path": "supabase/functions/prune-job-exports/index.ts",
+   "lines": 296,
+   "tables": [
+    {
+     "table": "job_exports",
+     "op": "select"
+    },
+    {
+     "table": "job_exports",
+     "op": "update"
+    },
+    {
+     "table": "job_exports",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "job_exports": [
+     "created_at",
+     "file_url",
+     "id"
+    ]
+   },
+   "dyn_from": 1,
+   "env": [
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL"
+   ],
+   "errors": [
+    "job_exports: ${leituraErro.message}"
+   ],
+   "params": [
+    {
+     "name": "BUCKET",
+     "value": "\"job-exports\""
+    },
+    {
+     "name": "RETENCAO_DIAS_PADRAO",
+     "value": "90"
+    },
+    {
+     "name": "LOTE",
+     "value": "500"
+    },
+    {
+     "name": "FATIA",
+     "value": "100"
+    },
+    {
+     "name": "PAGINA_LIST",
+     "value": "1000"
+    },
+    {
+     "name": "PAGINA_DB",
+     "value": "1000"
+    },
+    {
+     "name": "MAX_PROFUNDIDADE",
+     "value": "5"
+    },
+    {
+     "name": "MAX_ENTRADAS",
+     "value": "50"
+    }
+   ],
+   "status_values": [
+    {
+     "field": "etapa",
+     "value": "geral",
+     "kind": "escreve"
+    },
+    {
+     "field": "etapa",
+     "value": "storage",
+     "kind": "escreve"
+    },
+    {
+     "field": "status",
+     "value": "expired",
+     "kind": "escreve"
+    }
+   ],
+   "rule_comments": [
+    "continua intacto; some apenas o arquivo.",
+    "apenas se forem mais velhos que a retencao - um upload feito entre a"
+   ],
+   "uses_service_role": true
+  },
+  "supabase/functions/prune-job-exports/regras.ts": {
+   "path": "supabase/functions/prune-job-exports/regras.ts",
+   "lines": 35,
+   "exports": [
+    "type Arquivo",
+    "function ehArquivoApagavel",
+    "function selecionarOrfaos"
+   ],
+   "rule_comments": [
+    "* Regra de selecao dos arquivos orfaos do bucket `job-exports`.",
+    "@param corte      ISO do limite de retencao; arquivo mais novo nunca entra"
+   ],
+   "doc": "Regra de selecao dos arquivos orfaos do bucket `job-exports`. Fica separada do handler para poder ser testada: e a unica decisao desta function que apaga byte de verdade sem ter uma linha de banco como testemunha, entao cada trava precisa de prova propria."
+  },
+  "supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts": {
+   "path": "supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts",
+   "lines": 48,
+   "is_test": true,
+   "params": [
+    {
+     "name": "CORTE",
+     "value": "\"2026-09-01T00:00:00.000Z\""
+    },
+    {
+     "name": "VELHO",
+     "value": "\"2026-06-01T00:00:00.000Z\""
+    },
+    {
+     "name": "NOVO",
+     "value": "\"2026-11-20T00:00:00.000Z\""
+    }
+   ],
+   "tests": [
+    "arquivo com linha no banco nunca e candidato",
+    "orfao mais velho que a retencao e candidato",
+    "orfao dentro da retencao espera a proxima janela",
+    "pasta (uuid sem extensao) nunca e apagada, nem se estiver orfa",
+    "respeita o lote e mantem a ordem da varredura"
+   ]
+  },
   "supabase/functions/public-api/index.ts": {
    "path": "supabase/functions/public-api/index.ts",
    "lines": 528,
@@ -104205,13 +104511,33 @@
   "supabase/migrations/20261126140000_job_exports_bucket.sql": {
    "path": "supabase/migrations/20261126140000_job_exports_bucket.sql",
    "lines": 23
+  },
+  "supabase/migrations/20261126180000_job_exports_retencao.sql": {
+   "path": "supabase/migrations/20261126180000_job_exports_retencao.sql",
+   "lines": 82,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "c6c2424c184a540fac7328af8a36c6ebdcbee6a7",
+  "sha": "7389012b9bc7a6247a2252a2d1e41152ec163501",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "7389012",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "infra: expurgo dos CSVs de exportacao depois de 90 dias (#273)",
+    "files": [
+     "src/components/lux/ScrapeResultsView.tsx",
+     "supabase/config.toml",
+     "supabase/functions/prune-job-exports/__tests__/selecao-de-orfaos.test.ts",
+     "supabase/functions/prune-job-exports/index.ts",
+     "supabase/functions/prune-job-exports/regras.ts",
+     "supabase/migrations/20261126180000_job_exports_retencao.sql",
+     "vitest.config.ts"
+    ]
+   },
    {
     "sha": "c6c2424",
     "date": "2026-11-26",
@@ -104619,33 +104945,31 @@
      "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
      "src/integrations/supabase/__tests__/orgFixtureSync.test.ts"
     ]
-   },
-   {
-    "sha": "580b952",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(e2e): suite de RLS para de passar verde sem backend real (#226)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "e2e/helpers/supabase.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    24
+    23
    ],
    [
     "scripts/automation.config.json",
     4
    ],
    [
+    "src/components/lux/ScrapeResultsView.tsx",
+    3
+   ],
+   [
     "supabase/functions/gmaps-proxy/index.ts",
     3
    ],
    [
-    "src/components/lux/ScrapeResultsView.tsx",
+    "supabase/config.toml",
+    2
+   ],
+   [
+    "vitest.config.ts",
     2
    ],
    [
@@ -104702,14 +105026,6 @@
    ],
    [
     "src/hooks/useApiKeys.ts",
-    2
-   ],
-   [
-    "src/hooks/useEmailTemplates.ts",
-    2
-   ],
-   [
-    "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
     2
    ]
   ]

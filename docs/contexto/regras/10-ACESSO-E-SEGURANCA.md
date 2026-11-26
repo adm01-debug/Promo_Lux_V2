@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c6c2424c18` · branch `main` · 2026-11-26 12:53 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7389012b9b` · branch `main` · 2026-11-26 15:30 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -148,7 +148,7 @@
 
 > `—` com RLS ligado = ninguém além de service_role. `sem RLS` = qualquer chave anon lê/escreve tudo.
 
-## Onde o RLS é IGNORADO (service_role) — 210 arquivo(s)
+## Onde o RLS é IGNORADO (service_role) — 212 arquivo(s)
 
 - `e2e/dlq-web-smoke.spec.ts`
 - `e2e/instagram-dlq-replay.spec.ts`
@@ -201,6 +201,7 @@
 - `supabase/functions/oracle-search-decisors/index.ts`
 - `supabase/functions/org-violation-alerts/index.ts`
 - `supabase/functions/pg-net-watchdog/index.ts`
+- `supabase/functions/prune-job-exports/index.ts`
 - `supabase/functions/public-api/index.ts`
 - `supabase/functions/purge-soft-deleted/index.ts`
 - `supabase/functions/qa-ingest-run/index.ts`
@@ -299,8 +300,7 @@
 - `supabase/migrations/20260721225534_28c2ba63-b892-4c2a-bcbb-a4b31f0423de.sql`
 - `supabase/migrations/20260721225851_96d1133c-350c-4bd1-be9c-96de97456af1.sql`
 - `supabase/migrations/20260721225949_e0ca6ffa-efa2-4bd0-a116-c6425eb821cd.sql`
-- `supabase/migrations/20260721230244_719383a4-5877-4561-a2f0-368eb1ce49be.sql`
-- … +60 (lista completa em `context.json`)
+- … +62 (lista completa em `context.json`)
 
 ## Funções SQL `SECURITY DEFINER` (rodam com privilégio do dono, ignoram RLS)
 
@@ -498,6 +498,7 @@
 - `email-poll-replies`
 - `gmaps-proxy`
 - `pg-net-watchdog`
+- `prune-job-exports`
 - `purge-soft-deleted`
 - `reaper-alerts`
 - `retry-policy-tuner`
