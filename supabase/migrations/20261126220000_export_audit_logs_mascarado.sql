@@ -16,6 +16,22 @@
 -- Assinatura, filtros, cursor, ordenacao e grants permanecem identicos aos de
 -- 20261122240000_audit_log_export.sql: a UI nao precisa passar parametro novo e
 -- nenhuma chamada existente muda de forma.
+--
+-- Correcao de coluna: a versao original filtrava por `a.user_id`, coluna que nao
+-- existe em `audit_logs` (o schema real usa `actor_id` -- mesma divergencia ja
+-- documentada em 20260713123956 e corrigida em 20261124220000). Em plpgsql o
+-- corpo nao e validado na criacao, entao `export_audit_logs`, `count_audit_logs`
+-- e `read_audit_logs_safe` foram criados com sucesso e falhavam em tempo de
+-- execucao com "column a.user_id does not exist" -- ou seja, o botao Exportar do
+-- painel de auditoria nunca conseguiu ler uma linha. Aqui a coluna passa a ser
+-- `actor_id` e a comparacao de `action` vira explicita (`::text`) para nao
+-- depender de resolucao de operador entre `text` e o enum `public.audit_action`.
+
+-- O parametro `_user_id` vira `_actor_id` e a coluna de retorno `user_id` vira
+-- `actor_id`: CREATE OR REPLACE nao renomeia parametro ("cannot change name of input
+-- parameter"), entao a versao antiga e removida antes de recriar. Nenhum hook, view ou
+-- edge function depende dela (todas falhavam em execucao).
+DROP FUNCTION IF EXISTS public.export_audit_logs(uuid, timestamptz, timestamptz, text, text, uuid, timestamptz, uuid, int);
 
 CREATE OR REPLACE FUNCTION public.export_audit_logs(
   _org_id uuid,
@@ -23,7 +39,7 @@ CREATE OR REPLACE FUNCTION public.export_audit_logs(
   _to timestamptz DEFAULT NULL,
   _action text DEFAULT NULL,
   _table_name text DEFAULT NULL,
-  _user_id uuid DEFAULT NULL,
+  _actor_id uuid DEFAULT NULL,
   _after_created_at timestamptz DEFAULT NULL,
   _after_id uuid DEFAULT NULL,
   _limit int DEFAULT 1000
@@ -31,7 +47,7 @@ CREATE OR REPLACE FUNCTION public.export_audit_logs(
 RETURNS TABLE (
   id uuid,
   organization_id uuid,
-  user_id uuid,
+  actor_id uuid,
   action text,
   table_name text,
   record_id uuid,
@@ -59,8 +75,8 @@ BEGIN
   RETURN QUERY
   SELECT a.id,
          a.organization_id,
-         a.user_id,
-         a.action,
+         a.actor_id,
+         a.action::text,
          a.table_name,
          a.record_id,
          public.pii_redact_jsonb(_org_id, a.old_data) AS old_data,
@@ -71,9 +87,9 @@ BEGIN
   WHERE a.organization_id = _org_id
     AND (_from IS NULL OR a.created_at >= _from)
     AND (_to IS NULL OR a.created_at < _to)
-    AND (_action IS NULL OR a.action = _action)
+    AND (_action IS NULL OR a.action::text = _action)
     AND (_table_name IS NULL OR a.table_name = _table_name)
-    AND (_user_id IS NULL OR a.user_id = _user_id)
+    AND (_actor_id IS NULL OR a.actor_id = _actor_id)
     -- cursor: (created_at, id) estritamente posterior ao ultimo item exportado
     AND (
       _after_created_at IS NULL
@@ -86,4 +102,8 @@ END;
 $$;
 
 REVOKE ALL ON FUNCTION public.export_audit_logs(uuid, timestamptz, timestamptz, text, text, uuid, timestamptz, uuid, int) FROM public;
+-- O projeto concede EXECUTE a `anon` por default privileges: sem este REVOKE o
+-- visitante sem login continua com a funcao exposta na API (a barreira interna
+-- devolve "nao autenticado", mas a superficie nao precisa existir).
+REVOKE ALL ON FUNCTION public.export_audit_logs(uuid, timestamptz, timestamptz, text, text, uuid, timestamptz, uuid, int) FROM anon;
 GRANT EXECUTE ON FUNCTION public.export_audit_logs(uuid, timestamptz, timestamptz, text, text, uuid, timestamptz, uuid, int) TO authenticated;

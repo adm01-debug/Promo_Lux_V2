@@ -36,6 +36,12 @@ vi.mock("@/integrations/supabase/client", () => ({
 
 vi.mock("../SlaAlertSettingsCard", () => ({ SlaAlertSettingsCard: () => null }));
 
+// O painel da trilha lê as regras de mascaramento de PII para avisar o usuário.
+vi.mock("@/hooks/usePiiRules", async (importOriginal) => {
+  const real = await importOriginal<typeof import("@/hooks/usePiiRules")>();
+  return { ...real, usePiiRules: () => ({ data: [] }) };
+});
+
 vi.mock("@/hooks/useApiLatency", () => ({
   useApiLatency: () => ({ data: [], isLoading: false }),
   useApiLatencyTrend: () => ({ data: [], isLoading: false }),

@@ -7,7 +7,7 @@ import { toast } from "@/hooks/use-toast";
 export interface AuditLogRow {
   id: string;
   organization_id: string;
-  user_id: string | null;
+  actor_id: string | null;
   action: string;
   table_name: string;
   record_id: string;
@@ -112,7 +112,7 @@ export function useAuditLogExport() {
         } else if (format === "json") {
           content = JSON.stringify(rows, null, 2);
         } else {
-          const cols = ["id", "created_at", "action", "table_name", "record_id", "user_id"];
+          const cols = ["id", "created_at", "action", "table_name", "record_id", "actor_id"];
           const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
           content =
             cols.join(",") +

@@ -3,51 +3,38 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 /**
  * Guarda de regressão da fonte de dados da Trilha de Auditoria.
  *
- * Valida a construção da query (filtros de entidade/ação, paginação por range),
- * a junção do ator via `profiles` e o refinamento de busca no cliente — pontos
- * que quebrariam silenciosamente o painel de auditoria se o contrato mudasse.
+ * A trilha lê por `read_audit_logs_safe` (o mascaramento de PII roda no servidor)
+ * e não mais por `db.from("audit_logs")`. Este teste fixa os argumentos enviados
+ * à RPC (paginação, período, ação, conjunto de tabelas), a junção do ator via
+ * `profiles` e o refinamento de busca no cliente.
  */
 
-type Call = { method: string; args: unknown[] };
-const calls: Call[] = [];
-
-// Resultados injetáveis por tabela consultada.
-let auditResult: { data: unknown[]; count: number; error: unknown } = {
-  data: [],
-  count: 0,
-  error: null,
-};
+type RpcCall = { name: string; args: Record<string, unknown> };
+const rpcCalls: RpcCall[] = [];
+let rpcResult: { data: unknown; error: unknown } = { data: [], error: null };
 let profilesResult: { data: unknown[]; error: unknown } = { data: [], error: null };
+const fromCalls: string[] = [];
 
-function makeAuditBuilder() {
-  const b: Record<string, (...a: unknown[]) => unknown> = {};
-  for (const m of ["select", "order", "in", "eq"] as const) {
-    b[m] = vi.fn((...args: unknown[]) => {
-      calls.push({ method: m, args });
-      return b;
-    });
-  }
-  // range() encerra a cadeia da tabela audit_logs.
-  b.range = vi.fn((...args: unknown[]) => {
-    calls.push({ method: "range", args });
-    return Promise.resolve(auditResult);
-  });
-  return b;
-}
-
-function makeProfilesBuilder() {
-  const b: Record<string, (...a: unknown[]) => unknown> = {};
-  b.select = vi.fn(() => b);
-  // in() encerra a cadeia de profiles.
-  b.in = vi.fn(() => Promise.resolve(profilesResult));
-  return b;
-}
+vi.mock("@/integrations/supabase/client", () => ({
+  supabase: {
+    rpc: vi.fn((name: string, args: Record<string, unknown>) => {
+      rpcCalls.push({ name, args });
+      return Promise.resolve(rpcResult);
+    }),
+  },
+}));
 
 vi.mock("@/integrations/supabase/withOrg", () => ({
+  getActiveOrgId: () => "org-1",
   db: {
-    from: vi.fn((table: string) =>
-      table === "profiles" ? makeProfilesBuilder() : makeAuditBuilder(),
-    ),
+    from: vi.fn((table: string) => {
+      fromCalls.push(table);
+      const b: Record<string, (...a: unknown[]) => unknown> = {};
+      b.select = vi.fn(() => b);
+      // in() encerra a cadeia de profiles.
+      b.in = vi.fn(() => Promise.resolve(profilesResult));
+      return b;
+    }),
   },
 }));
 
@@ -58,53 +45,74 @@ import {
 } from "../useAuditTrail";
 
 beforeEach(() => {
-  calls.length = 0;
-  auditResult = { data: [], count: 0, error: null };
+  rpcCalls.length = 0;
+  fromCalls.length = 0;
+  rpcResult = { data: [], error: null };
   profilesResult = { data: [], error: null };
 });
 
-const method = (name: string) => calls.filter((c) => c.method === name);
+type Args = Record<string, unknown>;
+const ultima = (): RpcCall => rpcCalls[rpcCalls.length - 1];
 
 describe("fetchAuditTrail", () => {
-  it("pagina via range() com base em page/pageSize (1-indexada)", async () => {
+  it("lê pelo leitor mascarado com a organização ativa", async () => {
+    await fetchAuditTrail(DEFAULT_AUDIT_FILTERS);
+    expect(ultima().name).toBe("read_audit_logs_safe");
+    expect(ultima().args._org_id).toBe("org-1");
+  });
+
+  it("pagina via _limit/_offset a partir de page/pageSize (1-indexada)", async () => {
     await fetchAuditTrail({ ...DEFAULT_AUDIT_FILTERS, page: 3, pageSize: 25 });
-    const range = method("range")[0];
-    // page 3 → from = (3-1)*25 = 50, to = 50 + 25 - 1 = 74
-    expect(range.args).toEqual([50, 74]);
+    // page 3 → offset = (3-1)*25 = 50
+    expect(ultima().args._limit).toBe(25);
+    expect(ultima().args._offset).toBe(50);
   });
 
-  it("filtra apenas automações com .in() no conjunto esperado", async () => {
+  it("envia o período como timestamps ISO inclusivos", async () => {
+    await fetchAuditTrail({
+      ...DEFAULT_AUDIT_FILTERS,
+      dateFrom: "2026-11-01",
+      dateTo: "2026-11-30",
+    });
+    expect(ultima().args._from).toBe("2026-11-01T00:00:00.000Z");
+    expect(ultima().args._to).toBe("2026-11-30T23:59:59.999Z");
+  });
+
+  it("filtra apenas automações com o conjunto de tabelas esperado", async () => {
     await fetchAuditTrail({ ...DEFAULT_AUDIT_FILTERS, table: "automations" });
-    const inCall = method("in")[0];
-    expect(inCall.args[0]).toBe("table_name");
-    expect(inCall.args[1]).toEqual([...AUTOMATION_TABLES]);
+    expect(ultima().args._tables).toEqual([...AUTOMATION_TABLES]);
   });
 
-  it("filtra por tabela específica com .eq(table_name)", async () => {
+  it("filtra por tabela específica com um único item", async () => {
     await fetchAuditTrail({ ...DEFAULT_AUDIT_FILTERS, table: "companies" });
-    const eqTable = method("eq").find((c) => c.args[0] === "table_name");
-    expect(eqTable?.args[1]).toBe("companies");
+    expect(ultima().args._tables).toEqual(["companies"]);
   });
 
   it("não filtra tabela quando table = 'all'", async () => {
     await fetchAuditTrail({ ...DEFAULT_AUDIT_FILTERS, table: "all" });
-    expect(method("in")).toHaveLength(0);
-    expect(method("eq").some((c) => c.args[0] === "table_name")).toBe(false);
+    expect(ultima().args._tables).toBeUndefined();
   });
 
-  it("filtra por ação quando diferente de 'all'", async () => {
+  it("filtra por ação somente quando diferente de 'all'", async () => {
     await fetchAuditTrail({ ...DEFAULT_AUDIT_FILTERS, action: "delete" });
-    const eqAction = method("eq").find((c) => c.args[0] === "action");
-    expect(eqAction?.args[1]).toBe("delete");
+    expect(ultima().args._action).toBe("delete");
+
+    await fetchAuditTrail({ ...DEFAULT_AUDIT_FILTERS, action: "all" });
+    expect(ultima().args._action).toBeUndefined();
+  });
+
+  it("não lê audit_logs direto — só profiles para decorar o ator", async () => {
+    rpcResult = { data: [{ id: "l1", actor_id: "u1" }], error: null };
+    await fetchAuditTrail(DEFAULT_AUDIT_FILTERS);
+    expect(fromCalls).toEqual(["profiles"]);
   });
 
   it("junta o ator a partir de profiles e calcula total/totalPages", async () => {
-    auditResult = {
+    rpcResult = {
       data: [
-        { id: "l1", actor_id: "u1", table_name: "companies", action: "create" },
-        { id: "l2", actor_id: null, table_name: "deals", action: "update" },
+        { id: "l1", actor_id: "u1", table_name: "companies", action: "create", total_count: 30 },
+        { id: "l2", actor_id: null, table_name: "deals", action: "update", total_count: 30 },
       ],
-      count: 30,
       error: null,
     };
     profilesResult = {
@@ -120,12 +128,11 @@ describe("fetchAuditTrail", () => {
   });
 
   it("refina por busca de ator/tabela no cliente sobre a página carregada", async () => {
-    auditResult = {
+    rpcResult = {
       data: [
-        { id: "l1", actor_id: "u1", table_name: "companies", action: "create" },
-        { id: "l2", actor_id: "u2", table_name: "deals", action: "update" },
+        { id: "l1", actor_id: "u1", table_name: "companies", action: "create", total_count: 2 },
+        { id: "l2", actor_id: "u2", table_name: "deals", action: "update", total_count: 2 },
       ],
-      count: 2,
       error: null,
     };
     profilesResult = {
@@ -141,8 +148,8 @@ describe("fetchAuditTrail", () => {
     expect(res.rows[0].actor?.full_name).toBe("Ana Silva");
   });
 
-  it("propaga erro da query de audit_logs", async () => {
-    auditResult = { data: [], count: 0, error: new Error("rls denied") };
+  it("propaga erro da leitura mascarada", async () => {
+    rpcResult = { data: null, error: new Error("rls denied") };
     await expect(fetchAuditTrail(DEFAULT_AUDIT_FILTERS)).rejects.toThrow("rls denied");
   });
 });
