@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useActiveOrganization } from "@/contexts/active-org-context";
 import { toast } from "@/hooks/use-toast";
 
@@ -73,7 +74,7 @@ export function useToggleSurvey() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, active }: { id: string; active: boolean }) => {
-      const { error } = await supabase.from("satisfaction_surveys").update({ active }).eq("id", id);
+      const { error } = await db.from("satisfaction_surveys").update({ active }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["satisfaction-stats"] }),
@@ -85,7 +86,7 @@ export function useDeleteSurvey() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("satisfaction_surveys").delete().eq("id", id);
+      const { error } = await db.from("satisfaction_surveys").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {

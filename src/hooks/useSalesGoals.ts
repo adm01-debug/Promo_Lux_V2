@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/supabase/withOrg";
 import { useActiveOrganization } from "@/contexts/active-org-context";
 import { toast } from "@/hooks/use-toast";
 
@@ -101,7 +102,7 @@ export function useUpdateGoal() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, target }: { id: string; target: number }) => {
-      const { error } = await supabase.from("sales_goals").update({ target }).eq("id", id);
+      const { error } = await db.from("sales_goals").update({ target }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -116,7 +117,7 @@ export function useDeleteGoal() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("sales_goals").delete().eq("id", id);
+      const { error } = await db.from("sales_goals").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
