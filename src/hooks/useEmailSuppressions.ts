@@ -57,6 +57,17 @@ export function useEmailSuppressions() {
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         throw new Error("Informe um e-mail válido.");
       }
+      // Um endereço na lixeira não bloqueia envio: para voltar a bloquear é
+      // preciso restaurar o registro, não só tentar inserir de novo.
+      const restaurado = await db
+        .from("email_suppressions")
+        .update({ deleted_at: null })
+        .eq("email", email)
+        .not("deleted_at", "is", null)
+        .select("id");
+      if (restaurado.error) throw restaurado.error;
+      if ((restaurado.data ?? []).length > 0) return;
+
       // `organization_id` é injetado automaticamente pelo wrapper `db` (withOrg).
       const { error } = await db.from("email_suppressions").insert([{
         email,
