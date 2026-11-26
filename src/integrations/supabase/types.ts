@@ -2387,6 +2387,7 @@ export type Database = {
       email_suppressions: {
         Row: {
           created_at: string
+          deleted_at: string | null
           email: string
           id: string
           notes: string | null
@@ -2398,6 +2399,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
           email: string
           id?: string
           notes?: string | null
@@ -2409,6 +2411,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
           email?: string
           id?: string
           notes?: string | null
