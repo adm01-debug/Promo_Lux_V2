@@ -39,12 +39,14 @@ function recordFailure() {
 import { z } from "https://esm.sh/zod@3.23.8";
 import { CreateScrapeJobSchema } from "../_shared/schemas.ts";
 import { checkCircuitBreaker, reportSuccess, reportFailure } from "../_shared/circuit-breaker.ts";
-import { calculateIPCScore, type IPCHittingCriteria } from "../_shared/domain/ipc/scoring.ts";
 import { getTraceparent, createTraceparent, parseTraceparent } from "../_shared/tracing.ts";
-import { mapGmapsRow, parseCsv, type RawGmapsRow } from "../_shared/gmaps-mapper.ts";
+import { parseCsv, type RawGmapsRow } from "../_shared/gmaps-mapper.ts";
 import { fetchPlacesResults } from "../_shared/places-fallback.ts";
 import { getUserOrgIds } from "../_shared/org-membership.ts";
-import { upsertCompanies } from "../_shared/companies-upsert.ts";
+import {
+  loadIpcCriteria,
+  saveScrapeResults,
+} from "../_shared/scrape-results-save.ts";
 
 const GMAPS_API_BASE = "https://gmaps.atomicabr.com.br/api/v1";
 
@@ -281,23 +283,23 @@ serve(async (req) => {
           for (const job of externalJobs) {
             const status = (job.Status as string) === "ok" ? "completed" : job.Status as string;
             
+            // G16-3 / etapa 054: a listagem do fornecedor e COMPARTILHADA entre
+            // clientes (o endpoint nao aceita credencial), entao ela so serve
+            // para ATUALIZAR o estado dos jobs que a organizacao ja tem. Antes,
+            // todo job devolvido era inserido como se fosse do solicitante e o
+            // cliente passava a ver o nome e a config das buscas de outro
+            // cliente. Filtrar por nome nao resolve — nomes colidem entre
+            // clientes: o vinculo e o `external_id` ja associado aqui na base.
             const { data: existing } = await supabase
               .from("scrape_jobs")
               .select("id, status, auto_sync")
               .eq("external_id", job.ID as string)
-              .eq("user_id", userId)
+              .eq("organization_id", userOrgId)
               .maybeSingle();
-              
+
             if (!existing) {
-              await supabase.from("scrape_jobs").insert({
-                user_id: userId,
-                organization_id: userOrgId,
+              log.warn("external_job_sem_vinculo_local", {
                 external_id: job.ID as string,
-                name: job.Name as string,
-                status: status,
-                source: "gmaps",
-                config: job.Data as Record<string, unknown>,
-                started_at: job.Date as string,
               });
             } else {
               // If status changed to completed and auto_sync is true, we could trigger sync
@@ -311,11 +313,14 @@ serve(async (req) => {
                 // or we can do it right here since we have the data.
               }
 
+              // Atualiza o job LOCAL (por id): o `external_id` sozinho nao
+              // identifica uma linha e o filtro por `user_id` errava quando
+              // outro membro da organizacao foi quem criou a busca.
               await supabase
                 .from("scrape_jobs")
                 .update({ status: status })
-                .eq("external_id", job.ID as string)
-                .eq("user_id", userId);
+                .eq("id", existing.id)
+                .eq("organization_id", userOrgId);
             }
           }
         }
@@ -379,11 +384,15 @@ serve(async (req) => {
       const body = { name: parsed.data.name, ...parsed.data.config };
 
       // G4: injeta proxies ativos da organização quando o usuário não passou explícitos.
+      // Etapa 033 (G12-3): o client acima é service_role e ignora RLS, então sem o
+      // filtro abaixo a raspagem de uma organização usava (e entregava ao scraper
+      // externo) as credenciais de proxy de outra. `org_proxies` é admin-only.
       let orgProxies: string[] = [];
-      if (!parsed.data.config.proxies?.length) {
+      if (userOrgId && !parsed.data.config.proxies?.length) {
         const { data: proxyRows } = await supabase
           .from("org_proxies")
           .select("url")
+          .eq("organization_id", userOrgId)
           .eq("is_active", true)
           .order("last_used_at", { ascending: true, nullsFirst: true })
           .limit(10);
@@ -503,8 +512,12 @@ serve(async (req) => {
 
       // Fallback: o scraper externo nao devolveu external_id. Em vez de deixar
       // o job pendurado para sempre (o sintoma historico: `api_online: false`
-      // e nenhum resultado), marca o job como concluido e o `sync-results`
-      // busca direto na Places API usando as keywords gravadas no `config`.
+      // e nenhum resultado), a busca vai direto na Places API usando as
+      // keywords gravadas no `config` — e o que voltar e GRAVADO pelo mesmo
+      // gravador dos outros caminhos (`_shared/scrape-results-save.ts`), antes
+      // de concluir. Antes disto o job era marcado como concluido com
+      // `results_count` e nenhuma empresa gravada, e o `sync-results` pagava a
+      // mesma consulta de novo.
       if (!externalId) {
         const keywords = parsed.data.config.keywords ?? [];
         if (Deno.env.get("GOOGLE_MAPS_API_KEY") && keywords.length) {
@@ -514,13 +527,37 @@ serve(async (req) => {
             20,
             parsed.data.config.lang ?? "pt-BR",
           );
-          const found = fallbackResults?.length ?? 0;
-          responseBody = { id: dbJob.id, external_id: externalId, status: "completed", fallback: "places_api", results_count: found };
-          await supabase
-            .from("scrape_jobs")
-            .update({ external_id: externalId, status: "completed", completed_at: new Date().toISOString() })
-            .eq("id", dbJob.id);
-          log.info("places_fallback_create", { job_id: dbJob.id, keywords, results: found });
+          const { saved } = await saveScrapeResults(supabase, {
+            organizationId: userOrgId,
+            userId,
+            jobId: dbJob.id,
+            rows: fallbackResults ?? [],
+            ipcCriteria: await loadIpcCriteria(supabase, userId),
+            onRowError: (error, name) =>
+              log.warn("company_upsert_failed", { error: error.message, name }),
+          });
+
+          if (saved === 0) {
+            // Nada gravado = tarefa sem resultado. Nao mentir "concluido".
+            await supabase
+              .from("scrape_jobs")
+              .update({
+                external_id: externalId,
+                status: "failed",
+                error_message: "Places API nao devolveu empresas para gravar",
+                completed_at: new Date().toISOString(),
+              })
+              .eq("id", dbJob.id);
+            responseBody = { id: dbJob.id, external_id: externalId, status: "failed", fallback: "places_api", results_count: 0 };
+            log.warn("places_fallback_empty", { job_id: dbJob.id, keywords });
+          } else {
+            await supabase
+              .from("scrape_jobs")
+              .update({ external_id: externalId, status: "completed", results_count: saved, completed_at: new Date().toISOString() })
+              .eq("id", dbJob.id);
+            responseBody = { id: dbJob.id, external_id: externalId, status: "completed", fallback: "places_api", results_count: saved };
+            log.info("places_fallback_create", { job_id: dbJob.id, keywords, results: saved });
+          }
         }
       }
 
@@ -594,6 +631,35 @@ serve(async (req) => {
 
       if (!job?.external_id) throw new Error("Job not found or has no external ID");
 
+      // G16-1 / etapa 053: se este job JA tem resultados gravados, a
+      // sincronizacao so reconcilia — nao refaz a consulta paga (Places API no
+      // caminho `places:` ou download no provedor externo). O caso tipico era o
+      // fallback da etapa 052: o create ja pagou a Places API e gravou, e o
+      // auto_sync logo em seguida pagava a MESMA busca de novo para chegar ao
+      // mesmo resultado.
+      const { count: jaGravados } = await supabase
+        .from("scrape_results")
+        .select("id", { count: "exact", head: true })
+        .eq("job_id", job_id);
+
+      if ((jaGravados ?? 0) > 0) {
+        await supabase
+          .from("scrape_jobs")
+          .update({
+            results_count: jaGravados,
+            status: "completed",
+            completed_at: job.completed_at ?? new Date().toISOString(),
+          })
+          .eq("id", job_id)
+          .eq("user_id", userId);
+
+        log.info("sync_results_reconciled", { job_id, results: jaGravados });
+        return new Response(
+          JSON.stringify({ companies_created: 0, total_results: jaGravados, reconciled: true }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+
       let results: RawGmapsRow[] = [];
       const jobConfig = (job.config ?? {}) as { keywords?: string[]; lang?: string; max_results?: number };
       const isPlacesJob = String(job.external_id).startsWith("places:");
@@ -638,99 +704,16 @@ serve(async (req) => {
         throw new Error("Failed to download results from external API");
       }
 
-      const { data: ipcConfig } = await supabase
-        .from("ipc_config")
-        .select("*")
-        .eq("is_active", true)
-        .eq("user_id", userId)
-        .limit(1)
-        .maybeSingle();
-
-      let companiesCreated = 0;
-
-      for (const rawRow of results) {
-        const mapped = mapGmapsRow(rawRow);
-        const ipcScore = calculateIPCScore(
-          {
-            category: mapped.sector,
-            address: mapped.location,
-            email: mapped.email,
-            phone: mapped.phone,
-            website: mapped.website,
-            rating: mapped.rating ?? undefined,
-          },
-          ipcConfig?.criteria as IPCHittingCriteria | undefined,
-        );
-
-        // G9: deduplicação por place_id quando disponível (o Google garante
-        // unicidade global); senão cai no par legado (org, name, source).
-        // A escolha da chave e o fallback vivem em upsertCompanies: o schema de
-        // producao pode estar com indice unico PARCIAL, que o PostgREST recusa
-        // em ON CONFLICT (42P10) e fazia o lote inteiro ser descartado.
-
-        // organization_id vem do job (não do DEFAULT da coluna): o client
-        // service_role não repassa Authorization, então auth.uid() é NULL.
-        const payload = {
-          user_id: userId,
-          organization_id: job.organization_id,
-          name: mapped.name,
-          sector: mapped.sector,
-          location: mapped.location,
-          website: mapped.website,
-          phone: mapped.phone,
-          email: mapped.email,
-          source: "gmaps",
-          ipc_score: ipcScore,
-          enriched: !!(mapped.email || mapped.phone),
-          raw_data: rawRow,
-          latitude: mapped.latitude,
-          longitude: mapped.longitude,
-          place_id: mapped.place_id,
-          cid: mapped.cid,
-          plus_code: mapped.plus_code,
-          google_maps_url: mapped.google_maps_url,
-          street_view_url: mapped.street_view_url,
-          rating: mapped.rating,
-          review_count: mapped.review_count,
-          price_range: mapped.price_range,
-          business_status: mapped.business_status,
-          thumbnail_url: mapped.thumbnail_url,
-          images: mapped.images,
-          open_hours: mapped.open_hours,
-          popular_times: mapped.popular_times,
-          timezone: mapped.timezone,
-          descriptions: mapped.descriptions,
-          owner_claimed: mapped.owner_claimed,
-          reservations_url: mapped.reservations_url,
-          order_online_url: mapped.order_online_url,
-          menu_url: mapped.menu_url,
-        };
-
-        const { data: upserted, error: upsertError } = await upsertCompanies<{ id: string }>(
-          supabase,
-          payload,
-          { hasPlaceId: !!mapped.place_id },
-        );
-        const company = upserted[0];
-
-        if (upsertError) {
-          log.warn("company_upsert_failed", { error: upsertError.message, name: mapped.name });
-          continue;
-        }
-
-        if (company) {
-          companiesCreated++;
-          await supabase.from("scrape_results").insert({
-            user_id: userId,
-            organization_id: job.organization_id,
-            job_id: job_id,
-            company_id: company.id,
-            raw_data: rawRow,
-            processed: true,
-          });
-        }
-      }
-
+      // Gravacao unica (G16-1): vive em _shared/scrape-results-save.ts.
+      const { saved: companiesCreated } = await saveScrapeResults(supabase, {
+        organizationId: job.organization_id,
+        userId,
+        jobId: job_id,
+        rows: results,
+        ipcCriteria: await loadIpcCriteria(supabase, userId),
+        onRowError: (error, name) =>
+          log.warn("company_upsert_failed", { error: error.message, name }),
+      });
 
       await supabase
         .from("scrape_jobs")
