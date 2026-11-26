@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 152,
+ "total": 154,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 130
+  "unit": 132
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 105
+   "arquivos": 107
   },
   {
    "padrao": "e2e/",
@@ -655,6 +655,17 @@
    "casos": 3
   },
   {
+   "arquivo": "src/contexts/__tests__/ActiveOrgContext.test.tsx",
+   "tipo": "unit",
+   "linhas": 101,
+   "testa": [
+    "src/contexts/ActiveOrgContext.tsx",
+    "src/contexts/active-org-context.ts",
+    "src/integrations/supabase/withOrg.ts"
+   ],
+   "casos": 3
+  },
+  {
    "arquivo": "src/contexts/__tests__/AuthContext.test.tsx",
    "tipo": "unit",
    "linhas": 57,
@@ -735,6 +746,15 @@
    "casos": 8
   },
   {
+   "arquivo": "src/hooks/__tests__/useAutomationsMonitor.test.ts",
+   "tipo": "unit",
+   "linhas": 77,
+   "testa": [
+    "src/hooks/useAutomationsMonitor.ts"
+   ],
+   "casos": 2
+  },
+  {
    "arquivo": "src/hooks/__tests__/useConfirm.test.tsx",
    "tipo": "unit",
    "linhas": 66,
@@ -784,11 +804,11 @@
   {
    "arquivo": "src/hooks/__tests__/usePersistedFilters.test.ts",
    "tipo": "unit",
-   "linhas": 95,
+   "linhas": 127,
    "testa": [
     "src/hooks/usePersistedFilters.ts"
    ],
-   "casos": 7
+   "casos": 9
   },
   {
    "arquivo": "src/hooks/__tests__/useRateLimit.logic.test.ts",
@@ -1488,8 +1508,10 @@
   "src/components/lux/stakeholders/stakeholder-utils.ts": 1,
   "src/components/lux/workflows/WorkflowCard.tsx": 1,
   "src/components/ui/tooltip.tsx": 12,
+  "src/contexts/ActiveOrgContext.tsx": 1,
   "src/contexts/AuthContext.tsx": 1,
   "src/contexts/DemoContext.tsx": 1,
+  "src/contexts/active-org-context.ts": 1,
   "src/contexts/auth-context.ts": 1,
   "src/contexts/demo-context.ts": 1,
   "src/hooks/confirm-context.ts": 1,
@@ -1498,7 +1520,7 @@
   "src/hooks/useApiKeys.ts": 1,
   "src/hooks/useApiLatency.ts": 1,
   "src/hooks/useAuditTrail.ts": 4,
-  "src/hooks/useAutomationsMonitor.ts": 1,
+  "src/hooks/useAutomationsMonitor.ts": 2,
   "src/hooks/useConfirm.tsx": 1,
   "src/hooks/useDashboardData.ts": 3,
   "src/hooks/useDbHealth.ts": 1,
@@ -1528,7 +1550,7 @@
   "src/hooks/useWeeklyPerformance.ts": 2,
   "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json": 2,
   "src/integrations/supabase/client.ts": 1,
-  "src/integrations/supabase/withOrg.ts": 18,
+  "src/integrations/supabase/withOrg.ts": 19,
   "src/lib/api/workflows.ts": 1,
   "src/lib/csv.ts": 1,
   "src/lib/demoViews.ts": 1,
@@ -1604,7 +1626,6 @@
    "src/components/ui/use-form-field.ts",
    "src/components/ui/use-sidebar.ts",
    "src/components/ui/use-toast.ts",
-   "src/contexts/active-org-context.ts",
    "src/hooks/unsaved-changes-context.ts",
    "src/hooks/use-toast.ts",
    "src/hooks/useActiveSessions.ts",

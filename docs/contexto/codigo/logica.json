@@ -263,7 +263,7 @@
     "hooks",
     "pages"
    ],
-   "coberto_por_testes": 0,
+   "coberto_por_testes": 1,
    "orfao": false
   },
   {
@@ -460,7 +460,7 @@
     "lib/api",
     "pages"
    ],
-   "coberto_por_testes": 18,
+   "coberto_por_testes": 19,
    "orfao": false
   },
   {

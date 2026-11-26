@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `965bba87767deff2c255f9cc5ff9d8fc54c79160` (2026-11-25T21:36:22-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `aeaea4023a80ac80f1ce36d860c21220406f4c53` (2026-11-25T21:49:37-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (707), SQL (274), Markdown (87), JSON (38), JavaScript (25), Shell (16), YAML (12), Python (5)
+- linguagens: TypeScript (709), SQL (274), Markdown (87), JSON (38), JavaScript (25), Shell (16), YAML (12), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,9 +34,9 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1182 |
-| arquivos_codigo | 736 |
-| linhas_codigo | 127927 |
+| arquivos_total | 1184 |
+| arquivos_codigo | 738 |
+| linhas_codigo | 128162 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -48,7 +48,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | tabelas | 121 |
 | migrations | 270 |
 | cron_jobs | 43 |
-| testes | 152 |
+| testes | 154 |
 | workflows | 10 |
 | scripts | 54 |
 | docs_md | 87 |
@@ -58,7 +58,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - componentes: src/components (251), src/pages (11), src/contexts (3)
 - hooks: src/hooks (90), src/components (4), src/contexts (3)
 - servicos_logica: src/lib (41), src/integrations (4), src/contexts (3)
-- testes: co-localizado (__tests__) (105), e2e/ (19), co-localizado (*.test) (16)
+- testes: co-localizado (__tests__) (107), e2e/ (19), co-localizado (*.test) (16)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
 - scripts: scripts/maintenance (4), scripts/ci (3), scripts/regras_negocio (3)
@@ -236,7 +236,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - env de integração (só nomes): APIFY_API_KEY, APIFY_TOKEN, APOLLO_API_KEY, BITRIX_WEBHOOK_BASE, BRIGHTDATA_API_TOKEN, CNPJA_API_KEY, GMAPS_OMKAR_API_KEY, GOOGLE_MAPS_API_KEY, GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, HIKER_API_KEY, LOVABLE_API_KEY, LUSHA_API_KEY, MCP_SECRET, MS_OAUTH_CLIENT_ID, MS_OAUTH_CLIENT_SECRET, QA_INGEST_TOKEN, TRACKING_SIGNING_SECRET
 
 ## Permissões / papéis
-- papéis no código: admin (12), alert (11), status (11), user (6), button (4), dialog (4), system (4), group (3), main (3), viewer (3), CEO (2), CTO (2), navigation (2), presentation (2), region (2), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), progressbar (1), sdr (1), separator (1)
+- papéis no código: admin (13), alert (11), status (11), user (6), button (4), dialog (4), system (4), group (3), main (3), viewer (3), CEO (2), CTO (2), navigation (2), presentation (2), region (2), CFO (1), agent (1), img (1), link (1), listitem (1), member (1), menu (1), owner (1), progressbar (1), sdr (1), separator (1)
 - enums de papel: app_role: admin|sdr|viewer
 - guards: nenhum · rotas protegidas: 5 · públicas: /*, /invite/:token, /login, /reset-password, /status, /survey/:token
 - feature flags: oracle_v2
@@ -259,15 +259,15 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8066 nós · 17298 arestas · 720 comunidades · grafo do commit `965bba87`
-- comunidades maiores: button.tsx (154), @tanstack/react-query (154), react (114), snapshot.py (102), Monitoring.tsx (97), cn (97), hooks/use-toast.ts (91), withOrg.ts (88), badge.tsx (85), gerar.mjs (80), lucide-react (72), campaign-dispatch/index.ts (65)
-- símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
+- 8073 nós · 17318 arestas · 726 comunidades · grafo do commit `aeaea402`
+- comunidades maiores: lucide-react (168), input.tsx (122), cn (114), badge.tsx (108), framer-motion (90), @tanstack/react-query (90), ref_node_fs (86), gerar.mjs (80), react (77), CompanyDetailModal.tsx (76), generate.py (73), button.tsx (66)
+- símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), .metadata() (scripts/supabase_snapshot/test_snapshot.py)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
 - package.json (21)
 - package-lock.json (20)
-- docs/qa/05-PROGRESSO.md (18)
+- docs/qa/05-PROGRESSO.md (19)
 - docs/GAPS-ENTERPRISE.md (10)
 - .github/workflows/db-migrations.yml (9)
 - supabase/config.toml (9)
@@ -379,6 +379,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-25 `aeaea40` fix(estado): uma invalidacao por troca de organizacao e canais seguindo a organizacao nova (etapas 211-213) (#237)
 - 2026-11-25 `965bba8` fix(dados): leituras e escritas por organizacao nos templates, chaves, lembretes e metas (etapas 206-210) (#236)
 - 2026-11-25 `1122654` fix(hooks): erros silenciados no funil, no passo a passo e nas mutacoes (etapas 195-199) (#235)
 - 2026-11-25 `59db346` feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)
@@ -393,7 +394,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `d15f85e` feat: aviso de demonstracao em todas as telas e estado de demo por view (#222)
 - 2026-11-25 `40e6a6e` fix: separa o cache do modo demonstracao do cache real (#221)
 - 2026-11-25 `21eb9db` fix: remove rotulo ambiguo do e2e de login (#219)
-- 2026-11-25 `8b6a870` fix: corrige os textos duplamente codificados da tela de monitoramento (#220)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

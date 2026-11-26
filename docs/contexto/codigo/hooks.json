@@ -140,7 +140,7 @@
     "src/hooks/useOrgProxies.ts",
     "src/hooks/useOrgRateLimit.ts"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/contexts/auth-context.ts",
@@ -537,7 +537,7 @@
    "hooks_exportados": [
     "useAutomationsMonitor"
    ],
-   "linhas": 189,
+   "linhas": 192,
    "dominio": "hooks",
    "tabelas": [
     "automation_execution_logs",
@@ -572,7 +572,7 @@
     "src/components/lux/automations/AutomationsRealtimeView.tsx",
     "src/components/lux/automations/CompanyAutomationTable.tsx"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   },
   {
    "arquivo": "src/hooks/useBottomNavSwipe.ts",
@@ -1884,14 +1884,15 @@
    "hooks_exportados": [
     "usePersistedFilters"
    ],
-   "linhas": 87,
+   "linhas": 93,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [],
    "edges": [],
    "hooks_internos": [
     "useCallback",
-    "useEffect"
+    "useEffect",
+    "useRef"
    ],
    "canais_realtime": [],
    "usado_por": 3,

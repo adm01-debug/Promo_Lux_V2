@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `965bba8776` · branch `main` · 2026-11-26 00:41 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `aeaea4023a` · branch `main` · 2026-11-26 00:50 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2332,7 +2332,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1318 testes em 136 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1327 testes em 138 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2376,6 +2376,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx` | 10 | CompanyDetailModal — acoes do rodape · le os dados do Google Meu Negocio escopados pela organizacao ativa · nao exibe mais o botao Iniciar Sequencia (sem motor de sequencias) · Enviar Email abre o cliente de e-mail do contato principal … |
 | `src/components/lux/lusha/StatusBadge.test.tsx` | 10 | StatusBadge — contrato visual (R34) · renderiza status  · cobre exatamente as 13 chaves conhecidas do map · agrupa todos os estados error* sob label  … |
 | `src/hooks/__tests__/oracleV2Helpers.test.ts` | 10 | computeBitrixReadiness · marca pronto quando company_id e user_id numérico estão preenchidos · bloqueia quando company_id vazio · bloqueia quando user_id vazio … |
+| `src/hooks/__tests__/usePersistedFilters.test.ts` | 10 | usePersistedFilters · returns default state on first render · persists state updates to localStorage · restores state from localStorage … |
 | `supabase/functions/_shared/__tests__/scim-core.test.ts` | 10 | normalizeScimPath strips gateway prefix · normalizeScimPath strips bare /scim mount · normalizeScimPath keeps /v2 paths and normalizes leading slash · parseUserNameFilter extracts quoted value … |
 | `src/components/lux/lusha/DecisionMakersGrid.test.tsx` | 9 | DecisionMakersGrid · renderiza header do domínio + badge com total quando não há erro · renderiza badge de erro e não desenha a tabela quando r.error existe · renderiza linha por decisor com nome, cargo e link do LinkedIn … |
 | `src/components/lux/lusha/types.test.ts` | 9 | types.ts (R34) — contratos · DeptGroup: label + items · LushaContact aceita nullables e recusa campos ausentes · LushaSession: arrays nullable e status nullable … |
@@ -2390,7 +2391,6 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/DashboardView.test.tsx` | 8 | DashboardView — P1 Chart Legibility · renders Performance Semanal chart section · renders chart with strokeWidth 2.5 for better legibility · renders chart dots for data points … |
 | `src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts` | 8 | R35 fuzz — historyUtils robusto contra payloads adversos · filterHistory nunca lança e retorna subconjunto válido · filterHistory com janelas inválidas não estoura · formatDurationMs blindado contra NaN/negativos/infinito … |
 | `src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx` | 8 | DlqHealthCard · renderiza título e severidade  · mostra severidade  · exibe o valor de itens pendentes … |
-| `src/hooks/__tests__/usePersistedFilters.test.ts` | 8 | usePersistedFilters · returns default state on first render · persists state updates to localStorage · restores state from localStorage … |
 | `src/integrations/supabase/__tests__/withOrg.registry.test.ts` | 8 | withOrg registry ↔ banco (sincronia multi-tenant) · classifica TODA tabela com organization_id em exatamente um conjunto · não classifica a mesma tabela em mais de um conjunto · toda tabela ESCOPADA realmente possui organization_id no banco … |
 | `src/lib/__tests__/orgErrorHandler.e2e.test.ts` | 8 | orgErrorHandler — E2E switching de org durante edição · mostra toast quando UPDATE falha após troca de org no meio da edição · ação  · handler global captura unhandledrejection com OrgMismatchError e mostra toast … |
 | `src/lib/resilience/autotune.test.ts` | 8 | autotune - score · recompensa sucesso e penaliza DLQ/SLA · autotune - enumeração · descarta políticas com cap menor que base … |
@@ -2443,6 +2443,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/ICPConfigView.test.tsx` | 4 | useICPConfig (mocked) · returns activeConfig with criteria · returns isLoading false · returns save function |
 | `src/components/lux/__tests__/LostReasonsDialog.currency.test.tsx` | 4 | LostReasonsDialog — valor perdido por moeda (etapa 120) · nao soma moedas diferentes no valor perdido · mostra o valor do motivo por moeda ao lado da contagem · sem negocios perdidos, nao afirma valor nenhum |
 | `src/components/lux/__tests__/WorkflowsView.test.tsx` | 4 | WorkflowsView · renders heading · renders create button · shows workflow cards when data loads |
+| `src/contexts/__tests__/ActiveOrgContext.test.tsx` | 4 | ActiveOrgProvider · invalida o cache uma única vez por troca de organização · continua aplicando a troca vinda de outra aba · ignora eventos de outras chaves |
 | `src/hooks/__tests__/orgGateQueries.test.ts` | 4 | consultas condicionadas a organizacao ativa · nao consulta $nome sem organizacao ativa · consulta $nome quando a organizacao esta ativa · libera as telas com dado de exemplo mesmo sem organizacao ativa |
 | `src/hooks/__tests__/useConfirm.test.tsx` | 4 | useConfirm · resolves true when the user confirms · resolves false when the user cancels · throws when used outside the provider |
 | `src/hooks/__tests__/useOnboardingState.test.tsx` | 4 | useOnboardingState (etapa 197) · nao mostra o passo a passo quando a leitura do perfil falha · mostra quando o perfil existe e o passo a passo nao foi concluido · nao mostra e grava o cache local quando ja foi concluido |
@@ -2461,6 +2462,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/PlacesApiNewToggle.test.tsx` | 3 | PlacesApiNewToggle · avisa quando o UPDATE nao altera linha (RLS/sem permissao) em vez de mentir sucesso · confirma sucesso quando o UPDATE altera a linha |
 | `src/components/lux/__tests__/ProxyFormDialog.test.tsx` | 3 | ProxyFormDialog · mostra a mensagem de validacao no submit invalido em vez de lancar · envia os valores aparados quando o formulario e valido |
 | `src/contexts/__tests__/DemoContext.test.tsx` | 3 | DemoProvider · clears the query cache when entering demo mode so real data never shows as demo · clears the query cache when leaving demo mode so sample data never leaks to a real session |
+| `src/hooks/__tests__/useAutomationsMonitor.test.ts` | 3 | useAutomationsMonitor — canal em tempo real · abre o canal com a organização ativa · recria o canal com a organização nova quando ela muda |
 | `src/hooks/__tests__/useWeeklyPerformance.test.tsx` | 3 | useWeeklyPerformance — escopo multi-tenant e erro · le as empresas da organizacao ativa, fora da lixeira · propaga o erro da consulta em vez de devolver series zeradas |
 | `src/integrations/supabase/__tests__/orgFixtureSync.test.ts` | 3 | fixture de tabelas multi-tenant é derivada das migrations · está em dia com supabase/migrations · o gerador produz uma lista não vazia e ordenada |
 | `supabase/functions/_shared/__tests__/gmaps-mapper.test.ts` | 3 | parseCsv respects quoted commas and escapes · mapGmapsRow extracts full 36-field set from gosom CSV row · mapGmapsRow uses safe fallbacks for missing fields |

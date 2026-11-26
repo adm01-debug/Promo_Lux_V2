@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (707)",
+   "TypeScript (709)",
    "SQL (274)",
    "Markdown (87)",
    "JSON (38)",
@@ -1212,7 +1212,7 @@
   "papeis_no_codigo": [
    {
     "papel": "admin",
-    "ocorrencias": 12
+    "ocorrencias": 13
    },
    {
     "papel": "alert",
@@ -1296,6 +1296,10 @@
    },
    {
     "papel": "menu",
+    "ocorrencias": 1
+   },
+   {
+    "papel": "owner",
     "ocorrencias": 1
    },
    {
