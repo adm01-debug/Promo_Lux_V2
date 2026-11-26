@@ -62,55 +62,42 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    // Buscar registro atual
-    const { data: record, error: fetchError } = await supabaseAdmin
-      .from("auth_rate_limits")
-      .select("*")
-      .eq("identifier", rateLimitKey)
-      .maybeSingle();
+    // Incremento em uma unica transacao no banco (etapa 037). Ler o contador
+    // aqui e gravar depois deixava N logins simultaneos lerem o mesmo valor:
+    // 20 tentativas em paralelo terminavam com attempts=1 e sem bloqueio.
+    const { data, error } = await supabaseAdmin.rpc("check_auth_rate_limit", {
+      p_identifier: rateLimitKey,
+      p_max_attempts: MAX_ATTEMPTS,
+      p_window_minutes: WINDOW_MINUTES,
+    });
 
-    if (fetchError) {
-      throw fetchError;
+    if (error) {
+      throw error;
     }
 
-    const now = new Date();
+    const result = (data ?? {}) as {
+      attempts?: number;
+      locked?: boolean;
+      alreadyLocked?: boolean;
+      remainingSec?: number;
+    };
 
-    // Se estiver bloqueado, verificar se o bloqueio expirou
-    if (record?.locked_until && new Date(record.locked_until) > now) {
-      const remaining = Math.ceil((new Date(record.locked_until).getTime() - now.getTime()) / 1000);
-      return new Response(JSON.stringify({ locked: true, remainingSec: remaining }), {
+    // Bloqueio que ja valia antes desta chamada mantem o 429 historico. Quem
+    // atinge o teto agora segue recebendo 200 com locked=true, que e o unico
+    // formato que o cliente aplica: functions.invoke trata nao-2xx como erro e
+    // o hook faz fail-open.
+    if (result.alreadyLocked) {
+      const remainingSec = result.remainingSec || WINDOW_MINUTES * 60;
+      return new Response(JSON.stringify({ locked: true, remainingSec }), {
         status: 429,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Incrementar tentativas
-    // Se a última tentativa foi há mais de WINDOW_MINUTES, resetar contador
-    const lastAttempt = record?.last_attempt ? new Date(record.last_attempt) : null;
-    const isOld = lastAttempt && (now.getTime() - lastAttempt.getTime() > WINDOW_MINUTES * 60 * 1000);
-
-    const attempts = isOld ? 1 : (record?.attempts ?? 0) + 1;
-    let locked_until = null;
-
-    if (attempts >= MAX_ATTEMPTS) {
-      locked_until = new Date(now.getTime() + WINDOW_MINUTES * 60 * 1000).toISOString();
-      // Não resetamos as attempts aqui para que o bloqueio seja mantido se ele tentar novamente durante o locked_until
-    }
-
-    if (record) {
-      await supabaseAdmin
-        .from("auth_rate_limits")
-        .update({ attempts, last_attempt: now.toISOString(), locked_until })
-        .eq("identifier", rateLimitKey);
-    } else {
-      await supabaseAdmin
-        .from("auth_rate_limits")
-        .insert({ identifier: rateLimitKey, attempts, last_attempt: now.toISOString(), locked_until });
-    }
-
-    return new Response(JSON.stringify({ locked: !!locked_until, attempts }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ locked: !!result.locked, attempts: result.attempts ?? 0 }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
 
   } catch (error) {
     return new Response(JSON.stringify({ error: (error as Error).message }), {
