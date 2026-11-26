@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `d7ef7935e2` · branch `main` · 2026-11-26 04:50 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `c5a45b8afc` · branch `main` · 2026-11-26 04:54 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1038,7 +1038,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `investigating` | escreve | `src/components/lux/monitoring/IncidentsPanel.tsx`<br>`src/hooks/useStatusPage.ts` |
 | `status` | `masked` | compara, escreve | `supabase/functions/_shared/lusha-client.ts` |
 | `status` | `not_found` | compara, escreve | `src/hooks/useCnpjEnrich.ts`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
-| `status` | `ok` | compara, escreve | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/monitoring/SlaCompliancePanel.tsx`<br>`src/pages/AcceptInvite.tsx` |
+| `status` | `ok` | compara, escreve | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/monitoring/SlaCompliancePanel.tsx`<br>`src/pages/AcceptInvite.tsx`<br>`supabase/functions/health/index.ts` |
 | `status` | `paused` | compara, escreve | `src/components/lux/AutomationsList.tsx`<br>`src/components/lux/workflows/WorkflowCard.tsx`<br>`src/lib/demoData.ts` |
 | `status` | `pending` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>`src/hooks/useScheduledReports.ts`<br>… +7 |
 | `status` | `processing` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/lusha/historyUtils.ts`<br>`src/hooks/useAutomationsMonitor.ts` |

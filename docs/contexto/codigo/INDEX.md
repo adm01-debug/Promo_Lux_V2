@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `d7ef7935e22fd6f95aeac4e0e8d9242dc5677851` (2026-11-26T01:49:56-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `c5a45b8afc826700c14234cb31ef2fb30d683018` (2026-11-26T01:53:46-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -36,7 +36,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 |---|---|
 | arquivos_total | 1193 |
 | arquivos_codigo | 747 |
-| linhas_codigo | 129873 |
+| linhas_codigo | 129886 |
 | rotas | 12 |
 | rotas_http_backend | 0 |
 | vistas_por_id | 23 |
@@ -259,13 +259,13 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8120 nós · 17510 arestas · 711 comunidades · grafo do commit `d7ef7935`
-- comunidades maiores: Monitoring.tsx (172), react (166), OrganizationsView.tsx (131), @tanstack/react-query (126), snapshot.py (106), LushaIntelligenceView.tsx (101), cn (95), withOrg.ts (82), gerar.mjs (80), generate.py (75), req (74), useActiveOrganization (71)
+- 8120 nós · 17514 arestas · 718 comunidades · grafo do commit `c5a45b8a`
+- comunidades maiores: badge.tsx (177), cn (128), CampaignsView.tsx (122), snapshot.py (106), Monitoring.tsx (91), ref_node_fs (86), react (85), withOrg.ts (82), hooks/use-toast.ts (82), button.tsx (81), gerar.mjs (80), generate.py (75)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), getActiveOrgId() (src/integrations/supabase/withOrg.ts), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), mockFramerMotion() (src/test/mockFramerMotion.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
 ## Hotspots (arquivos mais alterados, 90 dias)
-- docs/qa/05-PROGRESSO.md (26)
+- docs/qa/05-PROGRESSO.md (27)
 - package.json (21)
 - package-lock.json (20)
 - docs/GAPS-ENTERPRISE.md (10)
@@ -379,6 +379,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-26 `c5a45b8` fix(seguranca): sonda de saude publica minima e diagnostico so com credencial (etapa 035) (#250)
 - 2026-11-26 `d7ef793` fix(raspagem): grava os resultados no caminho de contingencia (etapa 051) (#259)
 - 2026-11-26 `735410e` test(mcp): trava o emissor de autenticacao no projeto oficial (#257)
 - 2026-11-25 `ab29fc2` chore(formato): alinha o teste de permissoes ao printWidth 80 do repo (#243)
@@ -393,7 +394,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-25 `59db346` feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)
 - 2026-11-25 `39e3cfb` fix(negocios): organizacao ativa e totais por moeda no funil (etapas 110/111/120) (#233)
 - 2026-11-25 `23d4926` fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)
-- 2026-11-25 `488f67c` fix(lixeira): exclusao reversivel nas 8 tabelas e rotulo de negocio (etapas 047/049/050) (#231)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

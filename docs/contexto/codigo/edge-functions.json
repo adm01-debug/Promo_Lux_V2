@@ -787,7 +787,7 @@
    "nome": "health",
    "entrada": "supabase/functions/health/index.ts",
    "arquivos": 1,
-   "linhas": 134,
+   "linhas": 147,
    "verify_jwt": true,
    "metodos": [
     "OPTIONS"
@@ -810,7 +810,9 @@
     "places.googleapis.com",
     "promo-lux-v2.vercel.app"
    ],
-   "usa_shared": [],
+   "usa_shared": [
+    "cron-auth.ts"
+   ],
    "chamada_pelo_front": [],
    "chamada_por_edges": [],
    "chamada_por_sql_ou_cron": false,

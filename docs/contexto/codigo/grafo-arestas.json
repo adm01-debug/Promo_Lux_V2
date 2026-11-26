@@ -2636,6 +2636,9 @@
    "supabase/functions/_shared/scrape-results-save.ts",
    "supabase/functions/_shared/tracing.ts"
   ],
+  "supabase/functions/health/index.ts": [
+   "supabase/functions/_shared/cron-auth.ts"
+  ],
   "supabase/functions/hubspot-sync/index.ts": [
    "supabase/functions/_shared/cron-auth.ts"
   ],

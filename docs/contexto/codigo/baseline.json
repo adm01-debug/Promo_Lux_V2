@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "d7ef7935e22fd6f95aeac4e0e8d9242dc5677851",
+  "commit": "c5a45b8afc826700c14234cb31ef2fb30d683018",
   "branch": "main",
-  "data_commit": "2026-11-26T01:49:56-03:00",
+  "data_commit": "2026-11-26T01:53:46-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "c5a45b8",
+    "data": "2026-11-26",
+    "assunto": "fix(seguranca): sonda de saude publica minima e diagnostico so com credencial (etapa 035) (#250)"
+   },
    {
     "sha": "d7ef793",
     "data": "2026-11-26",
@@ -126,11 +131,6 @@
     "sha": "8b6a870",
     "data": "2026-11-25",
     "assunto": "fix: corrige os textos duplamente codificados da tela de monitoramento (#220)"
-   },
-   {
-    "sha": "6783576",
-    "data": "2026-11-25",
-    "assunto": "fix: oferece a acao que faltava nos estados vazios e guarda contra botoes mortos (#218)"
    }
   ],
   "arquivos_mudados_7d": 394,
@@ -149,7 +149,7 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 26
+    "mudancas": 27
    },
    {
     "pasta": "package.json",
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 26
+    "mudancas": 27
    },
    {
     "arquivo": "package.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 189
+    "commits": 190
    },
    {
     "autor": "dependabot[bot]",
@@ -312,7 +312,7 @@
  "contagens": {
   "arquivos_total": 1193,
   "arquivos_codigo": 747,
-  "linhas_codigo": 129873,
+  "linhas_codigo": 129886,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -596,7 +596,7 @@
   },
   "supabase/functions": {
    "arquivos": 138,
-   "linhas": 25237
+   "linhas": 25250
   },
   "tailwind.config.ts": {
    "arquivos": 1,
