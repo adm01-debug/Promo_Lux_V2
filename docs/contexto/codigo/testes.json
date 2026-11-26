@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 163,
+ "total": 165,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 141
+  "unit": 143
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 116
+   "arquivos": 118
   },
   {
    "padrao": "e2e/",
@@ -828,6 +828,15 @@
    "casos": 4
   },
   {
+   "arquivo": "src/hooks/__tests__/useEmailSuppressions.test.ts",
+   "tipo": "unit",
+   "linhas": 129,
+   "testa": [
+    "src/hooks/useEmailSuppressions.ts"
+   ],
+   "casos": 3
+  },
+  {
    "arquivo": "src/hooks/__tests__/useOnboardingState.test.tsx",
    "tipo": "unit",
    "linhas": 57,
@@ -942,6 +951,13 @@
    "testa": [
     "src/integrations/supabase/withOrg.ts"
    ],
+   "casos": 2
+  },
+  {
+   "arquivo": "src/integrations/supabase/__tests__/supressaoAtivaNoEnvio.test.ts",
+   "tipo": "unit",
+   "linhas": 39,
+   "testa": [],
    "casos": 2
   },
   {
@@ -1630,7 +1646,7 @@
   "src/hooks/useDeals.ts": 2,
   "src/hooks/useDlqHealth.ts": 3,
   "src/hooks/useDlqReplay.ts": 1,
-  "src/hooks/useEmailSuppressions.ts": 1,
+  "src/hooks/useEmailSuppressions.ts": 2,
   "src/hooks/useEmailTemplates.ts": 1,
   "src/hooks/useFeatureFlags.ts": 1,
   "src/hooks/useICPConfig.ts": 3,

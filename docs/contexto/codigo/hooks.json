@@ -1126,7 +1126,7 @@
    "hooks_exportados": [
     "useEmailSuppressions"
    ],
-   "linhas": 90,
+   "linhas": 101,
    "dominio": "hooks",
    "tabelas": [
     "email_suppressions"
@@ -1145,7 +1145,7 @@
    "usado_por_arquivos": [
     "src/components/lux/EmailSuppressionsView.tsx"
    ],
-   "coberto_por_testes": 1
+   "coberto_por_testes": 2
   },
   {
    "arquivo": "src/hooks/useEmailSyncLog.ts",

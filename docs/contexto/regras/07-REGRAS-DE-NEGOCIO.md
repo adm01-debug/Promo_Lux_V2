@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e739571358` · branch `main` · 2026-11-26 05:10 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f2a4df6403` · branch `main` · 2026-11-26 05:28 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -2334,7 +2334,7 @@ _nenhum item encontrado_
 | `true` | `supabase/functions/system-recovery-status/index.ts` |
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 
-## K. Testes como especificação (1389 testes em 147 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1396 testes em 149 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2454,6 +2454,7 @@ _nenhum item encontrado_
 | `src/contexts/__tests__/ActiveOrgContext.test.tsx` | 4 | ActiveOrgProvider · invalida o cache uma única vez por troca de organização · continua aplicando a troca vinda de outra aba · ignora eventos de outras chaves |
 | `src/hooks/__tests__/orgGateQueries.test.ts` | 4 | consultas condicionadas a organizacao ativa · nao consulta $nome sem organizacao ativa · consulta $nome quando a organizacao esta ativa · libera as telas com dado de exemplo mesmo sem organizacao ativa |
 | `src/hooks/__tests__/useConfirm.test.tsx` | 4 | useConfirm · resolves true when the user confirms · resolves false when the user cancels · throws when used outside the provider |
+| `src/hooks/__tests__/useEmailSuppressions.test.ts` | 4 | useEmailSuppressions.addSuppression · restaura o descadastro que esta na lixeira e nao insere de novo · insere quando o e-mail nao esta nem ativo nem na lixeira · propaga o erro da restauracao e nao tenta inserir |
 | `src/hooks/__tests__/useOnboardingState.test.tsx` | 4 | useOnboardingState (etapa 197) · nao mostra o passo a passo quando a leitura do perfil falha · mostra quando o perfil existe e o passo a passo nao foi concluido · nao mostra e grava o cache local quando ja foi concluido |
 | `src/hooks/__tests__/useOraclePushBitrix.test.ts` | 4 | useOraclePushBitrix — contrato da edge oracle-push-bitrix · envia payload com contact_ids + destino Bitrix opcional · propaga erro da edge (bitrix_open) para onError · aceita resposta com status variados no results[] |
 | `src/hooks/__tests__/useRateLimit.test.ts` | 4 | useRateLimit · should not be locked initially · should lock after exceeding max attempts · should unlock after window windowMs |
@@ -2475,6 +2476,7 @@ _nenhum item encontrado_
 | `src/hooks/__tests__/useAutomationsMonitor.test.ts` | 3 | useAutomationsMonitor — canal em tempo real · abre o canal com a organização ativa · recria o canal com a organização nova quando ela muda |
 | `src/hooks/__tests__/useWeeklyPerformance.test.tsx` | 3 | useWeeklyPerformance — escopo multi-tenant e erro · le as empresas da organizacao ativa, fora da lixeira · propaga o erro da consulta em vez de devolver series zeradas |
 | `src/integrations/supabase/__tests__/orgFixtureSync.test.ts` | 3 | fixture de tabelas multi-tenant é derivada das migrations · está em dia com supabase/migrations · o gerador produz uma lista não vazia e ordenada |
+| `src/integrations/supabase/__tests__/supressaoAtivaNoEnvio.test.ts` | 3 | caminho de envio respeita a lixeira da lista de supressao · toda leitura de email_suppressions carrega deleted_at IS NULL · a consulta de supressao do lote e escopada pela organizacao da campanha |
 | `src/lib/mcp/__tests__/emissor-projeto.test.ts` | 3 | emissor de autenticacao do MCP (etapa 046) · usa o mesmo projeto do config.toml · aponta para um project ref plausivel, nunca para um projeto de teste |
 | `supabase/functions/_shared/__tests__/gmaps-mapper.test.ts` | 3 | parseCsv respects quoted commas and escapes · mapGmapsRow extracts full 36-field set from gosom CSV row · mapGmapsRow uses safe fallbacks for missing fields |
 | `supabase/functions/_shared/__tests__/linkedin-url.test.ts` | 3 | publicIdFromLinkedInUrl · extrai de ${nome} · retorna vazio para ${nome} |
@@ -2698,6 +2700,7 @@ _nenhum item encontrado_
 | limite defensivo por ciclo para respeitar rate limits do provedor | `supabase/functions/campaign-dispatch/index.ts` |
 | Gate de auth (gap R27-CRIT-01): aceita apenas | `supabase/functions/campaign-dispatch/index.ts` |
 | podem mais ser contatados. Consulta apenas os e-mails do batch corrente. | `supabase/functions/campaign-dispatch/index.ts` |
+| Regra: só o descadastro ATIVO bloqueia envio. Registro na lixeira | `supabase/functions/campaign-dispatch/index.ts` |
 | Etapas de espera (wait/delay): apenas agenda a próxima ação e avança. | `supabase/functions/campaign-dispatch/index.ts` |
 | Etapa de e-mail: validação defensiva do endereço. | `supabase/functions/campaign-dispatch/index.ts` |
 | Seleção de variante A/B: apenas a etapa 0 decide (etapas seguintes | `supabase/functions/campaign-dispatch/index.ts` |

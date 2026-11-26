@@ -8575,6 +8575,7 @@
    "criada_em": "20260711175945_67e29e04-fe5c-4289-b936-b748b112dae5.sql",
    "colunas_types": {
     "created_at": "string",
+    "deleted_at": "string | null",
     "email": "string",
     "id": "string",
     "notes": "string | null",
@@ -8585,9 +8586,7 @@
     "updated_at": "string"
    },
    "drift": {
-    "so_na_migration": [
-     "deleted_at"
-    ],
+    "so_na_migration": [],
     "so_no_types": []
    },
    "usada_no_front": 1,

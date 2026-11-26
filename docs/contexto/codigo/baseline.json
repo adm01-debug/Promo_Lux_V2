@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "e739571358188621a29bba70e29d637540884a71",
+  "commit": "f2a4df6403bcabfe57e853d4fa35fa38b28b8ba1",
   "branch": "main",
-  "data_commit": "2026-11-26T02:09:54-03:00",
+  "data_commit": "2026-11-26T02:28:24-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f2a4df6",
+    "data": "2026-11-26",
+    "assunto": "fix(supressao): so o descadastro ativo bloqueia envio (etapa 048) (#258)"
+   },
    {
     "sha": "e739571",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "8c4a8f1",
     "data": "2026-11-25",
     "assunto": "fix: escopo de organizacao nas consultas e no cache do front (#224)"
-   },
-   {
-    "sha": "d7c7ccf",
-    "data": "2026-11-25",
-    "assunto": "fix: consultas do painel e da auditoria so rodam com organizacao ativa (#223)"
    }
   ],
-  "arquivos_mudados_7d": 397,
+  "arquivos_mudados_7d": 399,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -141,15 +141,15 @@
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
+    "mudancas": 32
+   },
+   {
+    "pasta": "src/integrations/supabase",
     "mudancas": 31
    },
    {
     "pasta": "supabase/functions/_shared",
     "mudancas": 30
-   },
-   {
-    "pasta": "src/integrations/supabase",
-    "mudancas": 29
    },
    {
     "pasta": "package.json",
@@ -164,11 +164,11 @@
     "mudancas": 13
    },
    {
-    "pasta": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 10
+    "pasta": "src/hooks/__tests__",
+    "mudancas": 11
    },
    {
-    "pasta": "src/hooks/__tests__",
+    "pasta": "docs/GAPS-ENTERPRISE.md",
     "mudancas": 10
    },
    {
@@ -199,7 +199,7 @@
   "arquivos_mais_mudados_90d": [
    {
     "arquivo": "docs/qa/05-PROGRESSO.md",
-    "mudancas": 31
+    "mudancas": 32
    },
    {
     "arquivo": "package.json",
@@ -222,15 +222,15 @@
     "mudancas": 9
    },
    {
+    "arquivo": "src/integrations/supabase/types.ts",
+    "mudancas": 9
+   },
+   {
     "arquivo": "supabase/config.toml",
     "mudancas": 9
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 8
-   },
-   {
-    "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 8
    },
    {
@@ -251,6 +251,10 @@
    },
    {
     "arquivo": ".github/workflows/edge-tests-daily.yml",
+    "mudancas": 6
+   },
+   {
+    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
     "mudancas": 6
    },
    {
@@ -278,10 +282,6 @@
     "mudancas": 5
    },
    {
-    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
-    "mudancas": 5
-   },
-   {
     "arquivo": "supabase/functions/workflow-engine/index.ts",
     "mudancas": 5
    },
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 194
+    "commits": 195
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1195,
-  "arquivos_codigo": 749,
-  "linhas_codigo": 130211,
+  "arquivos_total": 1197,
+  "arquivos_codigo": 751,
+  "linhas_codigo": 130396,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -324,7 +324,7 @@
   "tabelas": 121,
   "migrations": 270,
   "cron_jobs": 43,
-  "testes": 163,
+  "testes": 165,
   "workflows": 10,
   "scripts": 54,
   "docs_md": 87
@@ -567,12 +567,12 @@
    "linhas": 515
   },
   "src/hooks": {
-   "arquivos": 110,
-   "linhas": 12596
+   "arquivos": 111,
+   "linhas": 12736
   },
   "src/integrations": {
-   "arquivos": 14,
-   "linhas": 9321
+   "arquivos": 15,
+   "linhas": 9363
   },
   "src/lib": {
    "arquivos": 59,
@@ -596,7 +596,7 @@
   },
   "supabase/functions": {
    "arquivos": 140,
-   "linhas": 25575
+   "linhas": 25578
   },
   "tailwind.config.ts": {
    "arquivos": 1,
@@ -614,7 +614,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 7585
+   "linhas": 7588
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
@@ -658,7 +658,7 @@
   },
   {
    "arquivo": "supabase/functions/campaign-dispatch/index.ts",
-   "linhas": 797
+   "linhas": 800
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
@@ -781,7 +781,6 @@
    "audit_logs",
    "circuit_breakers",
    "email_accounts",
-   "email_suppressions",
    "feature_flags",
    "idempotency_keys",
    "organization_members",

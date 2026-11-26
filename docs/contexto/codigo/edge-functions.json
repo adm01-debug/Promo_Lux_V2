@@ -213,7 +213,7 @@
    "nome": "campaign-dispatch",
    "entrada": "supabase/functions/campaign-dispatch/index.ts",
    "arquivos": 1,
-   "linhas": 797,
+   "linhas": 800,
    "verify_jwt": false,
    "metodos": [
     "GET",

@@ -22,7 +22,7 @@
    "src/contexts (3)"
   ],
   "testes": [
-   "co-localizado (__tests__) (116)",
+   "co-localizado (__tests__) (118)",
    "e2e/ (19)",
    "co-localizado (*.test) (16)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(supressao): so o descadastro ativo bloqueia envio (etapa 048) (#258)",
    "fix(api-publica): limite de uso passa a falhar fechado (etapa 038) (#252)",
    "fix(raspagem): recupera a gravacao na contingencia, o sync sem consulta dupla e o escopo por organizacao (etapas 052/053/054) (#267)",
    "fix(seguranca): fecha o worker de Instagram atras de credencial de servico (etapa 034) (#249)",
-   "fix(seguranca): exige pertencimento a organizacao em campanhas, webhooks e proxies (etapas 031/032/033) (#248)",
-   "fix(seguranca): sonda de saude publica minima e diagnostico so com credencial (etapa 035) (#250)"
+   "fix(seguranca): exige pertencimento a organizacao em campanhas, webhooks e proxies (etapas 031/032/033) (#248)"
   ]
  },
  "pr_template": null,
