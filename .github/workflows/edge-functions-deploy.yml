@@ -151,6 +151,11 @@ jobs:
           echo "► Functions locais:"
           find supabase/functions -mindepth 1 -maxdepth 1 -type d ! -name _shared -printf '%f\n' | sort
 
+      - name: Guarda de segredo no corpo das functions
+        # Etapa 004 do docs/qa/04-PLANO.md: barra o deploy de function que
+        # publique a service_role key no JSON de resposta (caso migrate-helper).
+        run: bash scripts/check-no-secret-echo.sh
+
       - name: Deploy de todas as functions
         # --use-api: bundle server-side, sem Docker no runner (ubuntu-latest).
         # --yes: sem isso o CLI aborta quando stdout não é TTY (runner GH).

@@ -79,23 +79,17 @@ jobs:
           fi
           echo "✅ Nenhum console.log em produção."
 
+      - name: "Guard: segredo no corpo da resposta (edge functions)"
+        # Etapa 004 do docs/qa/04-PLANO.md. O caso real era a migrate-helper,
+        # que devolvia a service_role key no JSON; o bloco inline antigo olhava
+        # so uma linha e nao pegava segredo montado em varias.
+        run: bash scripts/check-no-secret-echo.sh
+
       - name: Check for hardcoded secrets patterns
-        run: |
-          echo "▶ Verificando padrões de secrets hardcoded..."
-          FOUND=0
-          if grep -rnE 'AKIA[0-9A-Z]{16}' src/ supabase/functions/ --include="*.ts" --include="*.tsx" 2>/dev/null; then
-            echo "::warning::Padrão AWS Access Key encontrado"
-            FOUND=$((FOUND+1))
-          fi
-          if grep -rnE 'sk_live_[A-Za-z0-9]{20,}' src/ supabase/functions/ --include="*.ts" --include="*.tsx" 2>/dev/null; then
-            echo "::warning::Padrão Stripe Live Key encontrado"
-            FOUND=$((FOUND+1))
-          fi
-          if [ $FOUND -gt 0 ]; then
-            echo "::error::$FOUND secret(s) hardcoded detectado(s)."
-            exit 1
-          fi
-          echo "✅ Scan de secrets concluído."
+        # Etapa 005. Amplia o padrao inline antigo (so AKIA e sk_live, so em
+        # src/ e supabase/functions/) para 7 regras e escopo src supabase e2e
+        # scripts .github; isencao com motivo em scripts/secrets-allowlist.txt.
+        run: bash scripts/check-hardcoded-secrets.sh
 
   db-guards:
     name: Database Guards (Grants/RLS + Audit Triggers)
