@@ -1,0 +1,60 @@
+name: Functions Retirement
+
+# ---------------------------------------------------------------------------
+# Aposentadoria de Edge Functions publicadas fora do repositorio.
+#
+# Por que existe: `supabase functions deploy` roda sem --prune de proposito
+# (function publicada fora do repo fica intacta). O repositorio nao e a unica
+# fonte do que esta publicado, entao tirar uma function do repo NAO a tira do
+# projeto: ela continua publica e respondendo. A migrate-helper sobreviveu ao
+# merge que a removeu do repo (PR #229) devolvendo a service_role key no corpo
+# da resposta -- dependia de alguem lembrar do dashboard.
+#
+# Fluxo: o nome entra em `supabase/functions/retired.txt` (revisado em PR); o
+# merge na main dispara este workflow; o job roda no Environment `production`
+# (mesmo token e mesma aprovacao de reviewer do deploy) e apaga cada nome pela
+# Management API. Um push = uma aprovacao. Idempotente: 404 = ja nao existia.
+#
+# Nao usa supabase CLI: a remocao e uma chamada DELETE na Management API.
+# ---------------------------------------------------------------------------
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/retired.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: functions-retirement
+  cancel-in-progress: false
+
+jobs:
+  retire:
+    name: Remover functions aposentadas
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+      EXPECTED_PROJECT_REF: ${{ vars.EXPECTED_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Guarda de ambiente (o ref precisa bater com o esperado)
+        run: bash scripts/check-edge-fn-target.sh
+
+      - name: Remover as functions aposentadas
+        run: bash scripts/retire-functions.sh
+
+      # Read-only. Roda depois da remocao: o que continuar publicado sem existir no
+      # repositorio e nem estar em retired.txt e a mesma deriva que manteve
+      # migrate-helper, latency-alerts, api-latency-alerts e audit-logs-prune no ar
+      # por semanas -- e ninguem era avisado. Falha o run de proposito: o aviso do
+      # GitHub e o unico canal que chega no dono sem alguem ler log.
+      - name: Detectar functions publicadas fora do repositorio
+        run: bash scripts/check-functions-orphans.sh

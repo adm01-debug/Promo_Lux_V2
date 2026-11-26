@@ -42,6 +42,12 @@ const API_RATE_LIMIT_PER_HOUR = 600;
 const ALLOWED_TABLES = ["companies", "deals", "stakeholders"] as const;
 type AllowedTable = (typeof ALLOWED_TABLES)[number];
 
+// Lixeira (ADR-008): `companies` e `deals` tem `deleted_at`; `stakeholders`
+// nao tem a coluna. A API publica so exclui o que da para mandar para a
+// lixeira — apagar stakeholder em definitivo com a chave mestra era justamente
+// o buraco encontrado na etapa 044.
+const SOFT_DELETE_TABLES: readonly AllowedTable[] = ["companies", "deals"];
+
 // Allowlist de colunas graváveis por integradores externos via API pública.
 // Antes o POST fazia `{ ...body, user_id }` — o corpo inteiro era gravado,
 // então um cliente da API podia injetar organization_id (escrevendo numa
@@ -446,6 +452,9 @@ Deno.serve(async (req) => {
         .select("*", { count: "exact" })
         .eq("user_id", user_id);
 
+      // O que esta na lixeira nao volta pela API, igual ao app (ADR-008).
+      if (SOFT_DELETE_TABLES.includes(table)) query = query.is("deleted_at", null);
+
       if (nameFilter) query = query.ilike("name", `%${nameFilter}%`);
       if (sectorFilter) query = query.ilike("sector", `%${sectorFilter}%`);
 
@@ -458,8 +467,9 @@ Deno.serve(async (req) => {
 
     // GET single
     if (req.method === "GET" && id) {
-      const { data, error } = await supabase
-        .from(table).select("*").eq("user_id", user_id).eq("id", id).maybeSingle();
+      let single = supabase.from(table).select("*").eq("user_id", user_id).eq("id", id);
+      if (SOFT_DELETE_TABLES.includes(table)) single = single.is("deleted_at", null);
+      const { data, error } = await single.maybeSingle();
       if (error) return await respond({ error: error.message }, 500);
       if (!data) return await respond({ error: "Not found" }, 404);
       return await respond({ data });
@@ -480,16 +490,32 @@ Deno.serve(async (req) => {
       const body = await req.json().catch(() => null);
       if (!body || typeof body !== "object") return await respond({ error: "Invalid JSON body" }, 400);
       const patch = pickWritable(table, body as Record<string, unknown>);
-      const { data, error } = await supabase
-        .from(table).update(patch).eq("user_id", user_id).eq("id", id).select().single();
+      let updateQ = supabase.from(table).update(patch).eq("user_id", user_id).eq("id", id);
+      if (SOFT_DELETE_TABLES.includes(table)) updateQ = updateQ.is("deleted_at", null);
+      const { data, error } = await updateQ.select().single();
       if (error) return await respond({ error: error.message }, 400);
       return await respond({ data });
     }
 
     // DELETE
     if (req.method === "DELETE" && id) {
-      const { error } = await supabase.from(table).delete().eq("user_id", user_id).eq("id", id);
+      // Lixeira em vez de exclusao fisica (ADR-008): o registro fica 30 dias
+      // recuperavel e some da API, exatamente como `workflow-engine:944` e o
+      // `withOrg` do front fazem. Sem a coluna nao ha lixeira, entao a rota e'
+      // recusada em vez de apagar em definitivo.
+      if (!SOFT_DELETE_TABLES.includes(table)) {
+        return await respond({ error: "Resource does not support deletion" }, 405);
+      }
+      const { data, error } = await supabase
+        .from(table)
+        .update({ deleted_at: new Date().toISOString() })
+        .eq("user_id", user_id)
+        .eq("id", id)
+        .is("deleted_at", null)
+        .select("id")
+        .maybeSingle();
       if (error) return await respond({ error: error.message }, 400);
+      if (!data) return await respond({ error: "Not found" }, 404);
       return await respond({ success: true });
     }
 

@@ -1,0 +1,31 @@
+# Edge functions APOSENTADAS: sairam do repositorio mas continuam publicadas no
+# projeto, porque `supabase functions deploy` roda sem --prune, de proposito --
+# function publicada fora do repo fica intacta.
+#
+# Um nome de function por linha. Linhas vazias e linhas comecando com # sao
+# ignoradas. O workflow "Functions Retirement" (scripts/retire-functions.sh)
+# remove cada nome do projeto alvo rodando no Environment `production`, ou seja:
+# a remocao passa por revisao de PR e por aprovacao de environment, igual ao
+# deploy. O nome pode ficar aqui depois da remocao -- a operacao e idempotente e
+# a lista serve de historico do que estava publicado fora do repositorio.
+#
+# migrate-helper -- devolvia a service_role key no corpo da resposta HTTP; saiu
+#                   do repositorio na PR #229 (etapa 003).
+migrate-helper
+#
+# Orfas ACTIVE sem chamador, do inventario de 26/11/2026 (60 functions
+# publicadas no projeto, 4 delas fora do repositorio):
+#
+# latency-alerts -- alerta de latencia duplicado; a migration
+#                   20261125120000_consolida_alerta_latencia_na_funcao_sql.sql
+#                   desagenda o job `latency-alerts-15min` e deixa
+#                   public.evaluate_api_latency_alerts() (SQL) como fonte unica,
+#                   que ainda aplica o limiar de 3 ciclos e cobre 5xx.
+# api-latency-alerts -- nunca teve agendamento proprio; a migration
+#                   20261124125500_cron_evaluate_api_latency_15min.sql passou a
+#                   chamar a funcao SQL direto (job evaluate-api-latency-15min).
+# audit-logs-prune -- expurgo de logs ja feito pelo job SQL de retencao
+#                   (migration 20261125150000_auditoria_retencao_5_anos.sql).
+latency-alerts
+api-latency-alerts
+audit-logs-prune

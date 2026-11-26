@@ -140,6 +140,14 @@
       "reason": "Legado mantido no fluxo existente; referências literais: package.json:scripts, .github/workflows/ci.yml. O dispatcher não executa esta operação."
     },
     {
+      "id": "legacy-1dfade0578eb4e44",
+      "kind": "legacy",
+      "files": ["scripts/check-hardcoded-secrets.sh"],
+      "manual": ["sh", "scripts/check-hardcoded-secrets.sh"],
+      "triggers": ["manual"],
+      "reason": "Varredura de segredos hardcoded chamada pelo job security-scan; referência literal: .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
       "id": "legacy-e2e3f28bab9a8e4a",
       "kind": "legacy",
       "files": ["scripts/check-migration-target.sh"],
@@ -196,12 +204,36 @@
       "reason": "Guarda de ambiente para deploy de edge functions (novo workflow edge-functions-deploy.yml). O dispatcher não executa esta operação."
     },
     {
+      "id": "fn-retirement",
+      "kind": "legacy",
+      "files": ["scripts/retire-functions.sh"],
+      "manual": ["bash", "scripts/retire-functions.sh"],
+      "triggers": ["manual"],
+      "reason": "Remove do projeto as edge functions listadas em supabase/functions/retired.txt (o deploy roda sem --prune, então o repo não é a fonte do que está publicado). Roda no workflow functions-retirement.yml, no Environment production. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "fn-orphans",
+      "kind": "legacy",
+      "files": ["scripts/check-functions-orphans.sh"],
+      "manual": ["bash", "scripts/check-functions-orphans.sh"],
+      "triggers": ["manual"],
+      "reason": "Compara o que está publicado no projeto (Management API, read-only) com o que existe no repositório e falha quando sobra function publicada fora das duas listas. Roda depois da remoção no workflow functions-retirement.yml, no Environment production. O dispatcher não executa esta operação."
+    },
+    {
       "id": "legacy-2d7c4232a46150c6",
       "kind": "legacy",
       "files": ["scripts/check-queue-kind-coverage.sh"],
       "manual": ["sh", "scripts/check-queue-kind-coverage.sh"],
       "triggers": ["manual"],
       "reason": "Legado mantido no fluxo existente; referências literais: .github/workflows/ci.yml. O dispatcher não executa esta operação."
+    },
+    {
+      "id": "legacy-0aa12c2c8f701f43",
+      "kind": "legacy",
+      "files": ["scripts/check-no-secret-echo.sh"],
+      "manual": ["sh", "scripts/check-no-secret-echo.sh"],
+      "triggers": ["manual"],
+      "reason": "Guarda de segredo no corpo de resposta, chamada antes do deploy; referências literais: .github/workflows/ci.yml, .github/workflows/edge-functions-deploy.yml. O dispatcher não executa esta operação."
     },
     {
       "id": "legacy-57c30fa982e3ca8a",
