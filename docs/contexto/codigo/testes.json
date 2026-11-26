@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 167,
+ "total": 168,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 145
+  "unit": 146
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 120
+   "arquivos": 121
   },
   {
    "padrao": "e2e/",
@@ -846,6 +846,15 @@
    "casos": 3
   },
   {
+   "arquivo": "src/hooks/__tests__/useInstagramResults.test.ts",
+   "tipo": "unit",
+   "linhas": 261,
+   "testa": [
+    "src/hooks/useInstagramResults.ts"
+   ],
+   "casos": 16
+  },
+  {
    "arquivo": "src/hooks/__tests__/useOnboardingState.test.tsx",
    "tipo": "unit",
    "linhas": 57,
@@ -1669,6 +1678,7 @@
   "src/hooks/useEmailTemplates.ts": 1,
   "src/hooks/useFeatureFlags.ts": 1,
   "src/hooks/useICPConfig.ts": 3,
+  "src/hooks/useInstagramResults.ts": 1,
   "src/hooks/useNotificationCount.ts": 2,
   "src/hooks/useOAuthSandboxSnapshots.ts": 1,
   "src/hooks/useOnboardingState.ts": 1,

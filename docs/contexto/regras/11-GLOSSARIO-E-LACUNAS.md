@@ -1,6 +1,6 @@
 # 11 · GLOSSÁRIO, DADOS DE REFERÊNCIA E LACUNAS
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9c59a910d5` · branch `main` · 2026-11-26 19:40 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7ea5268495` · branch `main` · 2026-11-26 19:41 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Glossário do domínio (entidades do sistema)
@@ -165,6 +165,7 @@
 | `EmailSyncStatus` (TS) | success \| error \| skipped \| refresh_failed |  | `src/hooks/useEmailSyncLog.ts` |
 | `TEMPLATE_CATEGORIES` (TS) | "prospeccao", "follow-up", "reuniao", "proposta", "reativacao", "geral", |  | `src/hooks/useEmailTemplates.ts` |
 | `TEMPLATE_VARIABLES` (TS) | "{{empresa}}", "{{contato}}", "{{cargo}}", "{{cidade}}", "{{segmento}}", "{{remetente}}", |  | `src/hooks/useEmailTemplates.ts` |
+| `InstagramTargetType` (TS) | profile \| posts \| hashtag \| comments |  | `src/hooks/useInstagramResults.ts` |
 | `LeaderboardMetric` (TS) | won_value \| won_deals \| activities \| new_companies |  | `src/hooks/useLeaderboard.ts` |
 | `LostReasonCategory` (TS) | price \| competitor \| timing \| no_budget \| no_fit \| no_response \| internal \| other |  | `src/hooks/useLostReasons.ts` |
 | `MembershipAuditAction` (TS) | added \| removed \| role_changed \| left \| other |  | `src/hooks/useMembershipAuditLog.ts` |

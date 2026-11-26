@@ -1,20 +1,20 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "nos": 589,
- "arestas": 1913,
+ "nos": 591,
+ "arestas": 1927,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
-   "importado_por": 141
+   "importado_por": 142
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 126
+   "importado_por": 127
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
-   "importado_por": 116
+   "importado_por": 117
   },
   {
    "arquivo": "src/lib/utils.ts",
@@ -26,11 +26,11 @@
   },
   {
    "arquivo": "src/components/ui/input.tsx",
-   "importado_por": 64
+   "importado_por": 65
   },
   {
    "arquivo": "src/components/ui/card.tsx",
-   "importado_por": 61
+   "importado_por": 62
   },
   {
    "arquivo": "src/hooks/use-toast.ts",
@@ -38,11 +38,11 @@
   },
   {
    "arquivo": "src/components/ui/label.tsx",
-   "importado_por": 49
+   "importado_por": 50
   },
   {
    "arquivo": "src/contexts/active-org-context.ts",
-   "importado_por": 45
+   "importado_por": 46
   },
   {
    "arquivo": "src/contexts/auth-context.ts",
@@ -50,7 +50,7 @@
   },
   {
    "arquivo": "src/components/ui/select.tsx",
-   "importado_por": 37
+   "importado_por": 38
   },
   {
    "arquivo": "src/components/ui/dialog.tsx",
@@ -77,11 +77,11 @@
    "importado_por": 24
   },
   {
-   "arquivo": "src/components/lux/DataError.tsx",
-   "importado_por": 22
+   "arquivo": "src/components/ui/switch.tsx",
+   "importado_por": 23
   },
   {
-   "arquivo": "src/components/ui/switch.tsx",
+   "arquivo": "src/components/lux/DataError.tsx",
    "importado_por": 22
   },
   {
@@ -110,14 +110,14 @@
   },
   {
    "arquivo": "src/components/lux/monitoring/PainelComEstado.tsx",
+   "importado_por": 14
+  },
+  {
+   "arquivo": "src/components/ui/table.tsx",
    "importado_por": 13
   },
   {
    "arquivo": "src/components/ui/alert-dialog.tsx",
-   "importado_por": 12
-  },
-  {
-   "arquivo": "src/components/ui/table.tsx",
    "importado_por": 12
   },
   {
@@ -149,6 +149,10 @@
    "importado_por": 9
   },
   {
+   "arquivo": "src/lib/exportCSV.ts",
+   "importado_por": 9
+  },
+  {
    "arquivo": "src/components/ui/checkbox.tsx",
    "importado_por": 8
   },
@@ -158,10 +162,6 @@
   },
   {
    "arquivo": "src/hooks/useAutomationsMonitor.ts",
-   "importado_por": 8
-  },
-  {
-   "arquivo": "src/lib/exportCSV.ts",
    "importado_por": 8
   }
  ],

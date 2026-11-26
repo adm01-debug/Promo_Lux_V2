@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 97,
+ "total": 98,
  "hooks": [
   {
    "arquivo": "src/components/lux/analytics/useAnalyticsData.ts",
@@ -107,7 +107,7 @@
     "useContext"
    ],
    "canais_realtime": [],
-   "usado_por": 44,
+   "usado_por": 45,
    "usado_por_arquivos": [
     "src/components/lux/CommandPalette.tsx",
     "src/components/lux/CompaniesView.tsx",
@@ -132,13 +132,13 @@
     "src/hooks/useEmailSuppressions.ts",
     "src/hooks/useEmailTemplates.ts",
     "src/hooks/useFeatureFlags.ts",
+    "src/hooks/useInstagramResults.ts",
     "src/hooks/useIpAllowlist.ts",
     "src/hooks/useLeaderboard.ts",
     "src/hooks/useLostReasons.ts",
     "src/hooks/useNextBestActions.ts",
     "src/hooks/useOracleV2.ts",
-    "src/hooks/useOrgProxies.ts",
-    "src/hooks/useOrgRateLimit.ts"
+    "src/hooks/useOrgProxies.ts"
    ],
    "coberto_por_testes": 1
   },
@@ -1320,6 +1320,31 @@
     "src/components/lux/ICPConfigView.tsx"
    ],
    "coberto_por_testes": 3
+  },
+  {
+   "arquivo": "src/hooks/useInstagramResults.ts",
+   "hooks_exportados": [
+    "useInstagramQueue",
+    "useInstagramResults"
+   ],
+   "linhas": 241,
+   "dominio": "hooks",
+   "tabelas": [
+    "instagram_scrape_queue",
+    "instagram_scrape_results"
+   ],
+   "rpcs": [],
+   "edges": [],
+   "hooks_internos": [
+    "useActiveOrganization",
+    "useQuery"
+   ],
+   "canais_realtime": [],
+   "usado_por": 1,
+   "usado_por_arquivos": [
+    "src/components/lux/monitoring/InstagramResultsPanel.tsx"
+   ],
+   "coberto_por_testes": 1
   },
   {
    "arquivo": "src/hooks/useIpAllowlist.ts",

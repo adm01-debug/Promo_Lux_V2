@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9c59a910d5297542620536c87c23cf6851045276",
+  "commit": "7ea526849571ae20691de592c0018a3df08d43f7",
   "branch": "main",
-  "data_commit": "2026-11-26T12:50:45-03:00",
+  "data_commit": "2026-11-26T16:38:32-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "7ea5268",
+    "data": "2026-11-26",
+    "assunto": "feat(monitoramento): tela para os leads coletados no Instagram (#275)"
+   },
    {
     "sha": "9c59a91",
     "data": "2026-11-26",
@@ -126,18 +131,13 @@
     "sha": "e0e485e",
     "data": "2026-11-25",
     "assunto": "fix(interface): erro explicito nas mutacoes sem aviso e cache curto em papel/permissao (etapas 214-216) (#238)"
-   },
-   {
-    "sha": "aeaea40",
-    "data": "2026-11-25",
-    "assunto": "fix(estado): uma invalidacao por troca de organizacao e canais seguindo a organizacao nova (etapas 211-213) (#237)"
    }
   ],
-  "arquivos_mudados_7d": 419,
+  "arquivos_mudados_7d": 422,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 165
+    "mudancas": 166
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
@@ -165,7 +165,7 @@
    },
    {
     "pasta": "src/hooks/__tests__",
-    "mudancas": 11
+    "mudancas": 12
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
@@ -184,15 +184,15 @@
     "mudancas": 9
    },
    {
+    "pasta": "src/pages/Monitoring.tsx",
+    "mudancas": 9
+   },
+   {
     "pasta": "supabase/functions/public-api",
     "mudancas": 9
    },
    {
     "pasta": ".gitignore",
-    "mudancas": 8
-   },
-   {
-    "pasta": "AGENTS.md",
     "mudancas": 8
    }
   ],
@@ -234,15 +234,15 @@
     "mudancas": 9
    },
    {
+    "arquivo": "src/pages/Monitoring.tsx",
+    "mudancas": 9
+   },
+   {
     "arquivo": "supabase/functions/public-api/index.ts",
     "mudancas": 9
    },
    {
     "arquivo": "AGENTS.md",
-    "mudancas": 8
-   },
-   {
-    "arquivo": "src/pages/Monitoring.tsx",
     "mudancas": 8
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 205
+    "commits": 206
    },
    {
     "autor": "dependabot[bot]",
@@ -310,21 +310,21 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1214,
-  "arquivos_codigo": 756,
-  "linhas_codigo": 131359,
+  "arquivos_total": 1217,
+  "arquivos_codigo": 759,
+  "linhas_codigo": 132252,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
   "itens_menu": 28,
   "modulos": 23,
-  "componentes": 269,
-  "hooks": 97,
+  "componentes": 270,
+  "hooks": 98,
   "edge_functions": 63,
   "tabelas": 121,
   "migrations": 275,
   "cron_jobs": 44,
-  "testes": 167,
+  "testes": 168,
   "workflows": 11,
   "scripts": 58,
   "docs_md": 87
@@ -559,16 +559,16 @@
    "linhas": 124
   },
   "src/components": {
-   "arquivos": 324,
-   "linhas": 54342
+   "arquivos": 325,
+   "linhas": 54731
   },
   "src/contexts": {
    "arquivos": 9,
    "linhas": 515
   },
   "src/hooks": {
-   "arquivos": 111,
-   "linhas": 12736
+   "arquivos": 113,
+   "linhas": 13238
   },
   "src/integrations": {
    "arquivos": 15,
@@ -584,7 +584,7 @@
   },
   "src/pages": {
    "arquivos": 11,
-   "linhas": 2307
+   "linhas": 2309
   },
   "src/test": {
    "arquivos": 4,
@@ -662,7 +662,7 @@
   },
   {
    "arquivo": "src/pages/Monitoring.tsx",
-   "linhas": 771
+   "linhas": 773
   },
   {
    "arquivo": "supabase/functions/lusha-decision-makers/index.ts",

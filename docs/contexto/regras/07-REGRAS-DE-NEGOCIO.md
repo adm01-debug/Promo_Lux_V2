@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9c59a910d5` · branch `main` · 2026-11-26 19:40 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7ea5268495` · branch `main` · 2026-11-26 19:41 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -1019,7 +1019,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `completed` | compara, escreve, filtra | `src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/ScrapeResultsView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>… +15 |
 | `status` | `connected` | escreve | `src/components/lux/SettingsView.tsx` |
 | `status` | `crit` | compara | `src/components/lux/monitoring/SlaCompliancePanel.tsx` |
-| `status` | `dead` | compara, escreve | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
+| `status` | `dead` | compara, escreve | `src/components/lux/monitoring/InstagramEnqueuePanel.tsx`<br>`src/components/lux/monitoring/InstagramResultsPanel.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>`supabase/functions/retry-policy-tuner/index.ts` |
 | `status` | `degraded` | escreve | `supabase/functions/health/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/oracle-search-decisors/index.ts` |
 | `status` | `done` | compara, escreve | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationStageBadge.tsx` |
 | `status` | `draft` | escreve | `src/components/lux/CampaignsView.tsx`<br>`src/lib/demoData.ts` |
@@ -1033,7 +1033,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `error_rate_limit` | compara | `supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `expired` | compara, escreve | `src/components/lux/ScrapeResultsView.tsx`<br>`src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/lusha-cookie-health/index.ts`<br>`supabase/functions/prune-job-exports/index.ts` |
 | `status` | `expiring_soon` | compara | `src/components/lux/lusha/LushaCookieHealthBanner.tsx` |
-| `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +14 |
+| `status` | `failed` | compara, escreve, filtra | `src/components/lux/LushaIntelligenceView.tsx`<br>`src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`src/components/lux/integrations/WebhooksPanel.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>… +15 |
 | `status` | `fulfilled` | compara | `src/components/lux/StakeholderFinderView.tsx`<br>`supabase/functions/oracle-enrich-contact/index.ts` |
 | `status` | `healthy` | compara, escreve | `src/components/lux/lusha/LushaCookieHealthBanner.tsx`<br>`supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts`<br>`supabase/functions/lusha-cookie-health/index.ts` |
 | `status` | `hit` | compara, escreve | `supabase/functions/_shared/apollo-cache.ts` |
@@ -1052,13 +1052,13 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `status` | `resolved` | compara, escreve | `src/components/lux/monitoring/IncidentsPanel.tsx`<br>`src/hooks/useStatusPage.ts`<br>`src/pages/StatusPage.tsx` |
 | `status` | `retry` | escreve | `supabase/functions/instagram-worker/index.ts` |
 | `status` | `retrying` | compara | `src/components/lux/integrations/WebhooksPanel.tsx` |
-| `status` | `running` | compara, escreve | `src/components/lux/AutomationsList.tsx`<br>`src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/JobDetailsSheet.tsx`<br>… +7 |
+| `status` | `running` | compara, escreve | `src/components/lux/AutomationsList.tsx`<br>`src/components/lux/GmapsScraperView.tsx`<br>`src/components/lux/analytics/useAnalyticsData.ts`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/InstagramResultsPanel.tsx`<br>… +8 |
 | `status` | `sending` | escreve | `supabase/functions/webhook-dispatcher/index.ts` |
 | `status` | `sent` | compara, escreve | `src/components/lux/campaigns/CampaignTrackingDrawer.tsx`<br>`supabase/functions/send-scheduled-reports/index.ts` |
 | `status` | `sent_to_bitrix` | compara, escreve | `src/hooks/useOracleV2.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts` |
 | `status` | `skipped` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`supabase/functions/email-poll-replies/index.ts`<br>`supabase/functions/oracle-enrich-contact/index.ts`<br>`supabase/functions/oracle-push-bitrix/index.ts`<br>`supabase/functions/send-scheduled-reports/index.ts`<br>… +2 |
 | `status` | `started` | compara | `src/components/lux/monitoring/AutomationStatusPanel.tsx` |
-| `status` | `succeeded` | compara, escreve, filtra | `src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/MultiQueueResilienceCard.tsx`<br>`src/components/lux/monitoring/SystemRecoveryPanel.tsx`<br>`supabase/functions/instagram-worker/index.ts`<br>… +1 |
+| `status` | `succeeded` | compara, escreve, filtra | `src/components/lux/automations/AutomationEventsFeed.tsx`<br>`src/components/lux/monitoring/AutomationStatusPanel.tsx`<br>`src/components/lux/monitoring/InstagramResultsPanel.tsx`<br>`src/components/lux/monitoring/MultiQueueResilienceCard.tsx`<br>`src/components/lux/monitoring/SystemRecoveryPanel.tsx`<br>… +2 |
 | `status` | `success` | compara, escreve | `src/components/lux/integrations/EmailSyncHistorySheet.tsx`<br>`src/components/lux/lusha/SessionsPanel.tsx`<br>`supabase/functions/cnpj-enrich-worker/index.ts`<br>`supabase/functions/cnpj-enrich/index.ts`<br>`supabase/functions/cnpj-settings-status/index.ts`<br>… +4 |
 | `status` | `timeout` | escreve | `src/hooks/useCnpjEnrich.ts` |
 | `status` | `unhealthy` | escreve | `supabase/functions/_shared/places-fallback.ts`<br>`supabase/functions/health/index.ts` |
@@ -1205,6 +1205,7 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | EmailSyncStatus | success \| error \| skipped \| refresh_failed | `src/hooks/useEmailSyncLog.ts` |
 | TEMPLATE_CATEGORIES | "prospeccao", "follow-up", "reuniao", "proposta", "reativacao", "geral", | `src/hooks/useEmailTemplates.ts` |
 | TEMPLATE_VARIABLES | "{{empresa}}", "{{contato}}", "{{cargo}}", "{{cidade}}", "{{segmento}}", "{{remetente}}", | `src/hooks/useEmailTemplates.ts` |
+| InstagramTargetType | profile \| posts \| hashtag \| comments | `src/hooks/useInstagramResults.ts` |
 | LeaderboardMetric | won_value \| won_deals \| activities \| new_companies | `src/hooks/useLeaderboard.ts` |
 | LostReasonCategory | price \| competitor \| timing \| no_budget \| no_fit \| no_response \| internal \| other | `src/hooks/useLostReasons.ts` |
 | MembershipAuditAction | added \| removed \| role_changed \| left \| other | `src/hooks/useMembershipAuditLog.ts` |
@@ -1769,6 +1770,8 @@ _nenhum item encontrado_
 | `HISTORY_LIMIT` | `288` | `src/hooks/useDbHealth.ts` |
 | `MAX_ENTRIES` | `200` | `src/hooks/useDryRunLogs.ts` |
 | `CACHE_TTL_MS` | `60` | `src/hooks/useFeatureFlag.ts` |
+| `TWENTY_FOUR_HOURS_MS` | `24` | `src/hooks/useInstagramResults.ts` |
+| `INSTAGRAM_RESULTS_LIMIT` | `500` | `src/hooks/useInstagramResults.ts` |
 | `MAX_UNREAD` | `99` | `src/hooks/useNotificationCount.ts` |
 | `GOOGLE_MONTHLY_CREDIT_USD` | `200` | `src/hooks/usePlacesApiUsage.ts` |
 | `MAX_RECENT` | `5` | `src/hooks/useRecentViews.ts` |
@@ -1869,6 +1872,7 @@ _nenhum item encontrado_
 | `const timer = setTimeout(() => setParticles([]), 3000);` | `src/components/lux/onboarding/ConfettiEffect.tsx` |
 | `setTimeout(() => setCopied(false), 2000);` | `src/components/lux/settings/MFASetup.tsx` |
 | `const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();` | `src/components/lux/settings/RLSVerificationPanel.tsx` |
+| `const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;` | `src/hooks/useInstagramResults.ts` |
 | `staleTime: 5 * 60 * 1000,` | `src/hooks/useResilienceComparison.ts` |
 | `const CORRELATION_WINDOW_MS = 5 * 60 * 1000; // 5 min` | `src/lib/orgErrorHandler.ts` |
 | `setTimeout(() => navigate("/"), 2000);` | `src/pages/ResetPassword.tsx` |
@@ -2358,7 +2362,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 | `admin` | `supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql` |
 
-## K. Testes como especificação (1410 testes em 151 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1431 testes em 152 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2369,6 +2373,7 @@ _nenhum item encontrado_
 | `src/lib/__tests__/sanitize.test.ts` | 33 | escapeHtml · escapes & < > \ · leaves safe strings unchanged · handles empty string … |
 | `supabase/functions/_shared/__tests__/ssrf-guard.test.ts` | 25 | isPrivateOrReservedIPv4 · bloqueia ${nome} (${ip}) · permite ${nome} (${ip}) · isPrivateOrReservedIPv6 … |
 | `supabase/functions/_shared/__tests__/lead-identity.test.ts` | 24 | normalizePersonName · remove acento, caixa e espaço extra · remove título de tratamento e sufixo geracional · remove pronomes/siglas entre parênteses e e-mail colado … |
+| `src/hooks/__tests__/useInstagramResults.test.ts` | 21 | flattenInstagramResult · achata o contato que vive dentro do JSONB normalized · aceita normalized serializado como texto JSON · não inventa dado quando normalized vem nulo ou inválido … |
 | `supabase/functions/_shared/__tests__/phone-br.test.ts` | 21 | normalizePhoneBR · normaliza celular BR 11 dígitos · normaliza fixo BR 10 dígitos · aceita já com +55 … |
 | `supabase/functions/_shared/__tests__/omkar-gmaps-config.test.ts` | 19 | normalizeLang · reduz a tag regional ao código base · cai no fallback quando inválido · mapToOmkarTaskInput … |
 | `src/components/lux/lusha/__tests__/historyUtils.test.ts` | 18 | filterHistory · busca por domínio e por linkedin (case-insensitive) · filtra por status · aplica janela de datas inclusiva … |

@@ -3,7 +3,7 @@
  "format_version": 2,
  "stack": {
   "linguagens": [
-   "TypeScript (727)",
+   "TypeScript (730)",
    "SQL (279)",
    "Markdown (87)",
    "JSON (38)",
@@ -818,6 +818,10 @@
     "arquivos": 4
    },
    {
+    "host": "empresa.com",
+    "arquivos": 4
+   },
+   {
     "host": "gmaps.atomicabr.com.br",
     "arquivos": 4
    },
@@ -827,10 +831,6 @@
    },
    {
     "host": "connector-gateway.lovable.dev",
-    "arquivos": 3
-   },
-   {
-    "host": "empresa.com",
     "arquivos": 3
    },
    {
@@ -855,6 +855,10 @@
    },
    {
     "host": "hikerapi.com",
+    "arquivos": 2
+   },
+   {
+    "host": "instagram.com",
     "arquivos": 2
    },
    {
@@ -1059,10 +1063,6 @@
    },
    {
     "host": "img2.jpg",
-    "arquivos": 1
-   },
-   {
-    "host": "instagram.com",
     "arquivos": 1
    },
    {

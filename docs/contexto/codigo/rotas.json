@@ -716,6 +716,8 @@
     "useEvaluatePartitions",
     "useEvents",
     "useIncidents",
+    "useInstagramQueue",
+    "useInstagramResults",
     "useLatestSnapshots",
     "useMemo",
     "useMutation",
@@ -802,6 +804,8 @@
     "useEnqueueWebScrape",
     "useEvaluatePartitions",
     "useIncidents",
+    "useInstagramQueue",
+    "useInstagramResults",
     "useMyOrganizations",
     "useOrgInvites",
     "useOrgMembers",
@@ -862,6 +866,8 @@
     "feature_flags",
     "incidents",
     "instagram_scrape_dead_letter",
+    "instagram_scrape_queue",
+    "instagram_scrape_results",
     "notifications",
     "org_proxies",
     "org_scrape_rate_limits",
@@ -935,7 +941,7 @@
     "status",
     "viewer"
    ],
-   "arquivos_puxados": 128
+   "arquivos_puxados": 130
   },
   {
    "protegida": false,

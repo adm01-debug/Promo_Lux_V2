@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 269,
+ "total": 270,
  "orfaos": 19,
  "nomes_duplicados": {
   "Sidebar": [
@@ -2040,6 +2040,23 @@
    "orfao": false
   },
   {
+   "arquivo": "src/components/lux/monitoring/InstagramResultsPanel.tsx",
+   "exports": [
+    "InstagramResultsPanel"
+   ],
+   "export_default": null,
+   "linhas": 389,
+   "dominio": "components/lux",
+   "hooks_locais": [
+    "useInstagramQueue",
+    "useInstagramResults"
+   ],
+   "tabelas": [],
+   "edges": [],
+   "usado_por": 1,
+   "orfao": false
+  },
+  {
    "arquivo": "src/components/lux/monitoring/JobDetailsSheet.tsx",
    "exports": [
     "JobDetailsSheet"
@@ -2160,7 +2177,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 12,
+   "usado_por": 13,
    "orfao": false
   },
   {
@@ -3536,7 +3553,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 116,
+   "usado_por": 117,
    "orfao": false
   },
   {
@@ -3571,7 +3588,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 141,
+   "usado_por": 142,
    "orfao": false
   },
   {
@@ -3605,7 +3622,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 61,
+   "usado_por": 62,
    "orfao": false
   },
   {
@@ -3850,7 +3867,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 64,
+   "usado_por": 65,
    "orfao": false
   },
   {
@@ -3864,7 +3881,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 49,
+   "usado_por": 50,
    "orfao": false
   },
   {
@@ -4033,7 +4050,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 37,
+   "usado_por": 38,
    "orfao": false
   },
   {
@@ -4165,7 +4182,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 22,
+   "usado_por": 23,
    "orfao": false
   },
   {
@@ -4186,7 +4203,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 12,
+   "usado_por": 13,
    "orfao": false
   },
   {
@@ -4472,7 +4489,7 @@
     "AutomationMonitoring"
    ],
    "export_default": "AutomationMonitoring",
-   "linhas": 771,
+   "linhas": 773,
    "dominio": "pages",
    "hooks_locais": [
     "useActiveOrganization",

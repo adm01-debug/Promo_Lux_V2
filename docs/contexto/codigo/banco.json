@@ -9861,7 +9861,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 0,
+   "usada_no_front": 1,
    "usada_em_edges": [
     "instagram-enqueue",
     "instagram-worker",
@@ -9988,7 +9988,7 @@
     "so_na_migration": [],
     "so_no_types": []
    },
-   "usada_no_front": 0,
+   "usada_no_front": 1,
    "usada_em_edges": [
     "instagram-worker"
    ],

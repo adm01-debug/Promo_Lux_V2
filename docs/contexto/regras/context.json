@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "9c59a910d5297542620536c87c23cf6851045276",
+  "sha": "7ea526849571ae20691de592c0018a3df08d43f7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 19:40 UTC",
-  "files_total": 1235,
-  "code_files": 1039,
-  "code_lines": 154262
+  "generated_at": "2026-11-26 19:41 UTC",
+  "files_total": 1238,
+  "code_files": 1042,
+  "code_lines": 155155
  },
  "version": "1.3.2",
- "facts_hash": "82dfe3880fd50686",
+ "facts_hash": "b6e2692d8e0517eb",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -254,8 +254,8 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 406,
-   ".tsx": 321,
+   ".ts": 408,
+   ".tsx": 322,
    ".sql": 279,
    ".mjs": 23,
    ".py": 5,
@@ -30436,6 +30436,8 @@
      "feature_flags",
      "incidents",
      "instagram_scrape_dead_letter",
+     "instagram_scrape_queue",
+     "instagram_scrape_results",
      "notifications",
      "org_proxies",
      "org_scrape_rate_limits",
@@ -30491,7 +30493,7 @@
      "sla_recommendations",
      "source_quality_report"
     ],
-    "deps_count": 128
+    "deps_count": 130
    },
    {
     "path": "",
@@ -32660,7 +32662,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 324,
+  "components_count": 325,
   "hooks": [
    {
     "name": "useContacts",
@@ -32945,6 +32947,14 @@
    {
     "name": "useICPConfig",
     "file": "src/hooks/useICPConfig.ts"
+   },
+   {
+    "name": "useInstagramResults",
+    "file": "src/hooks/useInstagramResults.ts"
+   },
+   {
+    "name": "useInstagramQueue",
+    "file": "src/hooks/useInstagramResults.ts"
    },
    {
     "name": "useIpAllowlist",
@@ -33687,8 +33697,8 @@
   },
   {
    "module": "src/components",
-   "files": 324,
-   "lines": 54342,
+   "files": 325,
+   "lines": 54731,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33937,8 +33947,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 111,
-   "lines": 12736,
+   "files": 113,
+   "lines": 13238,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -33971,6 +33981,8 @@
     "feature_flags",
     "incidents",
     "instagram_scrape_dead_letter",
+    "instagram_scrape_queue",
+    "instagram_scrape_results",
     "intent_signals",
     "ip_allowlist",
     "ipc_config",
@@ -34113,6 +34125,7 @@
     "src/hooks/useFeatureFlags.ts",
     "src/hooks/useFocusMode.ts",
     "src/hooks/useICPConfig.ts",
+    "src/hooks/useInstagramResults.ts",
     "src/hooks/useIpAllowlist.ts",
     "src/hooks/useKeyboardShortcuts.ts",
     "src/hooks/useLeadScores.ts",
@@ -34149,8 +34162,7 @@
     "src/hooks/useSatisfaction.ts",
     "src/hooks/useScheduledReports.ts",
     "src/hooks/useScrapeQueue.ts",
-    "src/hooks/useSidebarState.ts",
-    "src/hooks/useSkin.ts"
+    "src/hooks/useSidebarState.ts"
    ]
   },
   {
@@ -34355,7 +34367,7 @@
   {
    "module": "src/pages",
    "files": 11,
-   "lines": 2307,
+   "lines": 2309,
    "tables": [
     "automation_alerts",
     "scrape_jobs"
@@ -35371,6 +35383,7 @@
     "select": [
      "e2e/instagram-dlq-replay.spec.ts",
      "e2e/instagram-worker-smoke.spec.ts",
+     "src/hooks/useInstagramResults.ts",
      "supabase/functions/instagram-enqueue/index.ts",
      "supabase/functions/instagram-worker-health/index.ts"
     ],
@@ -35388,7 +35401,8 @@
    "instagram_scrape_results": {
     "select": [
      "e2e/instagram-dlq-replay.spec.ts",
-     "e2e/instagram-worker-smoke.spec.ts"
+     "e2e/instagram-worker-smoke.spec.ts",
+     "src/hooks/useInstagramResults.ts"
     ],
     "insert": [
      "supabase/functions/instagram-worker/index.ts"
@@ -36577,23 +36591,29 @@
     "target_value"
    ],
    "instagram_scrape_queue": [
+    "attempt",
     "config_hash",
     "created_at",
     "id",
     "last_error",
     "locked_at",
+    "max_attempts",
     "organization_id",
     "status",
     "target_type",
     "target_value",
-    "trace_id"
+    "trace_id",
+    "updated_at"
    ],
    "instagram_scrape_results": [
+    "fetched_at",
     "id",
     "item_type",
     "normalized",
+    "organization_id",
     "queue_id",
-    "target_type"
+    "target_type",
+    "target_value"
    ],
    "intent_signals": [
     "company_id",
@@ -38969,6 +38989,11 @@
     "file": "src/hooks/useEmailTemplates.ts",
     "name": "TEMPLATE_VARIABLES",
     "values": "\"{{empresa}}\", \"{{contato}}\", \"{{cargo}}\", \"{{cidade}}\", \"{{segmento}}\", \"{{remetente}}\","
+   },
+   {
+    "file": "src/hooks/useInstagramResults.ts",
+    "name": "InstagramTargetType",
+    "values": "profile | posts | hashtag | comments"
    },
    {
     "file": "src/hooks/useLeaderboard.ts",
@@ -47516,6 +47541,16 @@
     "value": "60"
    },
    {
+    "file": "src/hooks/useInstagramResults.ts",
+    "name": "TWENTY_FOUR_HOURS_MS",
+    "value": "24"
+   },
+   {
+    "file": "src/hooks/useInstagramResults.ts",
+    "name": "INSTAGRAM_RESULTS_LIMIT",
+    "value": "500"
+   },
+   {
     "file": "src/hooks/useNotificationCount.ts",
     "name": "MAX_UNREAD",
     "value": "99"
@@ -49309,6 +49344,30 @@
     "file": "src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
     "field": "status",
     "value": "dead",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/InstagramResultsPanel.tsx",
+    "field": "status",
+    "value": "succeeded",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/InstagramResultsPanel.tsx",
+    "field": "status",
+    "value": "dead",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/InstagramResultsPanel.tsx",
+    "field": "status",
+    "value": "failed",
+    "kind": "compara"
+   },
+   {
+    "file": "src/components/lux/monitoring/InstagramResultsPanel.tsx",
+    "field": "status",
+    "value": "running",
     "kind": "compara"
    },
    {
@@ -53220,6 +53279,10 @@
     "line": "const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();"
    },
    {
+    "file": "src/hooks/useInstagramResults.ts",
+    "line": "const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;"
+   },
+   {
     "file": "src/hooks/useResilienceComparison.ts",
     "line": "staleTime: 5 * 60 * 1000,"
    },
@@ -55882,6 +55945,90 @@
    {
     "file": "src/hooks/__tests__/useEmailSuppressions.test.ts",
     "name": "propaga o erro da restauracao e nao tenta inserir"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "flattenInstagramResult"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "achata o contato que vive dentro do JSONB normalized"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "aceita normalized serializado como texto JSON"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "não inventa dado quando normalized vem nulo ou inválido"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "trata contador não numérico como ausente"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "ignora string vazia e mantém apenas texto com conteúdo"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "summarizeInstagramResults"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "conta total, últimas 24h, contatos e perfis distintos"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "cai para o alvo coletado quando o item não tem @usuario"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "não conta fetched_at inválido como recente"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "matchesInstagramSearch"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "encontra por @usuario e por nome, sem diferenciar maiúsculas"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "encontra por cidade e por alvo"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "devolve tudo quando o termo está vazio e nada quando não casa"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "buildInstagramResultsCsv"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "gera uma linha por item com o contato em coluna própria"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "deixa célula vazia quando o contato não existe"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "useInstagramResults"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "lê instagram_scrape_results da organização ativa e resume o conjunto"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "expõe a falha em vez de mostrar lista vazia"
+   },
+   {
+    "file": "src/hooks/__tests__/useInstagramResults.test.ts",
+    "name": "não consulta quando não há organização ativa"
    },
    {
     "file": "src/hooks/__tests__/useOnboardingState.test.tsx",
@@ -69291,6 +69438,7 @@
       "compara:src/components/lux/AutomationsList.tsx",
       "compara:src/components/lux/GmapsScraperView.tsx",
       "compara:src/components/lux/monitoring/AutomationStatusPanel.tsx",
+      "compara:src/components/lux/monitoring/InstagramResultsPanel.tsx",
       "compara:src/components/lux/monitoring/JobDetailsSheet.tsx",
       "compara:src/pages/Monitoring.tsx",
       "escreve:src/components/lux/analytics/useAnalyticsData.ts",
@@ -69386,6 +69534,7 @@
       "compara:src/components/lux/integrations/WebhooksPanel.tsx",
       "compara:src/components/lux/lusha/SessionsPanel.tsx",
       "compara:src/components/lux/monitoring/AutomationStatusPanel.tsx",
+      "compara:src/components/lux/monitoring/InstagramResultsPanel.tsx",
       "compara:src/components/lux/monitoring/JobDetailsSheet.tsx",
       "compara:src/components/lux/monitoring/SystemRecoveryPanel.tsx",
       "compara:src/hooks/useCnpjEnrich.ts",
@@ -69464,6 +69613,7 @@
      "succeeded": [
       "compara:src/components/lux/automations/AutomationEventsFeed.tsx",
       "compara:src/components/lux/monitoring/AutomationStatusPanel.tsx",
+      "compara:src/components/lux/monitoring/InstagramResultsPanel.tsx",
       "compara:src/components/lux/monitoring/MultiQueueResilienceCard.tsx",
       "compara:src/components/lux/monitoring/SystemRecoveryPanel.tsx",
       "escreve:supabase/functions/instagram-worker/index.ts",
@@ -69557,6 +69707,7 @@
      ],
      "dead": [
       "compara:src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
+      "compara:src/components/lux/monitoring/InstagramResultsPanel.tsx",
       "compara:supabase/functions/retry-policy-tuner/index.ts",
       "escreve:supabase/functions/instagram-worker/index.ts"
      ],
@@ -86707,6 +86858,35 @@
     "invoke("
    ]
   },
+  "src/components/lux/monitoring/InstagramResultsPanel.tsx": {
+   "path": "src/components/lux/monitoring/InstagramResultsPanel.tsx",
+   "lines": 389,
+   "exports": [
+    "function InstagramResultsPanel"
+   ],
+   "status_values": [
+    {
+     "field": "status",
+     "value": "succeeded",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "dead",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "failed",
+     "kind": "compara"
+    },
+    {
+     "field": "status",
+     "value": "running",
+     "kind": "compara"
+    }
+   ]
+  },
   "src/components/lux/monitoring/JobDetailsSheet.tsx": {
    "path": "src/components/lux/monitoring/JobDetailsSheet.tsx",
    "lines": 707,
@@ -90519,6 +90699,82 @@
     "useICPConfig"
    ]
   },
+  "src/hooks/useInstagramResults.ts": {
+   "path": "src/hooks/useInstagramResults.ts",
+   "lines": 241,
+   "exports": [
+    "type InstagramTargetType",
+    "interface InstagramResultRow",
+    "interface InstagramQueueRow",
+    "interface InstagramResultsSummary",
+    "interface InstagramResultRecord",
+    "function flattenInstagramResult",
+    "function summarizeInstagramResults",
+    "function matchesInstagramSearch",
+    "function hasInstagramContact",
+    "function buildInstagramResultsCsv",
+    "const INSTAGRAM_RESULTS_LIMIT",
+    "function useInstagramResults",
+    "function useInstagramQueue"
+   ],
+   "tables": [
+    {
+     "table": "instagram_scrape_results",
+     "op": "select"
+    },
+    {
+     "table": "instagram_scrape_queue",
+     "op": "select"
+    }
+   ],
+   "table_cols": {
+    "instagram_scrape_results": [
+     "fetched_at",
+     "id",
+     "item_type",
+     "normalized",
+     "organization_id",
+     "queue_id",
+     "target_type",
+     "target_value"
+    ],
+    "instagram_scrape_queue": [
+     "attempt",
+     "created_at",
+     "id",
+     "last_error",
+     "max_attempts",
+     "organization_id",
+     "status",
+     "target_type",
+     "target_value",
+     "updated_at"
+    ]
+   },
+   "enums": [
+    {
+     "name": "InstagramTargetType",
+     "values": "profile | posts | hashtag | comments"
+    }
+   ],
+   "params": [
+    {
+     "name": "TWENTY_FOUR_HOURS_MS",
+     "value": "24"
+    },
+    {
+     "name": "INSTAGRAM_RESULTS_LIMIT",
+     "value": "500"
+    }
+   ],
+   "hooks": [
+    "useInstagramResults",
+    "useInstagramQueue"
+   ],
+   "temporal": [
+    "const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;"
+   ]
+  },
   "src/hooks/useIpAllowlist.ts": {
    "path": "src/hooks/useIpAllowlist.ts",
    "lines": 142,
@@ -92520,6 +92776,34 @@
     "restaura o descadastro que esta na lixeira e nao insere de novo",
     "insere quando o e-mail nao esta nem ativo nem na lixeira",
     "propaga o erro da restauracao e nao tenta inserir"
+   ]
+  },
+  "src/hooks/__tests__/useInstagramResults.test.ts": {
+   "path": "src/hooks/__tests__/useInstagramResults.test.ts",
+   "lines": 261,
+   "is_test": true,
+   "tests": [
+    "flattenInstagramResult",
+    "achata o contato que vive dentro do JSONB normalized",
+    "aceita normalized serializado como texto JSON",
+    "não inventa dado quando normalized vem nulo ou inválido",
+    "trata contador não numérico como ausente",
+    "ignora string vazia e mantém apenas texto com conteúdo",
+    "summarizeInstagramResults",
+    "conta total, últimas 24h, contatos e perfis distintos",
+    "cai para o alvo coletado quando o item não tem @usuario",
+    "não conta fetched_at inválido como recente",
+    "matchesInstagramSearch",
+    "encontra por @usuario e por nome, sem diferenciar maiúsculas",
+    "encontra por cidade e por alvo",
+    "devolve tudo quando o termo está vazio e nada quando não casa",
+    "buildInstagramResultsCsv",
+    "gera uma linha por item com o contato em coluna própria",
+    "deixa célula vazia quando o contato não existe",
+    "useInstagramResults",
+    "lê instagram_scrape_results da organização ativa e resume o conjunto",
+    "expõe a falha em vez de mostrar lista vazia",
+    "não consulta quando não há organização ativa"
    ]
   },
   "src/hooks/__tests__/useOnboardingState.test.tsx": {
@@ -95395,7 +95679,7 @@
   },
   "src/pages/Monitoring.tsx": {
    "path": "src/pages/Monitoring.tsx",
-   "lines": 771,
+   "lines": 773,
    "exports": [
     "default AutomationMonitoring"
    ],
@@ -104833,10 +105117,22 @@
   }
  },
  "git": {
-  "sha": "9c59a910d5297542620536c87c23cf6851045276",
+  "sha": "7ea526849571ae20691de592c0018a3df08d43f7",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "7ea5268",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "feat(monitoramento): tela para os leads coletados no Instagram (#275)",
+    "files": [
+     "src/components/lux/monitoring/InstagramResultsPanel.tsx",
+     "src/hooks/__tests__/useInstagramResults.test.ts",
+     "src/hooks/useInstagramResults.ts",
+     "src/pages/Monitoring.tsx"
+    ]
+   },
    {
     "sha": "9c59a91",
     "date": "2026-11-26",
@@ -105232,35 +105528,16 @@
      "src/lib/__tests__/money.test.ts",
      "src/lib/money.ts"
     ]
-   },
-   {
-    "sha": "23d4926",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(painel): escopo de organizacao e de excluidos nas leituras do painel (etapas 123-127) (#232)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/components/lux/AutomationsList.tsx",
-     "src/components/lux/CampaignsView.tsx",
-     "src/components/lux/CompaniesMapView.tsx",
-     "src/components/lux/CompanyDetailModal.tsx",
-     "src/components/lux/DashboardView.tsx",
-     "src/components/lux/__tests__/AutomationsList.test.tsx",
-     "src/components/lux/__tests__/CampaignsView.test.tsx",
-     "src/components/lux/__tests__/CompanyDetailModal.actions.test.tsx",
-     "src/components/lux/__tests__/DashboardView.test.tsx",
-     "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
-     "src/hooks/__tests__/useWeeklyPerformance.test.tsx",
-     "src/hooks/useWeeklyPerformance.ts",
-     "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts",
-     "src/test/mockSupabaseClient.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    22
+    21
+   ],
+   [
+    "src/pages/Monitoring.tsx",
+    3
    ],
    [
     "src/components/lux/ScrapeResultsView.tsx",
@@ -105307,14 +105584,6 @@
     2
    ],
    [
-    "src/pages/Monitoring.tsx",
-    2
-   ],
-   [
-    "src/components/lux/campaigns/CampaignTrackingDrawer.tsx",
-    2
-   ],
-   [
     "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
     2
    ],
@@ -105327,15 +105596,19 @@
     2
    ],
    [
-    "src/components/lux/CampaignsView.tsx",
-    2
-   ],
-   [
     "src/hooks/useOrganizations.ts",
     2
    ],
    [
     "src/hooks/useApiKeys.ts",
+    2
+   ],
+   [
+    "src/hooks/useEmailTemplates.ts",
+    2
+   ],
+   [
+    "src/hooks/useDeals.ts",
     2
    ]
   ]

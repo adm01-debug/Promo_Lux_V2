@@ -1349,6 +1349,19 @@
    "src/components/ui/select.tsx",
    "src/integrations/supabase/client.ts"
   ],
+  "src/components/lux/monitoring/InstagramResultsPanel.tsx": [
+   "src/components/lux/monitoring/PainelComEstado.tsx",
+   "src/components/ui/badge.tsx",
+   "src/components/ui/button.tsx",
+   "src/components/ui/card.tsx",
+   "src/components/ui/input.tsx",
+   "src/components/ui/label.tsx",
+   "src/components/ui/select.tsx",
+   "src/components/ui/switch.tsx",
+   "src/components/ui/table.tsx",
+   "src/hooks/useInstagramResults.ts",
+   "src/lib/exportCSV.ts"
+  ],
   "src/components/lux/monitoring/JobDetailsSheet.tsx": [
    "src/components/lux/DataError.tsx",
    "src/components/ui/badge.tsx",
@@ -2124,6 +2137,10 @@
    "src/integrations/supabase/types.ts",
    "src/integrations/supabase/withOrg.ts"
   ],
+  "src/hooks/useInstagramResults.ts": [
+   "src/contexts/active-org-context.ts",
+   "src/integrations/supabase/client.ts"
+  ],
   "src/hooks/useIpAllowlist.ts": [
    "src/contexts/active-org-context.ts",
    "src/hooks/use-toast.ts",
@@ -2502,6 +2519,7 @@
    "src/components/lux/monitoring/IncidentsPanel.tsx",
    "src/components/lux/monitoring/InstagramConnectionPanel.tsx",
    "src/components/lux/monitoring/InstagramEnqueuePanel.tsx",
+   "src/components/lux/monitoring/InstagramResultsPanel.tsx",
    "src/components/lux/monitoring/JobDetailsSheet.tsx",
    "src/components/lux/monitoring/MonteCarloReportPanel.tsx",
    "src/components/lux/monitoring/MultiQueueResilienceCard.tsx",
