@@ -2,13 +2,15 @@ import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Switch } from "@/components/ui/switch";
-import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2, Settings2, Bell, Download, Keyboard } from "lucide-react";
+import { Search, Users2, AlertTriangle, Loader2, ExternalLink, History, Building2, Globe, Mail, Phone, Sparkles, MapPin, Link2, Copy, CheckCircle2, XCircle, Clock, X, RotateCw, Trash2, Settings2, Bell, Download, Keyboard, Coins } from "lucide-react";
 import { downloadCSV } from "@/lib/exportCSV";
 import type { TablesUpdate } from "@/integrations/supabase/types";
 import { filterHistory, formatDurationMs, findRecentDuplicate, buildHistoryCsvRows, type DMHistoryEntry as DMHistoryEntryShared } from "@/components/lux/lusha/historyUtils";
 import { LushaCookieHealthBanner } from "@/components/lux/lusha/LushaCookieHealthBanner";
 import { OracleV2Panel } from "@/components/lux/lusha/OracleV2Panel";
 import { OracleV2ErrorBoundary } from "@/components/lux/lusha/OracleV2ErrorBoundary";
+import { LushaCreditUsagePanel } from "@/components/lux/lusha/LushaCreditUsagePanel";
+import { usePermissions } from "@/hooks/usePermissions";
 import { useFeatureFlag } from "@/hooks/useFeatureFlags";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -481,8 +483,15 @@ export const LushaIntelligenceView = () => {
   // ── Deep-link: abrir aba de histórico e destacar item quando ?tab=history&historyId=... ──
   const [searchParams, setSearchParams] = useSearchParams();
   const oracleV2Enabled = useFeatureFlag("oracle_v2");
-  const [resultsTab, setResultsTab] = useState<"oracle" | "results" | "history">(
-    (searchParams.get("tab") === "history" ? "history" : oracleV2Enabled ? "oracle" : "results"),
+  const { isAdmin } = usePermissions();
+  const [resultsTab, setResultsTab] = useState<"oracle" | "results" | "history" | "credits">(
+    (searchParams.get("tab") === "history"
+      ? "history"
+      : searchParams.get("tab") === "credits" && isAdmin
+        ? "credits"
+        : oracleV2Enabled
+          ? "oracle"
+          : "results"),
   );
   const [highlightedHistoryId, setHighlightedHistoryId] = useState<string | null>(
     searchParams.get("historyId"),
@@ -1987,7 +1996,7 @@ export const LushaIntelligenceView = () => {
       </Card>
 
       {/* Resultados / Histórico */}
-      <Tabs value={resultsTab} onValueChange={(v) => setResultsTab(v as "oracle" | "results" | "history")} className="space-y-4">
+      <Tabs value={resultsTab} onValueChange={(v) => setResultsTab(v as "oracle" | "results" | "history" | "credits")} className="space-y-4">
         <TabsList>
           {oracleV2Enabled && (
             <TabsTrigger value="oracle" className="gap-2">
@@ -2003,6 +2012,11 @@ export const LushaIntelligenceView = () => {
           <TabsTrigger value="history" className="gap-2">
             <History className="h-4 w-4" /> Histórico
           </TabsTrigger>
+          {isAdmin && (
+            <TabsTrigger value="credits" className="gap-2">
+              <Coins className="h-4 w-4" /> Consumo
+            </TabsTrigger>
+          )}
         </TabsList>
 
         {oracleV2Enabled && (
@@ -2094,6 +2108,12 @@ export const LushaIntelligenceView = () => {
         <TabsContent value="history">
           <SessionsPanel />
         </TabsContent>
+
+        {isAdmin && (
+          <TabsContent value="credits">
+            <LushaCreditUsagePanel />
+          </TabsContent>
+        )}
       </Tabs>
 
       {/* Confirmação de exclusão de item do histórico */}

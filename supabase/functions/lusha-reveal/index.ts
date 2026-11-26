@@ -1,5 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import {
+  buildLushaRevealUsageRow,
+  logLushaCreditUsage,
+} from "../_shared/lusha-credit-log.ts";
 
 const LUSHA_API_KEY = Deno.env.get("LUSHA_API_KEY") ?? "";
 const LUSHA_REVEAL_URL = "https://api.lusha.com/v2/person";
@@ -33,6 +37,19 @@ function getCorsHeaders(req: Request) {
 // inteira em loop. 50/hora é generoso para uso legítimo (bound de 100
 // contactIds por chamada já limita o pico de uma única requisição).
 const REVEAL_RATE_LIMIT_PER_HOUR = 50;
+
+// Falha de registro de consumo nunca vira erro para o cliente (o crédito já
+// foi gasto): só linha de log estruturado, no mesmo formato das demais.
+const logCreditLogError = (msg: string, detail: string) =>
+  console.error(
+    JSON.stringify({
+      function: "lusha-reveal",
+      level: "error",
+      msg,
+      detail,
+      ts: new Date().toISOString(),
+    }),
+  );
 
 // ── Shapes da resposta Lusha V2 Person (parcial/opcional em quase tudo) ──
 interface LushaRevealEmail {
@@ -140,6 +157,13 @@ serve(async (req) => {
   // Sem isto, qualquer usuário autenticado poderia drenar o saldo pago da
   // org em loop (autenticação sozinha não limita volume de gasto).
   const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  // Cliente service_role: usado no rate limit e no registro de consumo de
+  // crédito — a tabela lusha_credit_usage_log só aceita escrita de service_role.
+  const admin = SUPABASE_SERVICE_ROLE
+    ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
+        auth: { persistSession: false },
+      })
+    : null;
   const { data: orgId } = await supabase.rpc("default_org_for_current_user");
   if (!orgId) {
     return new Response(
@@ -147,8 +171,7 @@ serve(async (req) => {
       { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
-  if (SUPABASE_SERVICE_ROLE) {
-    const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, { auth: { persistSession: false } });
+  if (admin) {
     const { data: rl } = await admin.rpc("check_oracle_rate_limit", {
       _organization_id: orgId,
       _action: "lusha_reveal",
@@ -240,6 +263,22 @@ serve(async (req) => {
         user_id: userData.user.id,
         ts: new Date().toISOString(),
       }));
+      // A chamada falhou: nenhum crédito foi cobrado, mas a tentativa fica
+      // registrada para o painel de consumo separar falha de ausência de uso.
+      await logLushaCreditUsage(
+        admin,
+        buildLushaRevealUsageRow({
+          organizationId: orgId,
+          userId: userData.user.id,
+          requestId,
+          bitrixCardId: metadata?.bitrix_card_id ?? null,
+          creditsCharged: 0,
+          recordsReturned: 0,
+          success: false,
+          errorCode: `http_${lushaResp.status}`,
+        }),
+        logCreditLogError,
+      );
       return new Response(
         JSON.stringify({ error: "Lusha API error", status: lushaResp.status, detail: errText }),
         { status: lushaResp.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -291,6 +330,23 @@ serve(async (req) => {
         linkedin: person.socialLinks?.linkedin ?? null,
       });
     }
+
+    // ── Registro do consumo — a Lusha cobrou crédito por esta resposta ──────
+    // A linha guarda organização, usuário, custo informado pela API e data.
+    // O retorno do log é ignorado de propósito: a revelação já aconteceu.
+    await logLushaCreditUsage(
+      admin,
+      buildLushaRevealUsageRow({
+        organizationId: orgId,
+        userId: userData.user.id,
+        requestId: data.requestId ?? requestId,
+        bitrixCardId: metadata?.bitrix_card_id ?? null,
+        creditsCharged: data.creditsCharged ?? null,
+        recordsReturned: revealed.filter((r) => !r.error).length,
+        success: true,
+      }),
+      logCreditLogError,
+    );
 
     return new Response(
       JSON.stringify({
