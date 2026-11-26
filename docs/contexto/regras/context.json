@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "7389012b9bc7a6247a2252a2d1e41152ec163501",
+  "sha": "2c3abb82602544c411b0a1f012c005328e65fe14",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 15:30 UTC",
-  "files_total": 1232,
-  "code_files": 1036,
-  "code_lines": 153791
+  "generated_at": "2026-11-26 15:44 UTC",
+  "files_total": 1233,
+  "code_files": 1037,
+  "code_lines": 154035
  },
  "version": "1.3.2",
- "facts_hash": "5a270a31a73cf026",
+ "facts_hash": "c2c72e4f6795f298",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -256,7 +256,7 @@
   "languages": {
    ".ts": 404,
    ".tsx": 321,
-   ".sql": 278,
+   ".sql": 279,
    ".mjs": 23,
    ".py": 5,
    ".js": 4,
@@ -18084,13 +18084,13 @@
     "args": "p_organization_id UUID DEFAULT NULL, p_dlq_ids UUID[] DEFAULT NULL, p_limit INTEGER DEFAULT 50, p_actor UUID DEFAULT NULL, p_reason TEXT DEFAULT 'manual_replay'",
     "returns": "JSONB",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user UUID := COALESCE(p_actor, auth.uid()); v_dlq public.web_scrape_dead_letter; v_count INTEGER := 0; v_ids UUID[] := ARRAY[]::UUID[]; v_payload JSONB; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'Não autenticado'; END IF; IF p_organization_id IS NOT NULL AND NOT public.is_org_member(p_organization_id, v_user) THEN RAISE EXCEPTION 'Acesso negado à organização'; END IF; FOR v_dlq IN SELECT d.* FROM public.web_scrape_dead_letter d WHERE d.replayed_at IS NULL AND (p_organization_id IS NULL OR d.organization_id = p_organization_id) AND (p_dlq_ids IS NULL OR d.id = ANY(p_dlq_ids)) AND public.is_org_member(d.organization_id, v_user) ORDER BY d.failed_at ASC LIMIT GREATEST(COALESCE(p_li …",
+    "body": "DECLARE v_user UUID := COALESCE(p_actor, auth.uid()); v_dlq public.web_scrape_dead_letter; v_count INTEGER := 0; v_ids UUID[] := ARRAY[]::UUID[]; v_payload JSONB; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'Não autenticado'; END IF; IF p_organization_id IS NOT NULL AND NOT public.has_org_role(p_organization_id, v_user, 'admin') THEN RAISE EXCEPTION 'Somente administradores da organização podem reprocessar a fila morta' USING ERRCODE = '42501'; END IF; FOR v_dlq IN SELECT d.* FROM public.web_scrape_dead_letter d WHERE d.replayed_at IS NULL AND (p_organization_id IS NULL OR d.organization_id = p_organization_id) AND (p_dlq_ids IS NULL OR d.id = ANY(p_dlq_ids)) AND public.has_org_role(d.organ …",
     "raises": [
      "Não autenticado",
-     "Acesso negado à organização"
+     "Somente administradores da organização podem reprocessar a fila morta"
     ],
     "tables": [
      "SKIP",
@@ -18345,11 +18345,14 @@
     "args": "p_organization_id uuid DEFAULT NULL, p_dlq_ids uuid[] DEFAULT NULL, p_limit integer DEFAULT 50, p_actor uuid DEFAULT NULL, p_reason text DEFAULT 'manual_replay'",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260723112022_e904c624-2f37-4bdd-9306-7cd30686d530.sql",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_cap integer := LEAST(GREATEST(COALESCE(p_limit, 50), 1), 500); v_replayed uuid[] := ARRAY[]::uuid[]; v_skipped_active uuid[] := ARRAY[]::uuid[]; v_orgs uuid[] := ARRAY[]::uuid[]; v_row record; v_new_queue_id uuid; v_config_hash text; BEGIN FOR v_row IN SELECT dl.* FROM public.instagram_scrape_dead_letter dl WHERE (p_dlq_ids IS NULL OR dl.id = ANY(p_dlq_ids)) AND (p_organization_id IS NULL OR dl.organization_id = p_organization_id) ORDER BY dl.last_seen_at DESC LIMIT v_cap FOR UPDATE SKIP LOCKED LOOP v_config_hash := encode( digest( v_row.organization_id::text || '|' || v_row.target_type || '|' || v_row.target_value || '|' || COALESCE(v_row.params::text, '{}'), 'sha256' ), 'hex' ); …",
-    "raises": [],
+    "body": "DECLARE v_user uuid := COALESCE(p_actor, auth.uid()); v_cap integer := LEAST(GREATEST(COALESCE(p_limit, 50), 1), 500); v_replayed uuid[] := ARRAY[]::uuid[]; v_skipped_active uuid[] := ARRAY[]::uuid[]; v_orgs uuid[] := ARRAY[]::uuid[]; v_row record; v_new_queue_id uuid; v_config_hash text; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'Não autenticado'; END IF; IF p_organization_id IS NOT NULL AND NOT public.has_org_role(p_organization_id, v_user, 'admin') THEN RAISE EXCEPTION 'Somente administradores da organização podem reprocessar a fila morta' USING ERRCODE = '42501'; END IF; FOR v_row IN SELECT dl.* FROM public.instagram_scrape_dead_letter dl WHERE (p_dlq_ids IS NULL OR dl.id = ANY(p_dlq_ …",
+    "raises": [
+     "Não autenticado",
+     "Somente administradores da organização podem reprocessar a fila morta"
+    ],
     "tables": [
      "SKIP",
      "audit_logs",
@@ -23719,6 +23722,7 @@
    "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
    "supabase/migrations/20261126140000_job_exports_bucket.sql",
    "supabase/migrations/20261126180000_job_exports_retencao.sql",
+   "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -29463,6 +29467,70 @@
     "objkind": "table",
     "roles": "authenticated",
     "src": "supabase/migrations/20261126140000_job_exports_bucket.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_web_dead_letter_batch",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_web_dead_letter_batch",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_web_dead_letter_batch",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "replay_web_dead_letter_batch",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_instagram_dead_letter_batch",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_instagram_dead_letter_batch",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_instagram_dead_letter_batch",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "replay_instagram_dead_letter_batch",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
    }
   ],
   "raises": [
@@ -29790,16 +29858,6 @@
     "function": "prune_pg_net_health_snapshots",
     "msg": "Acesso negado: requer papel de administrador",
     "src": "supabase/migrations/20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql"
-   },
-   {
-    "function": "replay_web_dead_letter_batch",
-    "msg": "Não autenticado",
-    "src": "supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql"
-   },
-   {
-    "function": "replay_web_dead_letter_batch",
-    "msg": "Acesso negado à organização",
-    "src": "supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql"
    },
    {
     "function": "fail_scrape_task",
@@ -30250,6 +30308,26 @@
     "function": "public_api_list",
     "msg": "recurso nao permitido na API publica: %",
     "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
+   },
+   {
+    "function": "replay_web_dead_letter_batch",
+    "msg": "Não autenticado",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "function": "replay_web_dead_letter_batch",
+    "msg": "Somente administradores da organização podem reprocessar a fila morta",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "function": "replay_instagram_dead_letter_batch",
+    "msg": "Não autenticado",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "function": "replay_instagram_dead_letter_batch",
+    "msg": "Somente administradores da organização podem reprocessar a fila morta",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
    }
   ],
   "seed": [],
@@ -30373,6 +30451,7 @@
      "queue_sla_history",
      "reaper_alert_history",
      "retry_policy_advisories",
+     "role_permissions",
      "scrape_dead_letter",
      "scrape_queue",
      "scrape_results",
@@ -30396,6 +30475,7 @@
      "api_latency_trend",
      "apply_retry_advisory",
      "apply_sla_recommendation",
+     "default_role_permissions",
      "dlq_health_metrics",
      "dlq_health_trend",
      "evaluate_partition_policies",
@@ -30411,7 +30491,7 @@
      "sla_recommendations",
      "source_quality_report"
     ],
-    "deps_count": 123
+    "deps_count": 127
    },
    {
     "path": "",
@@ -33573,7 +33653,7 @@
   {
    "module": "src/components",
    "files": 322,
-   "lines": 54104,
+   "lines": 54115,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -34556,8 +34636,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 274,
-   "lines": 20845,
+   "files": 275,
+   "lines": 21078,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -65378,13 +65458,13 @@
     "args": "p_organization_id UUID DEFAULT NULL, p_dlq_ids UUID[] DEFAULT NULL, p_limit INTEGER DEFAULT 50, p_actor UUID DEFAULT NULL, p_reason TEXT DEFAULT 'manual_replay'",
     "returns": "JSONB",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_user UUID := COALESCE(p_actor, auth.uid()); v_dlq public.web_scrape_dead_letter; v_count INTEGER := 0; v_ids UUID[] := ARRAY[]::UUID[]; v_payload JSONB; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'Não autenticado'; END IF; IF p_organization_id IS NOT NULL AND NOT public.is_org_member(p_organization_id, v_user) THEN RAISE EXCEPTION 'Acesso negado à organização'; END IF; FOR v_dlq IN SELECT d.* FROM public.web_scrape_dead_letter d WHERE d.replayed_at IS NULL AND (p_organization_id IS NULL OR d.organization_id = p_organization_id) AND (p_dlq_ids IS NULL OR d.id = ANY(p_dlq_ids)) AND public.is_org_member(d.organization_id, v_user) ORDER BY d.failed_at ASC LIMIT GREATEST(COALESCE(p_li …",
+    "body": "DECLARE v_user UUID := COALESCE(p_actor, auth.uid()); v_dlq public.web_scrape_dead_letter; v_count INTEGER := 0; v_ids UUID[] := ARRAY[]::UUID[]; v_payload JSONB; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'Não autenticado'; END IF; IF p_organization_id IS NOT NULL AND NOT public.has_org_role(p_organization_id, v_user, 'admin') THEN RAISE EXCEPTION 'Somente administradores da organização podem reprocessar a fila morta' USING ERRCODE = '42501'; END IF; FOR v_dlq IN SELECT d.* FROM public.web_scrape_dead_letter d WHERE d.replayed_at IS NULL AND (p_organization_id IS NULL OR d.organization_id = p_organization_id) AND (p_dlq_ids IS NULL OR d.id = ANY(p_dlq_ids)) AND public.has_org_role(d.organ …",
     "raises": [
      "Não autenticado",
-     "Acesso negado à organização"
+     "Somente administradores da organização podem reprocessar a fila morta"
     ],
     "tables": [
      "SKIP",
@@ -65639,11 +65719,14 @@
     "args": "p_organization_id uuid DEFAULT NULL, p_dlq_ids uuid[] DEFAULT NULL, p_limit integer DEFAULT 50, p_actor uuid DEFAULT NULL, p_reason text DEFAULT 'manual_replay'",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20260723112022_e904c624-2f37-4bdd-9306-7cd30686d530.sql",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE v_cap integer := LEAST(GREATEST(COALESCE(p_limit, 50), 1), 500); v_replayed uuid[] := ARRAY[]::uuid[]; v_skipped_active uuid[] := ARRAY[]::uuid[]; v_orgs uuid[] := ARRAY[]::uuid[]; v_row record; v_new_queue_id uuid; v_config_hash text; BEGIN FOR v_row IN SELECT dl.* FROM public.instagram_scrape_dead_letter dl WHERE (p_dlq_ids IS NULL OR dl.id = ANY(p_dlq_ids)) AND (p_organization_id IS NULL OR dl.organization_id = p_organization_id) ORDER BY dl.last_seen_at DESC LIMIT v_cap FOR UPDATE SKIP LOCKED LOOP v_config_hash := encode( digest( v_row.organization_id::text || '|' || v_row.target_type || '|' || v_row.target_value || '|' || COALESCE(v_row.params::text, '{}'), 'sha256' ), 'hex' ); …",
-    "raises": [],
+    "body": "DECLARE v_user uuid := COALESCE(p_actor, auth.uid()); v_cap integer := LEAST(GREATEST(COALESCE(p_limit, 50), 1), 500); v_replayed uuid[] := ARRAY[]::uuid[]; v_skipped_active uuid[] := ARRAY[]::uuid[]; v_orgs uuid[] := ARRAY[]::uuid[]; v_row record; v_new_queue_id uuid; v_config_hash text; BEGIN IF v_user IS NULL THEN RAISE EXCEPTION 'Não autenticado'; END IF; IF p_organization_id IS NOT NULL AND NOT public.has_org_role(p_organization_id, v_user, 'admin') THEN RAISE EXCEPTION 'Somente administradores da organização podem reprocessar a fila morta' USING ERRCODE = '42501'; END IF; FOR v_row IN SELECT dl.* FROM public.instagram_scrape_dead_letter dl WHERE (p_dlq_ids IS NULL OR dl.id = ANY(p_dlq_ …",
+    "raises": [
+     "Não autenticado",
+     "Somente administradores da organização podem reprocessar a fila morta"
+    ],
     "tables": [
      "SKIP",
      "audit_logs",
@@ -67685,16 +67768,6 @@
     "src": "supabase/migrations/20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql"
    },
    {
-    "function": "replay_web_dead_letter_batch",
-    "msg": "Não autenticado",
-    "src": "supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql"
-   },
-   {
-    "function": "replay_web_dead_letter_batch",
-    "msg": "Acesso negado à organização",
-    "src": "supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql"
-   },
-   {
     "function": "fail_scrape_task",
     "msg": "Somente o worker do sistema pode falhar tarefas",
     "src": "supabase/migrations/20260723134607_c87d89db-1d71-4e34-a4a1-e25d9aab0e75.sql"
@@ -68143,6 +68216,26 @@
     "function": "public_api_list",
     "msg": "recurso nao permitido na API publica: %",
     "src": "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql"
+   },
+   {
+    "function": "replay_web_dead_letter_batch",
+    "msg": "Não autenticado",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "function": "replay_web_dead_letter_batch",
+    "msg": "Somente administradores da organização podem reprocessar a fila morta",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "function": "replay_instagram_dead_letter_batch",
+    "msg": "Não autenticado",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "function": "replay_instagram_dead_letter_batch",
+    "msg": "Somente administradores da organização podem reprocessar a fila morta",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
    }
   ],
   "db_generated": [],
@@ -72042,7 +72135,8 @@
    "supabase/migrations/20261125123000_cron_http_archive_7dias.sql",
    "supabase/migrations/20261125160000_auditoria_tabelas_criticas.sql",
    "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
-   "supabase/migrations/20261126180000_job_exports_retencao.sql"
+   "supabase/migrations/20261126180000_job_exports_retencao.sql",
+   "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -77865,6 +77959,70 @@
     "objkind": "table",
     "roles": "authenticated",
     "src": "supabase/migrations/20261126140000_job_exports_bucket.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_web_dead_letter_batch",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_web_dead_letter_batch",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_web_dead_letter_batch",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "replay_web_dead_letter_batch",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_instagram_dead_letter_batch",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_instagram_dead_letter_batch",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "replay_instagram_dead_letter_batch",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "replay_instagram_dead_letter_batch",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
    }
   ],
   "guards": [
@@ -86315,7 +86473,7 @@
   },
   "src/components/lux/monitoring/DLQReplayPanel.tsx": {
    "path": "src/components/lux/monitoring/DLQReplayPanel.tsx",
-   "lines": 333,
+   "lines": 344,
    "exports": [
     "function DLQReplayPanel"
    ],
@@ -104516,13 +104674,29 @@
    "path": "supabase/migrations/20261126180000_job_exports_retencao.sql",
    "lines": 82,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql": {
+   "path": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
+   "lines": 233,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "7389012b9bc7a6247a2252a2d1e41152ec163501",
+  "sha": "2c3abb82602544c411b0a1f012c005328e65fe14",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "2c3abb8",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix(dlq): reprocessar fila morta exige papel de administrador (#256)",
+    "files": [
+     "docs/qa/05-PROGRESSO.md",
+     "src/components/lux/monitoring/DLQReplayPanel.tsx",
+     "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+    ]
+   },
    {
     "sha": "7389012",
     "date": "2026-11-26",
@@ -104931,20 +105105,6 @@
      "src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts",
      "src/integrations/supabase/withOrg.ts"
     ]
-   },
-   {
-    "sha": "ec5349f",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "feat(ci): fixture multi-tenant passa a vir das migrations (etapa 008) (#227)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "package.json",
-     "scripts/automation.config.json",
-     "scripts/ci/gerar-org-scoped-fixture.mjs",
-     "src/integrations/supabase/__tests__/org-scoped-tables.fixture.json",
-     "src/integrations/supabase/__tests__/orgFixtureSync.test.ts"
-    ]
    }
   ],
   "hot_files": [
@@ -104953,11 +105113,11 @@
     23
    ],
    [
-    "scripts/automation.config.json",
-    4
+    "src/components/lux/ScrapeResultsView.tsx",
+    3
    ],
    [
-    "src/components/lux/ScrapeResultsView.tsx",
+    "scripts/automation.config.json",
     3
    ],
    [

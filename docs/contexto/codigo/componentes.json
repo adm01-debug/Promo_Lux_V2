@@ -1957,7 +1957,7 @@
     "DLQReplayPanel"
    ],
    "export_default": null,
-   "linhas": 333,
+   "linhas": 344,
    "dominio": "components/lux",
    "hooks_locais": [
     "useActiveOrganization",

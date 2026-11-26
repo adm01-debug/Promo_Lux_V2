@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `7389012b9b` · branch `main` · 2026-11-26 15:30 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `2c3abb8260` · branch `main` · 2026-11-26 15:44 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -817,8 +817,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `defer_web_scrape_task` | Somente o worker do sistema pode adiar tarefas | `supabase/migrations/20260721223228_9f320c24-b3f3-4067-9e70-b9924824f7c9.sql` |
 | `pg_net_health` | Acesso negado: requer service_role ou admin | `supabase/migrations/20260722115903_e036397e-e483-46f6-8d8d-00fc632767e0.sql` |
 | `prune_pg_net_health_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20260722123959_e7c39e43-b1a2-4861-a445-6343f477981a.sql` |
-| `replay_web_dead_letter_batch` | Não autenticado | `supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql` |
-| `replay_web_dead_letter_batch` | Acesso negado à organização | `supabase/migrations/20260723114921_c4f4d58e-b702-490c-bb58-304662fdca7e.sql` |
 | `fail_scrape_task` | Somente o worker do sistema pode falhar tarefas | `supabase/migrations/20260723134607_c87d89db-1d71-4e34-a4a1-e25d9aab0e75.sql` |
 | `fail_scrape_task` | Tarefa não encontrada | `supabase/migrations/20260723134607_c87d89db-1d71-4e34-a4a1-e25d9aab0e75.sql` |
 | `claim_scrape_tasks` | Somente o worker do sistema pode reservar tarefas | `supabase/migrations/20260726154832_c0dc9709-892f-472b-ad37-30beedd48605.sql` |
@@ -909,6 +907,10 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `capture_api_latency_snapshots` | Acesso negado: requer papel de administrador | `supabase/migrations/20261124150000_api_error_rate_apenas_5xx.sql` |
 | `evaluate_api_latency_alerts` | Acesso negado | `supabase/migrations/20261124240000_api_alert_error_rate_5xx.sql` |
 | `public_api_list` | recurso nao permitido na API publica: % | `supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql` |
+| `replay_web_dead_letter_batch` | Não autenticado | `supabase/migrations/20261126200000_dlq_replay_exige_admin.sql` |
+| `replay_web_dead_letter_batch` | Somente administradores da organização podem reprocessar a fila morta | `supabase/migrations/20261126200000_dlq_replay_exige_admin.sql` |
+| `replay_instagram_dead_letter_batch` | Não autenticado | `supabase/migrations/20261126200000_dlq_replay_exige_admin.sql` |
+| `replay_instagram_dead_letter_batch` | Somente administradores da organização podem reprocessar a fila morta | `supabase/migrations/20261126200000_dlq_replay_exige_admin.sql` |
 
 ## E. Estados, máquinas de estado e transições
 

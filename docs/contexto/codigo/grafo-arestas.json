@@ -1262,6 +1262,7 @@
   ],
   "src/components/lux/monitoring/DLQReplayPanel.tsx": [
    "src/components/lux/EmptyState.tsx",
+   "src/components/lux/permissions/PermissionGate.tsx",
    "src/components/ui/badge.tsx",
    "src/components/ui/button.tsx",
    "src/components/ui/card.tsx",
