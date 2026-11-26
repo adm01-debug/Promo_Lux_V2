@@ -370,7 +370,7 @@ export const ScrapeResultsView = () => {
             <Badge key={e.id} variant="outline" className="text-[10px] gap-1">
               <FileJson className="h-3 w-3" />
               {new Date(e.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
-              {e.status === "completed" ? " ok" : ` ${e.status}`}
+              {e.status === "completed" ? " ok" : e.status === "expired" ? " expirado" : ` ${e.status}`}
               {e.file_url ? (
                 <button
                   type="button"
