@@ -11,6 +11,10 @@ import {
   type LuxScrapeConfig,
 } from "../_shared/omkar-gmaps-config.ts";
 import { fetchPlacesResults } from "../_shared/places-fallback.ts";
+import {
+  loadIpcCriteria,
+  saveScrapeResults,
+} from "../_shared/scrape-results-save.ts";
 
 
 /** Serviço externo protegido pelo circuit breaker. */
@@ -99,7 +103,8 @@ function isTransient(status: number | null, err?: unknown): boolean {
  *
  * Sem isso, um scraper fora do ar transforma toda tarefa em dead-letter e a
  * extracao de empresas para de vez. A Places API entrega o mesmo tipo de dado,
- * entao marcamos o job como concluido com os resultados reais.
+ * entao gravamos as empresas obtidas e marcamos o job como concluido com a
+ * contagem real.
  *
  * Retorna `true` quando assumiu a tarefa (o chamador nao deve falhar).
  */
@@ -117,13 +122,39 @@ async function completeWithPlacesFallback(
   const rows = await fetchPlacesResults(keywords, 20, (cfg.lang as string) ?? "pt-BR");
   if (!rows?.length) return false;
 
+  // G16-1: a contingencia tem de GRAVAR o que obteve. Antes o job era concluido
+  // com `results_count` preenchido e nenhuma empresa entrava: o usuario via
+  // "20 resultados" no job e a lista de empresas vazia, sem erro nenhum.
+  const { saved } = await saveScrapeResults(supabase, {
+    organizationId: task.organization_id,
+    userId: task.user_id,
+    jobId: task.scrape_job_id,
+    rows,
+    ipcCriteria: await loadIpcCriteria(supabase, task.user_id),
+    onRowError: (error, name) =>
+      log("warn", "company_upsert_failed", {
+        task_id: task.id,
+        error: error.message,
+        name,
+      }),
+  });
+  // Sem gravar nada a tarefa NAO esta concluida: devolve false para o chamador
+  // seguir para retry/dead-letter em vez de perder o resultado.
+  if (saved === 0) {
+    log("warn", "places_fallback_sem_gravacao", {
+      task_id: task.id,
+      results: rows.length,
+    });
+    return false;
+  }
+
   const externalId = `places:${task.scrape_job_id ?? task.id}`;
   if (task.scrape_job_id) {
     await supabase.from("scrape_jobs")
       .update({
         external_id: externalId,
         status: "completed",
-        results_count: rows.length,
+        results_count: saved,
         completed_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -138,9 +169,9 @@ async function completeWithPlacesFallback(
     _failure_reason: reason,
     _attempt: attempt,
     _duration_ms: Math.round(performance.now() - startedAt),
-    _metadata: { fallback: "places_api", results: rows.length, external_id: externalId },
+    _metadata: { fallback: "places_api", results: saved, external_id: externalId },
   });
-  log("warn", "task_completed_via_places_fallback", { task_id: task.id, reason, results: rows.length });
+  log("warn", "task_completed_via_places_fallback", { task_id: task.id, reason, results: saved });
   return true;
 }
 
