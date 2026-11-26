@@ -17,6 +17,15 @@
 --   3. agendamento diario da function `prune-job-exports`, que apaga o objeto
 --      pela Storage API e marca a linha como `expired`.
 --
+-- A function tem duas passadas: a retencao (linha vencida -> apaga o arquivo ->
+-- marca `expired`) e a varredura de ORFAOS (arquivo no bucket sem linha
+-- nenhuma apontando para ele). Orfao nao perde funcionalidade: o bucket nao
+-- tem policy em `storage.objects` e o unico caminho ate o arquivo e a linha em
+-- `job_exports`, entao o arquivo e inalcancavel pela aplicacao. A varredura e
+-- fail-closed (listagem ou leitura do banco incompleta = zero remocoes) e so
+-- considera arquivo com extensao e mais velho que a retencao.
+-- Aceita `{"dry_run": true}` no corpo para contar candidatos sem apagar.
+--
 -- Nota sobre o status: o CHECK criado em 20260711194630 aceita
 -- ('pending','processing','ready','failed'), mas as duas funcoes de exportacao
 -- gravam 'completed' e o expurgo grava 'expired'. A constraint passa a ser o
