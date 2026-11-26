@@ -133,6 +133,7 @@ export const WorkflowsView = () => {
       }
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows", isDemoMode] }); },
+    onError: (err: Error) => toast({ title: "Erro ao ligar ou desligar o fluxo", description: err.message, variant: "destructive" }),
   });
 
   const deleteMutation = useMutation({
@@ -145,6 +146,7 @@ export const WorkflowsView = () => {
       }
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["workflows", isDemoMode] }); toast({ title: "Workflow removido" }); },
+    onError: (err: Error) => toast({ title: "Erro ao remover o workflow", description: err.message, variant: "destructive" }),
   });
 
   const selectedSteps = defaultSteps.filter(s => !s.phase || enabledPhases.includes(s.phase));

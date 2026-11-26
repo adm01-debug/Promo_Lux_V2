@@ -127,6 +127,7 @@ export const IntentSignalsView = () => {
       queryClient.invalidateQueries({ queryKey: ["intent-signals", isDemoMode] });
       toast({ title: "Sinal removido" });
     },
+    onError: (err: Error) => toast({ title: "Erro ao remover o sinal", description: err.message, variant: "destructive" }),
   });
 
   const detectMutation = useMutation({

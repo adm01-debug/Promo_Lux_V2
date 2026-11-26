@@ -191,6 +191,7 @@ export const CampaignsView = () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns", isDemoMode] });
       toast({ title: "Campanha removida" });
     },
+    onError: (err: Error) => toast({ title: "Erro ao remover a campanha", description: err.message, variant: "destructive" }),
   });
 
   const dispatchMutation = useMutation({
