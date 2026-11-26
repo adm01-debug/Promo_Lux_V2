@@ -13,7 +13,6 @@ const CORS = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const DESTRUCTIVE = /\b(DROP|TRUNCATE|ALTER\s+SYSTEM|RESET\s+ALL)\b/i;
 const IS_SELECT   = /^\s*(SELECT|WITH)\b/i;
 
 function decodeB64(b64: string): string {
@@ -73,19 +72,19 @@ Deno.serve(async (req) => {
   }
   sql = sql.trim();
   if (!sql) return json({ error: "empty sql" }, 400);
-  if (DESTRUCTIVE.test(sql)) return json({ error: "Query destrutiva bloqueada (DROP/TRUNCATE/ALTER SYSTEM)" }, 400);
+  if (!IS_SELECT.test(sql)) return json({ error: "Apenas SELECT e WITH sao aceitos (canal somente leitura)" }, 400);
 
   const limit   = Number(body.limit) || 100;
   const finalSql = IS_SELECT.test(sql) && !/\blimit\b/i.test(sql) ? `${sql} LIMIT ${limit}` : sql;
 
-  const res = await fetch(`${url}/rest/v1/rpc/exec_sql`, {
+  const res = await fetch(`${url}/rest/v1/rpc/mcp_query`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${key}`,
       "apikey": key,
     },
-    body: JSON.stringify({ query: finalSql }),
+    body: JSON.stringify({ _sql: finalSql }),
   });
 
   const data = await res.json().catch(() => null);
