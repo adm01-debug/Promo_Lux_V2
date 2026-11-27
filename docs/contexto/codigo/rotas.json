@@ -390,6 +390,7 @@
     "pg_columns_for_insert",
     "pii_redact_text",
     "pii_scan",
+    "read_audit_logs_safe",
     "refresh_next_best_actions",
     "refresh_org_scores",
     "revoke_my_session",
@@ -729,6 +730,9 @@
     "usePartitionAdvisories",
     "usePartitionPolicies",
     "usePermissions",
+    "usePiiPreview",
+    "usePiiRules",
+    "usePiiScan",
     "usePublicStatus",
     "usePublicUptime",
     "usePurgeDeadLetter",
@@ -816,6 +820,9 @@
     "usePartitionAdvisories",
     "usePartitionPolicies",
     "usePermissions",
+    "usePiiPreview",
+    "usePiiRules",
+    "usePiiScan",
     "usePublicStatus",
     "usePublicUptime",
     "usePurgeDeadLetter",
@@ -913,11 +920,16 @@
     "evaluate_partition_policies",
     "get_public_status",
     "get_public_uptime",
+    "list_pii_rules",
+    "pii_redact_text",
+    "pii_scan",
     "purge_dead_letter",
+    "read_audit_logs_safe",
     "replay_dead_letter",
     "replay_dead_letter_batch",
     "reset_circuit_breaker",
     "rollback_retry_advisory",
+    "set_pii_rule",
     "sla_autotune_blocked_streaks",
     "sla_compliance_stats",
     "sla_recommendations",
@@ -946,7 +958,7 @@
     "status",
     "viewer"
    ],
-   "arquivos_puxados": 132
+   "arquivos_puxados": 133
   },
   {
    "protegida": false,
@@ -1904,6 +1916,7 @@
     "pg_columns_for_insert",
     "pii_redact_text",
     "pii_scan",
+    "read_audit_logs_safe",
     "refresh_next_best_actions",
     "refresh_org_scores",
     "revoke_my_session",
@@ -2545,7 +2558,8 @@
     "dlq_health_metrics",
     "dlq_health_trend",
     "get_public_status",
-    "get_public_uptime"
+    "get_public_uptime",
+    "read_audit_logs_safe"
    ],
    "edges": [],
    "canais_realtime": [],
@@ -2919,10 +2933,11 @@
    "flags": [],
    "papeis": [
     "admin",
+    "alert",
     "sdr",
     "viewer"
    ],
-   "arquivos_puxados": 49
+   "arquivos_puxados": 50
   },
   {
    "id": "stakeholders",

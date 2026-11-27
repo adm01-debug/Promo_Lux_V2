@@ -1797,11 +1797,12 @@
     "AuditTrailPanel"
    ],
    "export_default": null,
-   "linhas": 268,
+   "linhas": 276,
    "dominio": "components/lux",
    "hooks_locais": [
     "useAuditTables",
-    "useAuditTrail"
+    "useAuditTrail",
+    "usePiiRules"
    ],
    "tabelas": [],
    "edges": [],
@@ -3028,10 +3029,11 @@
     "AuditLogExportPanel"
    ],
    "export_default": null,
-   "linhas": 99,
+   "linhas": 116,
    "dominio": "components/lux",
    "hooks_locais": [
-    "useAuditLogExport"
+    "useAuditLogExport",
+    "usePiiRules"
    ],
    "tabelas": [],
    "edges": [],
@@ -3540,7 +3542,7 @@
    "hooks_locais": [],
    "tabelas": [],
    "edges": [],
-   "usado_por": 7,
+   "usado_por": 8,
    "orfao": false
   },
   {

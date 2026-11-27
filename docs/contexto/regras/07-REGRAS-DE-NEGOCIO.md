@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `72c71be281` · branch `main` · 2026-11-26 19:52 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9615e96eec` · branch `main` · 2026-11-27 00:23 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -845,12 +845,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `mark_email_template_used` | template inexistente ou sem permissao | `supabase/migrations/20261122200000_email_templates.sql` |
 | `duplicate_email_template` | template inexistente | `supabase/migrations/20261122200000_email_templates.sql` |
 | `duplicate_email_template` | sem permissao na organizacao | `supabase/migrations/20261122200000_email_templates.sql` |
-| `export_audit_logs` | nao autenticado | `supabase/migrations/20261122240000_audit_log_export.sql` |
-| `export_audit_logs` | apenas admin da organizacao pode exportar audit log | `supabase/migrations/20261122240000_audit_log_export.sql` |
-| `count_audit_logs` | nao autenticado | `supabase/migrations/20261122240000_audit_log_export.sql` |
-| `count_audit_logs` | apenas admin da organizacao pode contar audit log | `supabase/migrations/20261122240000_audit_log_export.sql` |
-| `audit_log_facets` | nao autenticado | `supabase/migrations/20261122240000_audit_log_export.sql` |
-| `audit_log_facets` | apenas admin da organizacao pode listar facets | `supabase/migrations/20261122240000_audit_log_export.sql` |
 | `export_subject_data` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `export_subject_data` | apenas admin da organizacao pode exportar dados de titular | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `export_subject_data` | email do titular invalido | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
@@ -866,8 +860,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `fulfill_dsar_request` | pedido nao encontrado nesta organizacao | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `dsar_sla_alerts` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `dsar_sla_alerts` | apenas admin da organizacao pode consultar SLA de pedidos | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
-| `read_audit_logs_safe` | nao autenticado | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
-| `read_audit_logs_safe` | apenas admin da organizacao pode ler audit log mascarado | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
 | `pii_scan` | nao autenticado | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
 | `pii_scan` | apenas admin da organizacao pode varrer PII | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
 | `list_pii_rules` | nao autenticado | `supabase/migrations/20261122260000_dlp_pii_masking.sql` |
@@ -911,6 +903,14 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `replay_web_dead_letter_batch` | Somente administradores da organização podem reprocessar a fila morta | `supabase/migrations/20261126200000_dlq_replay_exige_admin.sql` |
 | `replay_instagram_dead_letter_batch` | Não autenticado | `supabase/migrations/20261126200000_dlq_replay_exige_admin.sql` |
 | `replay_instagram_dead_letter_batch` | Somente administradores da organização podem reprocessar a fila morta | `supabase/migrations/20261126200000_dlq_replay_exige_admin.sql` |
+| `export_audit_logs` | nao autenticado | `supabase/migrations/20261126220000_export_audit_logs_mascarado.sql` |
+| `export_audit_logs` | apenas admin da organizacao pode exportar audit log | `supabase/migrations/20261126220000_export_audit_logs_mascarado.sql` |
+| `count_audit_logs` | nao autenticado | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
+| `count_audit_logs` | apenas admin da organizacao pode contar audit log | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
+| `audit_log_facets` | nao autenticado | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
+| `audit_log_facets` | apenas admin da organizacao pode listar facets | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
+| `read_audit_logs_safe` | nao autenticado | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
+| `read_audit_logs_safe` | apenas admin da organizacao pode ler audit log mascarado | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
 
 ## E. Estados, máquinas de estado e transições
 
@@ -2227,6 +2227,7 @@ _nenhum item encontrado_
 | Falha ao avaliar | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | Falha ao salvar | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | Sem organização ativa | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
+| ; import { Button } from  | `src/components/lux/settings/AuditLogExportPanel.tsx` |
 | API Key nao pode ser vazia | `src/components/lux/settings/HubSpotPanel.tsx` |
 | Erro de sincronizacao: ${err.message} | `src/components/lux/settings/HubSpotPanel.tsx` |
 | Erro: ${err.message} | `src/components/lux/settings/HubSpotPanel.tsx` |
@@ -2251,6 +2252,7 @@ _nenhum item encontrado_
 | Export truncado em ${MAX_PAGES * PAGE} linhas — refine o período. | `src/hooks/useAuditLogExport.ts` |
 | Falha na exportação | `src/hooks/useAuditLogExport.ts` |
 | Organização não selecionada | `src/hooks/useAuditLogExport.ts` |
+| Organização não selecionada | `src/hooks/useAuditTrail.ts` |
 | Falha ao reiniciar disjuntor: ${err.message} | `src/hooks/useCircuitBreakers.ts` |
 | Não foi possível salvar o layout no servidor | `src/hooks/useDashboardLayout.ts` |
 | Erro ao atualizar estágio | `src/hooks/useDeals.ts` |
@@ -2341,9 +2343,7 @@ _nenhum item encontrado_
 | >As senhas não coincidem.</p>           )}            <Button type= | `src/pages/ResetPassword.tsx` |
 | Dados inválidos | `src/pages/ResetPassword.tsx` |
 | Apify não configurado: defina APIFY_MOCK_MODE=true ou conecte o Apify (LOVABLE_API_KEY + APIFY_API_KEY). | `supabase/functions/_shared/apify-gateway.ts` |
-| [apify-gateway ${response.status}] getDatasetItems: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
-| [apify-gateway ${response.status}] getRunStatus: ${body} | `supabase/functions/_shared/apify-gateway.ts` |
-| … +73 linhas — lista completa em `context.json` | |
+| … +75 linhas — lista completa em `context.json` | |
 
 ## J. Controle de acesso no código (checagens de perfil/permissão)
 
@@ -2367,7 +2367,7 @@ _nenhum item encontrado_
 | `admin` | `supabase/migrations/20260721204338_c3449eb5-c14f-4f87-a0ef-49debf3d12bf.sql` |
 | `admin` | `supabase/migrations/20261126000000_audit_logs_escopo_organizacao.sql` |
 
-## K. Testes como especificação (1446 testes em 153 arquivos — nomes completos em `context.json`)
+## K. Testes como especificação (1460 testes em 155 arquivos — nomes completos em `context.json`)
 
 | Arquivo | Testes | Exemplos do que o sistema DEVE fazer |
 |---|---|---|
@@ -2404,6 +2404,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/CompanyTableRow.test.tsx` | 12 | HighlightText · highlights matching text · returns plain text when no match · returns plain text for short queries … |
 | `src/components/lux/__tests__/StatsGrid.test.tsx` | 12 | StatsGrid — P1 Visual Differentiation · renders all 5 KPI cards · shows loading skeletons when data is loading · displays unique color themes per card via CARD_STYLES … |
 | `src/components/lux/layout/__tests__/Sidebar.test.tsx` | 12 | Sidebar · renders all nav items when expanded · hides labels when collapsed · calls onNavigate when a nav item is clicked … |
+| `src/hooks/__tests__/useAuditTrail.test.ts` | 12 | fetchAuditTrail · lê pelo leitor mascarado com a organização ativa · pagina via _limit/_offset a partir de page/pageSize (1-indexada) · envia o período como timestamps ISO inclusivos … |
 | `src/lib/__tests__/exportCSV.test.ts` | 12 | sanitizeCell · prefixes formula injection with a quote · does not corrupt legitimate negative numbers · still blocks a non-numeric string that merely starts with - … |
 | `e2e/auth.spec.ts` | 11 | Auth — Login Page · renders login card with brand and core elements · renders both Entrar and Criar Conta tabs · toggles password visibility … |
 | `e2e/rls-guarantees.spec.ts` | 11 | RLS — leitura anônima bloqueada em tabelas multi-tenant · anon não lê linhas de  · RLS — leitura anônima bloqueada em tabelas isentas sensíveis · anon não lê linhas de  … |
@@ -2421,7 +2422,6 @@ _nenhum item encontrado_
 | `src/components/lux/lusha/types.test.ts` | 9 | types.ts (R34) — contratos · DeptGroup: label + items · LushaContact aceita nullables e recusa campos ausentes · LushaSession: arrays nullable e status nullable … |
 | `src/components/lux/monitoring/__tests__/PainelComEstado.test.tsx` | 9 | PainelComEstado · mostra a falha com nova tentativa e esconde o conteudo · mostra o esqueleto enquanto carrega · mostra o vazio no lugar do conteudo … |
 | `src/components/lux/monitoring/__tests__/cronFreshness.test.ts` | 9 | expectedIntervalSecs · lê a cadência das formas usadas no projeto · devolve null para expressão fora do subconjunto suportado · evaluateCronFreshness … |
-| `src/hooks/__tests__/useAuditTrail.test.ts` | 9 | fetchAuditTrail · pagina via range() com base em page/pageSize (1-indexada) · filtra apenas automações com .in() no conjunto esperado · filtra por tabela específica com .eq(table_name) … |
 | `src/integrations/supabase/__tests__/withOrg.bulkDelete.test.ts` | 9 | db (withOrg) — bulk DELETE scope guards · injeta organization_id ANTES de filtros adicionais (.in) · soft delete: em companies, DELETE vira UPDATE deleted_at mantendo escopo de org · soft delete cobre TODAS as tabelas da lixeira — nenhuma delas emite DELETE real … |
 | `src/integrations/supabase/__tests__/withOrg.switching.test.ts` | 9 | withOrg — E2E switching de organização ativa · fluxo completo: opera em Org A, troca para Org B, e o filtro de leitura acompanha · bloqueia leitura cross-org: estando em Org A, cliente NÃO consegue forçar SELECT em Org B · bloqueia escrita cross-org após switch: tentar inserir com org antiga é interceptado … |
 | `src/lib/dlq/__tests__/classify.test.ts` | 9 | classifyDlqReason · classifica rede · classifica rate limit · classifica auth … |
@@ -2433,6 +2433,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/MutationsErroAviso.test.tsx` | 8 | avisos de erro nas mutacoes (etapa 215) · avisa quando pausar o workflow falha, com o motivo do banco · avisa quando remover o workflow falha · avisos de erro nas mutacoes (etapa 216) … |
 | `src/components/lux/lusha/__tests__/historyUtils.fuzz.test.ts` | 8 | R35 fuzz — historyUtils robusto contra payloads adversos · filterHistory nunca lança e retorna subconjunto válido · filterHistory com janelas inválidas não estoura · formatDurationMs blindado contra NaN/negativos/infinito … |
 | `src/components/lux/monitoring/__tests__/DlqHealthCard.test.tsx` | 8 | DlqHealthCard · renderiza título e severidade  · mostra severidade  · exibe o valor de itens pendentes … |
+| `src/hooks/__tests__/usePiiRules.test.ts` | 8 | regrasAtivasPii · devolve lista vazia quando o hook ainda nao carregou · descarta regra desligada: so ela nao muda o arquivo exportado · resumoMascaramentoPii … |
 | `src/integrations/supabase/__tests__/withOrg.registry.test.ts` | 8 | withOrg registry ↔ banco (sincronia multi-tenant) · classifica TODA tabela com organization_id em exatamente um conjunto · não classifica a mesma tabela em mais de um conjunto · toda tabela ESCOPADA realmente possui organization_id no banco … |
 | `src/lib/__tests__/orgErrorHandler.e2e.test.ts` | 8 | orgErrorHandler — E2E switching de org durante edição · mostra toast quando UPDATE falha após troca de org no meio da edição · ação  · handler global captura unhandledrejection com OrgMismatchError e mostra toast … |
 | `src/lib/resilience/autotune.test.ts` | 8 | autotune - score · recompensa sucesso e penaliza DLQ/SLA · autotune - enumeração · descarta políticas com cap menor que base … |
@@ -2509,6 +2510,7 @@ _nenhum item encontrado_
 | `src/components/lux/__tests__/DemoNotice.test.tsx` | 3 | DemoNotice · explica qual área não tem demonstração e leva para criar conta · oferece voltar ao painel quando o layout passa a navegação |
 | `src/components/lux/__tests__/PlacesApiNewToggle.test.tsx` | 3 | PlacesApiNewToggle · avisa quando o UPDATE nao altera linha (RLS/sem permissao) em vez de mentir sucesso · confirma sucesso quando o UPDATE altera a linha |
 | `src/components/lux/__tests__/ProxyFormDialog.test.tsx` | 3 | ProxyFormDialog · mostra a mensagem de validacao no submit invalido em vez de lancar · envia os valores aparados quando o formulario e valido |
+| `src/components/lux/settings/__tests__/AuditLogExportPanel.test.tsx` | 3 | AuditLogExportPanel — aviso de mascaramento · avisa que o arquivo sai mascarado quando ha regra ligada · nao avisa nada quando nenhuma regra esta ligada |
 | `src/contexts/__tests__/DemoContext.test.tsx` | 3 | DemoProvider · clears the query cache when entering demo mode so real data never shows as demo · clears the query cache when leaving demo mode so sample data never leaks to a real session |
 | `src/hooks/__tests__/useAutomationsMonitor.test.ts` | 3 | useAutomationsMonitor — canal em tempo real · abre o canal com a organização ativa · recria o canal com a organização nova quando ela muda |
 | `src/hooks/__tests__/useWeeklyPerformance.test.tsx` | 3 | useWeeklyPerformance — escopo multi-tenant e erro · le as empresas da organizacao ativa, fora da lixeira · propaga o erro da consulta em vez de devolver series zeradas |
@@ -2626,7 +2628,7 @@ _nenhum item encontrado_
 | * Acesso: apenas admins (gate feito por `usePermissions` no caller). | `src/components/lux/security/OrgViolationAlertsPanel.tsx` |
 | Regras: company_id não vazio; user_id somente dígitos. | `src/hooks/oracleV2Helpers.ts` |
 | * Preenchido apenas quando o disparo veio da taxa de erro 5xx. */ | `src/hooks/useApiLatencyAlertSettings.ts` |
-| apenas administradores enxerguem os registros do próprio workspace. | `src/hooks/useAuditTrail.ts` |
+| `new_data` e `metadata` — mesmo motor usado no arquivo exportado. Sem regra | `src/hooks/useAuditTrail.ts` |
 | * Configuração global (singleton) dos alertas de disjuntor. Somente admins | `src/hooks/useCircuitBreakerAlerts.ts` |
 | Auto-seed default stages. Roda no máximo uma vez por montagem e por | `src/hooks/useDeals.ts` |
 | * Incrementa usage_count. Best-effort: falhar aqui nao deve travar o envio. */ | `src/hooks/useEmailTemplates.ts` |
@@ -2643,6 +2645,7 @@ _nenhum item encontrado_
 | HTTP 429 do rate-limit por organização vem com Retry-After em segundos. | `src/hooks/useOracleV2.ts` |
 | e não pode esperar a janela global de 2 min (src/App.tsx:51). | `src/hooks/useOrganizations.ts` |
 | * A permissão vem de `public.role_permissions` (editável pelo admin). Enquanto a | `src/hooks/usePermissions.ts` |
+| Devolve string vazia quando nao ha regra ligada (nenhum efeito). | `src/hooks/usePiiRules.ts` |
 | * Hook de Rate Limit Híbrido: | `src/hooks/useRateLimit.ts` |
 | GAP-5: validação de parâmetros em modo de desenvolvimento. | `src/hooks/useRateLimit.ts` |
 | Check original: apenas quando ambos são finitos (evita falso positivo com Infinity) | `src/hooks/useRateLimit.ts` |

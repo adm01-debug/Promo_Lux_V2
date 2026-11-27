@@ -5,16 +5,16 @@
   "vitest",
   "playwright"
  ],
- "total": 169,
+ "total": 171,
  "por_tipo": {
   "e2e": 20,
   "pytest": 2,
-  "unit": 147
+  "unit": 149
  },
  "onde_ficam": [
   {
    "padrao": "co-localizado (__tests__)",
-   "arquivos": 122
+   "arquivos": 124
   },
   {
    "padrao": "e2e/",
@@ -640,12 +640,13 @@
   {
    "arquivo": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
    "tipo": "unit",
-   "linhas": 151,
+   "linhas": 157,
    "testa": [
     "src/components/lux/monitoring/MonitoringView.tsx",
     "src/hooks/useAuditTrail.ts",
     "src/hooks/useDbHealth.ts",
     "src/hooks/useDlqHealth.ts",
+    "src/hooks/usePiiRules.ts",
     "src/hooks/useStatusPage.ts"
    ],
    "casos": 5
@@ -653,7 +654,7 @@
   {
    "arquivo": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
    "tipo": "unit",
-   "linhas": 162,
+   "linhas": 168,
    "testa": [
     "src/components/lux/EnrichmentFunnel.tsx",
     "src/components/lux/monitoring/ChaosEngineeringPanel.tsx",
@@ -665,6 +666,7 @@
     "src/components/lux/monitoring/SlaTrendChart.tsx",
     "src/hooks/useDbHealth.ts",
     "src/hooks/useDlqHealth.ts",
+    "src/hooks/usePiiRules.ts",
     "src/hooks/useStatusPage.ts"
    ],
    "casos": 9
@@ -707,6 +709,16 @@
     "src/components/lux/SafeHTML.tsx"
    ],
    "casos": 3
+  },
+  {
+   "arquivo": "src/components/lux/settings/__tests__/AuditLogExportPanel.test.tsx",
+   "tipo": "unit",
+   "linhas": 43,
+   "testa": [
+    "src/components/lux/settings/AuditLogExportPanel.tsx",
+    "src/hooks/usePiiRules.ts"
+   ],
+   "casos": 2
   },
   {
    "arquivo": "src/contexts/__tests__/ActiveOrgContext.test.tsx",
@@ -793,11 +805,11 @@
   {
    "arquivo": "src/hooks/__tests__/useAuditTrail.test.ts",
    "tipo": "unit",
-   "linhas": 149,
+   "linhas": 155,
    "testa": [
     "src/hooks/useAuditTrail.ts"
    ],
-   "casos": 8
+   "casos": 11
   },
   {
    "arquivo": "src/hooks/__tests__/useAutomationsMonitor.test.ts",
@@ -881,6 +893,15 @@
     "src/hooks/usePersistedFilters.ts"
    ],
    "casos": 9
+  },
+  {
+   "arquivo": "src/hooks/__tests__/usePiiRules.test.ts",
+   "tipo": "unit",
+   "linhas": 63,
+   "testa": [
+    "src/hooks/usePiiRules.ts"
+   ],
+   "casos": 6
   },
   {
    "arquivo": "src/hooks/__tests__/useRateLimit.logic.test.ts",
@@ -1660,6 +1681,7 @@
   "src/components/lux/monitoring/cronFreshness.ts": 1,
   "src/components/lux/monitoring/slaHistoryChartData.ts": 1,
   "src/components/lux/monitoring/slaRiskAnalysis.ts": 1,
+  "src/components/lux/settings/AuditLogExportPanel.tsx": 1,
   "src/components/lux/stakeholders/StakeholderCard.tsx": 1,
   "src/components/lux/stakeholders/stakeholder-utils.ts": 1,
   "src/components/lux/workflows/WorkflowCard.tsx": 1,
@@ -1693,6 +1715,7 @@
   "src/hooks/useOnboardingState.ts": 1,
   "src/hooks/useOracleV2.ts": 3,
   "src/hooks/usePersistedFilters.ts": 1,
+  "src/hooks/usePiiRules.ts": 4,
   "src/hooks/useRateLimit.ts": 1,
   "src/hooks/useRealtimeCompanies.ts": 1,
   "src/hooks/useRealtimeScrapeJobs.ts": 1,
@@ -1827,7 +1850,6 @@
    "src/hooks/useOrgRateLimit.ts",
    "src/hooks/usePartitionAdvisories.ts",
    "src/hooks/usePermissions.ts",
-   "src/hooks/usePiiRules.ts",
    "src/hooks/usePlacesApiUsage.ts",
    "src/hooks/useRealtimeJobDetails.ts",
    "src/hooks/useReaperAlerts.ts",

@@ -2,7 +2,7 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "nos": 593,
- "arestas": 1938,
+ "arestas": 1942,
  "hubs": [
   {
    "arquivo": "src/components/ui/button.tsx",
@@ -10,7 +10,7 @@
   },
   {
    "arquivo": "src/integrations/supabase/client.ts",
-   "importado_por": 128
+   "importado_por": 129
   },
   {
    "arquivo": "src/components/ui/badge.tsx",
@@ -153,15 +153,15 @@
    "importado_por": 9
   },
   {
+   "arquivo": "src/components/ui/alert.tsx",
+   "importado_por": 8
+  },
+  {
    "arquivo": "src/components/ui/checkbox.tsx",
    "importado_por": 8
   },
   {
    "arquivo": "src/components/ui/progress.tsx",
-   "importado_por": 8
-  },
-  {
-   "arquivo": "src/hooks/useAutomationsMonitor.ts",
    "importado_por": 8
   }
  ],

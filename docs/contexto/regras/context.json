@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "72c71be28191aecd0840be910ccd8c7b73a140b9",
+  "sha": "9615e96eec519eb7872130907f594469e32249fb",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-26 19:52 UTC",
-  "files_total": 1241,
-  "code_files": 1045,
-  "code_lines": 155723
+  "generated_at": "2026-11-27 00:23 UTC",
+  "files_total": 1246,
+  "code_files": 1050,
+  "code_lines": 156349
  },
  "version": "1.3.2",
- "facts_hash": "cb6f2391eefbcbe0",
+ "facts_hash": "48cec5de43782c9c",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -254,9 +254,9 @@
   ],
   "package_manager": "bun",
   "languages": {
-   ".ts": 410,
-   ".tsx": 323,
-   ".sql": 279,
+   ".ts": 411,
+   ".tsx": 324,
+   ".sql": 282,
    ".mjs": 23,
    ".py": 5,
    ".js": 4,
@@ -19057,47 +19057,14 @@
      "auth"
     ]
    },
-   "export_audit_logs": {
-    "args": "_org_id uuid, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL, _action text DEFAULT NULL, _table_name text DEFAULT NULL, _user_id uuid DEFAULT NULL, _after_created_at timestamptz DEFAULT …",
-    "returns": "TABLE (\n  id uuid,\n  organization_id uuid,\n  user_id uuid,\n  action text,\n  table_name text,\n  record_id uuid,\n  old_data jsonb,\n  new_data jsonb,\n  metadata jsonb,\n  created_at timestamptz\n)",
-    "lang": "plpgsql",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "DECLARE _lim int := LEAST(GREATEST(COALESCE(_limit, 1000), 1), 5000); BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode exportar audit log' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT a.id, a.organization_id, a.user_id, a.action, a.table_name, a.record_id, a.old_data, a.new_data, a.metadata, a.created_at FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_from IS NULL OR a.created_at >= _from) AND (_to IS NULL OR a.created_at < _to) AND (_action IS NULL OR a.action = _action) AND (_table_name I …",
-    "raises": [
-     "nao autenticado",
-     "apenas admin da organizacao pode exportar audit log"
-    ],
-    "tables": [
-     "audit_logs"
-    ]
-   },
-   "count_audit_logs": {
-    "args": "_org_id uuid, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL, _action text DEFAULT NULL, _table_name text DEFAULT NULL, _user_id uuid DEFAULT NULL",
-    "returns": "bigint",
-    "lang": "plpgsql",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "DECLARE _total bigint; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode contar audit log' USING ERRCODE = '42501'; END IF; SELECT count(*) INTO _total FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_from IS NULL OR a.created_at >= _from) AND (_to IS NULL OR a.created_at < _to) AND (_action IS NULL OR a.action = _action) AND (_table_name IS NULL OR a.table_name = _table_name) AND (_user_id IS NULL OR a.user_id = _user_id); RETURN COALESCE(_total, 0); END;",
-    "raises": [
-     "nao autenticado",
-     "apenas admin da organizacao pode contar audit log"
-    ],
-    "tables": [
-     "_total",
-     "audit_logs"
-    ]
-   },
    "audit_log_facets": {
     "args": "_org_id uuid",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE _actions text[]; _tables text[]; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode listar facets' USING ERRCODE = '42501'; END IF; SELECT array_agg(DISTINCT a.action ORDER BY a.action) INTO _actions FROM public.audit_logs a WHERE a.organization_id = _org_id; SELECT array_agg(DISTINCT a.table_name ORDER BY a.table_name) INTO _tables FROM public.audit_logs a WHERE a.organization_id = _org_id; RETURN jsonb_build_object( 'actions', COALESCE(to_jsonb(_actions), '[]'::jsonb), 'tables', COALESCE(to_jsonb(_tables), …",
+    "body": "DECLARE _actions text[]; _tables text[]; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode listar facets' USING ERRCODE = '42501'; END IF; SELECT array_agg(DISTINCT a.action::text ORDER BY a.action::text) INTO _actions FROM public.audit_logs a WHERE a.organization_id = _org_id; SELECT array_agg(DISTINCT a.table_name ORDER BY a.table_name) INTO _tables FROM public.audit_logs a WHERE a.organization_id = _org_id; RETURN jsonb_build_object( 'actions', COALESCE(to_jsonb(_actions), '[]'::jsonb), 'tables', COALESCE(to_json …",
     "raises": [
      "nao autenticado",
      "apenas admin da organizacao pode listar facets"
@@ -19334,22 +19301,6 @@
     "body": "SELECT public._pii_redact_jsonb(_org_id, _data, 0)",
     "raises": [],
     "tables": []
-   },
-   "read_audit_logs_safe": {
-    "args": "_org_id uuid, _limit int DEFAULT 100, _action text DEFAULT NULL, _table_name text DEFAULT NULL",
-    "returns": "TABLE (\n  id uuid,\n  user_id uuid,\n  action text,\n  table_name text,\n  record_id uuid,\n  old_data jsonb,\n  new_data jsonb,\n  metadata jsonb,\n  created_at timestamptz\n)",
-    "lang": "plpgsql",
-    "src": "supabase/migrations/20261122260000_dlp_pii_masking.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "DECLARE _lim int := LEAST(GREATEST(coalesce(_limit, 100), 1), 1000); BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode ler audit log mascarado' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT a.id, a.user_id, a.action, a.table_name, a.record_id, public.pii_redact_jsonb(_org_id, a.old_data) AS old_data, public.pii_redact_jsonb(_org_id, a.new_data) AS new_data, public.pii_redact_jsonb(_org_id, a.metadata) AS metadata, a.created_at FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_action IS NULL OR …",
-    "raises": [
-     "nao autenticado",
-     "apenas admin da organizacao pode ler audit log mascarado"
-    ],
-    "tables": [
-     "audit_logs"
-    ]
    },
    "pii_scan": {
     "args": "_org_id uuid",
@@ -19974,6 +19925,57 @@
     "raises": [],
     "tables": [
      "audit_logs"
+    ]
+   },
+   "export_audit_logs": {
+    "args": "_org_id uuid, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL, _action text DEFAULT NULL, _table_name text DEFAULT NULL, _actor_id uuid DEFAULT NULL, _after_created_at timestamptz DEFAULT …",
+    "returns": "TABLE (\n  id uuid,\n  organization_id uuid,\n  actor_id uuid,\n  action text,\n  table_name text,\n  record_id uuid,\n  old_data jsonb,\n  new_data jsonb,\n  metadata jsonb,\n  created_at timestamptz\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _lim int := LEAST(GREATEST(COALESCE(_limit, 1000), 1), 5000); BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode exportar audit log' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT a.id, a.organization_id, a.actor_id, a.action::text, a.table_name, a.record_id, public.pii_redact_jsonb(_org_id, a.old_data) AS old_data, public.pii_redact_jsonb(_org_id, a.new_data) AS new_data, public.pii_redact_jsonb(_org_id, a.metadata) AS metadata, a.created_at FROM public.audit_logs a WHERE a.organization_id = _org_id AN …",
+    "raises": [
+     "nao autenticado",
+     "apenas admin da organizacao pode exportar audit log"
+    ],
+    "tables": [
+     "audit_logs"
+    ]
+   },
+   "count_audit_logs": {
+    "args": "_org_id uuid, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL, _action text DEFAULT NULL, _table_name text DEFAULT NULL, _actor_id uuid DEFAULT NULL",
+    "returns": "bigint",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _total bigint; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode contar audit log' USING ERRCODE = '42501'; END IF; SELECT count(*) INTO _total FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_from IS NULL OR a.created_at >= _from) AND (_to IS NULL OR a.created_at < _to) AND (_action IS NULL OR a.action::text = _action) AND (_table_name IS NULL OR a.table_name = _table_name) AND (_actor_id IS NULL OR a.actor_id = _actor_id); RETURN COALESCE(_total, 0); END;",
+    "raises": [
+     "nao autenticado",
+     "apenas admin da organizacao pode contar audit log"
+    ],
+    "tables": [
+     "_total",
+     "audit_logs"
+    ]
+   },
+   "read_audit_logs_safe": {
+    "args": "_org_id uuid, _limit int DEFAULT 25, _offset int DEFAULT 0, _action text DEFAULT NULL, _tables text[] DEFAULT NULL, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL",
+    "returns": "TABLE (\n  id uuid,\n  organization_id uuid,\n  actor_id uuid,\n  action text,\n  table_name text,\n  record_id uuid,\n  old_data jsonb,\n  new_data jsonb,\n  metadata jsonb,\n  trace_id uuid,\n  created_at timestamptz,\n  total_count bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _lim int := LEAST(GREATEST(COALESCE(_limit, 25), 1), 500); _off int := GREATEST(COALESCE(_offset, 0), 0); BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode ler audit log mascarado' USING ERRCODE = '42501'; END IF; RETURN QUERY WITH filtrado AS ( SELECT a.id, a.organization_id, a.actor_id, a.action, a.table_name, a.record_id, a.old_data, a.new_data, a.metadata, a.trace_id, a.created_at FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_action IS NULL OR a.action::text = _action) AND (_tables IS …",
+    "raises": [
+     "nao autenticado",
+     "apenas admin da organizacao pode ler audit log mascarado"
+    ],
+    "tables": [
+     "audit_logs",
+     "filtrado",
+     "total"
     ]
    },
    "Args": {
@@ -23723,6 +23725,8 @@
    "supabase/migrations/20261126140000_job_exports_bucket.sql",
    "supabase/migrations/20261126180000_job_exports_retencao.sql",
    "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
+   "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql",
+   "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -29531,6 +29535,102 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "export_audit_logs",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "export_audit_logs",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "export_audit_logs",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "count_audit_logs",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "count_audit_logs",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "count_audit_logs",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "audit_log_facets",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "audit_log_facets",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "audit_log_facets",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "read_audit_logs_safe",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "read_audit_logs_safe",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "read_audit_logs_safe",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
    }
   ],
   "raises": [
@@ -30000,36 +30100,6 @@
     "src": "supabase/migrations/20261122200000_email_templates.sql"
    },
    {
-    "function": "export_audit_logs",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "export_audit_logs",
-    "msg": "apenas admin da organizacao pode exportar audit log",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "count_audit_logs",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "count_audit_logs",
-    "msg": "apenas admin da organizacao pode contar audit log",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "audit_log_facets",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "audit_log_facets",
-    "msg": "apenas admin da organizacao pode listar facets",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
     "function": "export_subject_data",
     "msg": "nao autenticado",
     "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
@@ -30103,16 +30173,6 @@
     "function": "dsar_sla_alerts",
     "msg": "apenas admin da organizacao pode consultar SLA de pedidos",
     "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
-   },
-   {
-    "function": "read_audit_logs_safe",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122260000_dlp_pii_masking.sql"
-   },
-   {
-    "function": "read_audit_logs_safe",
-    "msg": "apenas admin da organizacao pode ler audit log mascarado",
-    "src": "supabase/migrations/20261122260000_dlp_pii_masking.sql"
    },
    {
     "function": "pii_scan",
@@ -30328,6 +30388,46 @@
     "function": "replay_instagram_dead_letter_batch",
     "msg": "Somente administradores da organização podem reprocessar a fila morta",
     "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "function": "export_audit_logs",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "function": "export_audit_logs",
+    "msg": "apenas admin da organizacao pode exportar audit log",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "function": "count_audit_logs",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "count_audit_logs",
+    "msg": "apenas admin da organizacao pode contar audit log",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "audit_log_facets",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "audit_log_facets",
+    "msg": "apenas admin da organizacao pode listar facets",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "read_audit_logs_safe",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "read_audit_logs_safe",
+    "msg": "apenas admin da organizacao pode ler audit log mascarado",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
    }
   ],
   "seed": [],
@@ -30484,17 +30584,22 @@
      "evaluate_partition_policies",
      "get_public_status",
      "get_public_uptime",
+     "list_pii_rules",
+     "pii_redact_text",
+     "pii_scan",
      "purge_dead_letter",
+     "read_audit_logs_safe",
      "replay_dead_letter",
      "replay_dead_letter_batch",
      "reset_circuit_breaker",
      "rollback_retry_advisory",
+     "set_pii_rule",
      "sla_autotune_blocked_streaks",
      "sla_compliance_stats",
      "sla_recommendations",
      "source_quality_report"
     ],
-    "deps_count": 132
+    "deps_count": 133
    },
    {
     "path": "",
@@ -32663,7 +32768,7 @@
     "file": ".github/workflows/production-smoke.yml"
    }
   ],
-  "components_count": 326,
+  "components_count": 327,
   "hooks": [
    {
     "name": "useContacts",
@@ -33516,8 +33621,8 @@
   },
   {
    "module": "scripts",
-   "files": 51,
-   "lines": 17575,
+   "files": 52,
+   "lines": 17721,
    "tables": [
     "a",
     "contacts",
@@ -33642,6 +33747,7 @@
     "scripts/regras_negocio/generate.py",
     "scripts/regras_negocio/indice.py",
     "scripts/regras_negocio/test_generate.py",
+    "scripts/sql/check-audit-trail-readers.sql",
     "scripts/sql/check-audit-triggers.sql",
     "scripts/sql/check-function-grants.sql",
     "scripts/sql/check-queue-kind-coverage.sql",
@@ -33706,8 +33812,8 @@
   },
   {
    "module": "src/components",
-   "files": 326,
-   "lines": 54947,
+   "files": 327,
+   "lines": 55027,
    "tables": [
     "agent_chat_messages",
     "audit_logs",
@@ -33956,8 +34062,8 @@
   },
   {
    "module": "src/hooks",
-   "files": 115,
-   "lines": 13590,
+   "files": 116,
+   "lines": 13684,
    "tables": [
     "api_keys",
     "api_latency_alert_history",
@@ -34178,7 +34284,7 @@
   {
    "module": "src/integrations",
    "files": 15,
-   "lines": 9363,
+   "lines": 9370,
    "tables": [
     "automation_alerts",
     "changelog_entries",
@@ -34693,8 +34799,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 275,
-   "lines": 21078,
+   "files": 277,
+   "lines": 21377,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -34842,6 +34948,9 @@
      "src/hooks/useAuditTrail.ts",
      "src/hooks/useEmailAccountAuditLog.ts",
      "src/hooks/useMembershipAuditLog.ts"
+    ],
+    "ref": [
+     "src/hooks/__tests__/useAuditTrail.test.ts"
     ],
     "insert": [
      "src/lib/orgErrorHandler.ts",
@@ -37941,6 +38050,9 @@
    "r1": [
     "scripts/ai-context/cenarios.mjs"
    ],
+   "read_audit_logs_safe": [
+    "src/hooks/useAuditTrail.ts"
+   ],
    "record_campaign_event": [
     "supabase/functions/campaign-dispatch/index.ts",
     "supabase/functions/track-click/index.ts",
@@ -39969,6 +40081,10 @@
     "msg": "Sem organização ativa"
    },
    {
+    "file": "src/components/lux/settings/AuditLogExportPanel.tsx",
+    "msg": ";\nimport { Button } from "
+   },
+   {
     "file": "src/components/lux/settings/HubSpotPanel.tsx",
     "msg": "API Key nao pode ser vazia"
    },
@@ -40062,6 +40178,10 @@
    },
    {
     "file": "src/hooks/useAuditLogExport.ts",
+    "msg": "Organização não selecionada"
+   },
+   {
+    "file": "src/hooks/useAuditTrail.ts",
     "msg": "Organização não selecionada"
    },
    {
@@ -40950,7 +41070,7 @@
    },
    {
     "file": "src/hooks/useAuditTrail.ts",
-    "text": "apenas administradores enxerguem os registros do próprio workspace."
+    "text": "`new_data` e `metadata` — mesmo motor usado no arquivo exportado. Sem regra"
    },
    {
     "file": "src/hooks/useCircuitBreakerAlerts.ts",
@@ -41015,6 +41135,10 @@
    {
     "file": "src/hooks/usePermissions.ts",
     "text": "* A permissão vem de `public.role_permissions` (editável pelo admin). Enquanto a"
+   },
+   {
+    "file": "src/hooks/usePiiRules.ts",
+    "text": "Devolve string vazia quando nao ha regra ligada (nenhum efeito)."
    },
    {
     "file": "src/hooks/useRateLimit.ts",
@@ -55736,6 +55860,18 @@
     "name": "retorna vazio sem dados de p95"
    },
    {
+    "file": "src/components/lux/settings/__tests__/AuditLogExportPanel.test.tsx",
+    "name": "AuditLogExportPanel — aviso de mascaramento"
+   },
+   {
+    "file": "src/components/lux/settings/__tests__/AuditLogExportPanel.test.tsx",
+    "name": "avisa que o arquivo sai mascarado quando ha regra ligada"
+   },
+   {
+    "file": "src/components/lux/settings/__tests__/AuditLogExportPanel.test.tsx",
+    "name": "nao avisa nada quando nenhuma regra esta ligada"
+   },
+   {
     "file": "src/contexts/__tests__/ActiveOrgContext.test.tsx",
     "name": "ActiveOrgProvider"
    },
@@ -55853,15 +55989,23 @@
    },
    {
     "file": "src/hooks/__tests__/useAuditTrail.test.ts",
-    "name": "pagina via range() com base em page/pageSize (1-indexada)"
+    "name": "lê pelo leitor mascarado com a organização ativa"
    },
    {
     "file": "src/hooks/__tests__/useAuditTrail.test.ts",
-    "name": "filtra apenas automações com .in() no conjunto esperado"
+    "name": "pagina via _limit/_offset a partir de page/pageSize (1-indexada)"
    },
    {
     "file": "src/hooks/__tests__/useAuditTrail.test.ts",
-    "name": "filtra por tabela específica com .eq(table_name)"
+    "name": "envia o período como timestamps ISO inclusivos"
+   },
+   {
+    "file": "src/hooks/__tests__/useAuditTrail.test.ts",
+    "name": "filtra apenas automações com o conjunto de tabelas esperado"
+   },
+   {
+    "file": "src/hooks/__tests__/useAuditTrail.test.ts",
+    "name": "filtra por tabela específica com um único item"
    },
    {
     "file": "src/hooks/__tests__/useAuditTrail.test.ts",
@@ -55869,7 +56013,11 @@
    },
    {
     "file": "src/hooks/__tests__/useAuditTrail.test.ts",
-    "name": "filtra por ação quando diferente de "
+    "name": "filtra por ação somente quando diferente de "
+   },
+   {
+    "file": "src/hooks/__tests__/useAuditTrail.test.ts",
+    "name": "não lê audit_logs direto — só profiles para decorar o ator"
    },
    {
     "file": "src/hooks/__tests__/useAuditTrail.test.ts",
@@ -55881,7 +56029,7 @@
    },
    {
     "file": "src/hooks/__tests__/useAuditTrail.test.ts",
-    "name": "propaga erro da query de audit_logs"
+    "name": "propaga erro da leitura mascarada"
    },
    {
     "file": "src/hooks/__tests__/useAutomationsMonitor.test.ts",
@@ -56130,6 +56278,38 @@
    {
     "file": "src/hooks/__tests__/usePersistedFilters.test.ts",
     "name": "mantém a sincronização entre abas depois de vários renders"
+   },
+   {
+    "file": "src/hooks/__tests__/usePiiRules.test.ts",
+    "name": "regrasAtivasPii"
+   },
+   {
+    "file": "src/hooks/__tests__/usePiiRules.test.ts",
+    "name": "devolve lista vazia quando o hook ainda nao carregou"
+   },
+   {
+    "file": "src/hooks/__tests__/usePiiRules.test.ts",
+    "name": "descarta regra desligada: so ela nao muda o arquivo exportado"
+   },
+   {
+    "file": "src/hooks/__tests__/usePiiRules.test.ts",
+    "name": "resumoMascaramentoPii"
+   },
+   {
+    "file": "src/hooks/__tests__/usePiiRules.test.ts",
+    "name": "devolve string vazia sem regra ligada (nenhum efeito no export)"
+   },
+   {
+    "file": "src/hooks/__tests__/usePiiRules.test.ts",
+    "name": "conta as regras ligadas e traduz categoria e acao"
+   },
+   {
+    "file": "src/hooks/__tests__/usePiiRules.test.ts",
+    "name": "nao repete a mesma acao quando varias categorias usam a mesma"
+   },
+   {
+    "file": "src/hooks/__tests__/usePiiRules.test.ts",
+    "name": "cai para o valor cru quando a acao ou categoria e desconhecida"
    },
    {
     "file": "src/hooks/__tests__/useRateLimit.logic.test.ts",
@@ -66761,47 +66941,14 @@
      "auth"
     ]
    },
-   "export_audit_logs": {
-    "args": "_org_id uuid, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL, _action text DEFAULT NULL, _table_name text DEFAULT NULL, _user_id uuid DEFAULT NULL, _after_created_at timestamptz DEFAULT …",
-    "returns": "TABLE (\n  id uuid,\n  organization_id uuid,\n  user_id uuid,\n  action text,\n  table_name text,\n  record_id uuid,\n  old_data jsonb,\n  new_data jsonb,\n  metadata jsonb,\n  created_at timestamptz\n)",
-    "lang": "plpgsql",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "DECLARE _lim int := LEAST(GREATEST(COALESCE(_limit, 1000), 1), 5000); BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode exportar audit log' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT a.id, a.organization_id, a.user_id, a.action, a.table_name, a.record_id, a.old_data, a.new_data, a.metadata, a.created_at FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_from IS NULL OR a.created_at >= _from) AND (_to IS NULL OR a.created_at < _to) AND (_action IS NULL OR a.action = _action) AND (_table_name I …",
-    "raises": [
-     "nao autenticado",
-     "apenas admin da organizacao pode exportar audit log"
-    ],
-    "tables": [
-     "audit_logs"
-    ]
-   },
-   "count_audit_logs": {
-    "args": "_org_id uuid, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL, _action text DEFAULT NULL, _table_name text DEFAULT NULL, _user_id uuid DEFAULT NULL",
-    "returns": "bigint",
-    "lang": "plpgsql",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "DECLARE _total bigint; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode contar audit log' USING ERRCODE = '42501'; END IF; SELECT count(*) INTO _total FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_from IS NULL OR a.created_at >= _from) AND (_to IS NULL OR a.created_at < _to) AND (_action IS NULL OR a.action = _action) AND (_table_name IS NULL OR a.table_name = _table_name) AND (_user_id IS NULL OR a.user_id = _user_id); RETURN COALESCE(_total, 0); END;",
-    "raises": [
-     "nao autenticado",
-     "apenas admin da organizacao pode contar audit log"
-    ],
-    "tables": [
-     "_total",
-     "audit_logs"
-    ]
-   },
    "audit_log_facets": {
     "args": "_org_id uuid",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE _actions text[]; _tables text[]; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode listar facets' USING ERRCODE = '42501'; END IF; SELECT array_agg(DISTINCT a.action ORDER BY a.action) INTO _actions FROM public.audit_logs a WHERE a.organization_id = _org_id; SELECT array_agg(DISTINCT a.table_name ORDER BY a.table_name) INTO _tables FROM public.audit_logs a WHERE a.organization_id = _org_id; RETURN jsonb_build_object( 'actions', COALESCE(to_jsonb(_actions), '[]'::jsonb), 'tables', COALESCE(to_jsonb(_tables), …",
+    "body": "DECLARE _actions text[]; _tables text[]; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode listar facets' USING ERRCODE = '42501'; END IF; SELECT array_agg(DISTINCT a.action::text ORDER BY a.action::text) INTO _actions FROM public.audit_logs a WHERE a.organization_id = _org_id; SELECT array_agg(DISTINCT a.table_name ORDER BY a.table_name) INTO _tables FROM public.audit_logs a WHERE a.organization_id = _org_id; RETURN jsonb_build_object( 'actions', COALESCE(to_jsonb(_actions), '[]'::jsonb), 'tables', COALESCE(to_json …",
     "raises": [
      "nao autenticado",
      "apenas admin da organizacao pode listar facets"
@@ -67038,22 +67185,6 @@
     "body": "SELECT public._pii_redact_jsonb(_org_id, _data, 0)",
     "raises": [],
     "tables": []
-   },
-   "read_audit_logs_safe": {
-    "args": "_org_id uuid, _limit int DEFAULT 100, _action text DEFAULT NULL, _table_name text DEFAULT NULL",
-    "returns": "TABLE (\n  id uuid,\n  user_id uuid,\n  action text,\n  table_name text,\n  record_id uuid,\n  old_data jsonb,\n  new_data jsonb,\n  metadata jsonb,\n  created_at timestamptz\n)",
-    "lang": "plpgsql",
-    "src": "supabase/migrations/20261122260000_dlp_pii_masking.sql",
-    "security_definer": true,
-    "search_path": true,
-    "body": "DECLARE _lim int := LEAST(GREATEST(coalesce(_limit, 100), 1), 1000); BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode ler audit log mascarado' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT a.id, a.user_id, a.action, a.table_name, a.record_id, public.pii_redact_jsonb(_org_id, a.old_data) AS old_data, public.pii_redact_jsonb(_org_id, a.new_data) AS new_data, public.pii_redact_jsonb(_org_id, a.metadata) AS metadata, a.created_at FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_action IS NULL OR …",
-    "raises": [
-     "nao autenticado",
-     "apenas admin da organizacao pode ler audit log mascarado"
-    ],
-    "tables": [
-     "audit_logs"
-    ]
    },
    "pii_scan": {
     "args": "_org_id uuid",
@@ -67680,6 +67811,57 @@
      "audit_logs"
     ]
    },
+   "export_audit_logs": {
+    "args": "_org_id uuid, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL, _action text DEFAULT NULL, _table_name text DEFAULT NULL, _actor_id uuid DEFAULT NULL, _after_created_at timestamptz DEFAULT …",
+    "returns": "TABLE (\n  id uuid,\n  organization_id uuid,\n  actor_id uuid,\n  action text,\n  table_name text,\n  record_id uuid,\n  old_data jsonb,\n  new_data jsonb,\n  metadata jsonb,\n  created_at timestamptz\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _lim int := LEAST(GREATEST(COALESCE(_limit, 1000), 1), 5000); BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode exportar audit log' USING ERRCODE = '42501'; END IF; RETURN QUERY SELECT a.id, a.organization_id, a.actor_id, a.action::text, a.table_name, a.record_id, public.pii_redact_jsonb(_org_id, a.old_data) AS old_data, public.pii_redact_jsonb(_org_id, a.new_data) AS new_data, public.pii_redact_jsonb(_org_id, a.metadata) AS metadata, a.created_at FROM public.audit_logs a WHERE a.organization_id = _org_id AN …",
+    "raises": [
+     "nao autenticado",
+     "apenas admin da organizacao pode exportar audit log"
+    ],
+    "tables": [
+     "audit_logs"
+    ]
+   },
+   "count_audit_logs": {
+    "args": "_org_id uuid, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL, _action text DEFAULT NULL, _table_name text DEFAULT NULL, _actor_id uuid DEFAULT NULL",
+    "returns": "bigint",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _total bigint; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode contar audit log' USING ERRCODE = '42501'; END IF; SELECT count(*) INTO _total FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_from IS NULL OR a.created_at >= _from) AND (_to IS NULL OR a.created_at < _to) AND (_action IS NULL OR a.action::text = _action) AND (_table_name IS NULL OR a.table_name = _table_name) AND (_actor_id IS NULL OR a.actor_id = _actor_id); RETURN COALESCE(_total, 0); END;",
+    "raises": [
+     "nao autenticado",
+     "apenas admin da organizacao pode contar audit log"
+    ],
+    "tables": [
+     "_total",
+     "audit_logs"
+    ]
+   },
+   "read_audit_logs_safe": {
+    "args": "_org_id uuid, _limit int DEFAULT 25, _offset int DEFAULT 0, _action text DEFAULT NULL, _tables text[] DEFAULT NULL, _from timestamptz DEFAULT NULL, _to timestamptz DEFAULT NULL",
+    "returns": "TABLE (\n  id uuid,\n  organization_id uuid,\n  actor_id uuid,\n  action text,\n  table_name text,\n  record_id uuid,\n  old_data jsonb,\n  new_data jsonb,\n  metadata jsonb,\n  trace_id uuid,\n  created_at timestamptz,\n  total_count bigint\n)",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
+    "security_definer": true,
+    "search_path": true,
+    "body": "DECLARE _lim int := LEAST(GREATEST(COALESCE(_limit, 25), 1), 500); _off int := GREATEST(COALESCE(_offset, 0), 0); BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode ler audit log mascarado' USING ERRCODE = '42501'; END IF; RETURN QUERY WITH filtrado AS ( SELECT a.id, a.organization_id, a.actor_id, a.action, a.table_name, a.record_id, a.old_data, a.new_data, a.metadata, a.trace_id, a.created_at FROM public.audit_logs a WHERE a.organization_id = _org_id AND (_action IS NULL OR a.action::text = _action) AND (_tables IS …",
+    "raises": [
+     "nao autenticado",
+     "apenas admin da organizacao pode ler audit log mascarado"
+    ],
+    "tables": [
+     "audit_logs",
+     "filtrado",
+     "total"
+    ]
+   },
    "Args": {
     "args": "",
     "returns": "?",
@@ -68238,36 +68420,6 @@
     "src": "supabase/migrations/20261122200000_email_templates.sql"
    },
    {
-    "function": "export_audit_logs",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "export_audit_logs",
-    "msg": "apenas admin da organizacao pode exportar audit log",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "count_audit_logs",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "count_audit_logs",
-    "msg": "apenas admin da organizacao pode contar audit log",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "audit_log_facets",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
-    "function": "audit_log_facets",
-    "msg": "apenas admin da organizacao pode listar facets",
-    "src": "supabase/migrations/20261122240000_audit_log_export.sql"
-   },
-   {
     "function": "export_subject_data",
     "msg": "nao autenticado",
     "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
@@ -68341,16 +68493,6 @@
     "function": "dsar_sla_alerts",
     "msg": "apenas admin da organizacao pode consultar SLA de pedidos",
     "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
-   },
-   {
-    "function": "read_audit_logs_safe",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122260000_dlp_pii_masking.sql"
-   },
-   {
-    "function": "read_audit_logs_safe",
-    "msg": "apenas admin da organizacao pode ler audit log mascarado",
-    "src": "supabase/migrations/20261122260000_dlp_pii_masking.sql"
    },
    {
     "function": "pii_scan",
@@ -68566,6 +68708,46 @@
     "function": "replay_instagram_dead_letter_batch",
     "msg": "Somente administradores da organização podem reprocessar a fila morta",
     "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "function": "export_audit_logs",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "function": "export_audit_logs",
+    "msg": "apenas admin da organizacao pode exportar audit log",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "function": "count_audit_logs",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "count_audit_logs",
+    "msg": "apenas admin da organizacao pode contar audit log",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "audit_log_facets",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "audit_log_facets",
+    "msg": "apenas admin da organizacao pode listar facets",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "read_audit_logs_safe",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "read_audit_logs_safe",
+    "msg": "apenas admin da organizacao pode ler audit log mascarado",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
    }
   ],
   "db_generated": [],
@@ -78361,6 +78543,102 @@
     "objkind": "function",
     "roles": "service_role",
     "src": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "export_audit_logs",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "export_audit_logs",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "export_audit_logs",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "count_audit_logs",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "count_audit_logs",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "count_audit_logs",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "audit_log_facets",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "audit_log_facets",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "audit_log_facets",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "read_audit_logs_safe",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "read_audit_logs_safe",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "read_audit_logs_safe",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
    }
   ],
   "guards": [
@@ -82011,6 +82289,24 @@
     "self.assertEqual(context[\"rules\"][\"temporal\"], [{\"file\": current, \"line\": \"SELECT now() - interval '7 days';\"}])",
     "self.write(archived, \"CREATE TABLE public.orders (id uuid, historical_status text);\\nSELECT now() - interval '365 days';\")",
     "self.write(current, \"CREATE TABLE public.orders (id uuid, created_at timestamptz);\\nSELECT now() - interval '7 days';\")"
+   ]
+  },
+  "scripts/sql/check-audit-trail-readers.sql": {
+   "path": "scripts/sql/check-audit-trail-readers.sql",
+   "lines": 146,
+   "rule_comments": [
+    ") INTO linhas FROM public.read_audit_logs_safe(org, 10, 0, null, negocio);",
+    ") INTO linhas FROM public.read_audit_logs_safe(org, 1, 2, null, negocio);",
+    ") INTO linhas FROM public.read_audit_logs_safe(org, 10, 0, null, negocio, now() - interval '7 days', null);",
+    ") INTO linhas FROM public.read_audit_logs_safe(org, 10, 0, null, negocio, null, now() - interval '30 days');"
+   ],
+   "temporal": [
+    "('b1111111-1111-4111-8111-111111111111','99999991-9999-4999-8999-999999999991','99999992-9999-4999-8999-999999999992','create','companies','c1111111-1111-4111-8 …",
+    "('b2222222-2222-4222-8222-222222222222','99999991-9999-4999-8999-999999999991','99999992-9999-4999-8999-999999999992','update','deals','d1111111-1111-4111-8111- …",
+    "('b3333333-3333-4333-8333-333333333333','99999991-9999-4999-8999-999999999991','99999992-9999-4999-8999-999999999992','delete','companies','c2222222-2222-4222-8 …",
+    "SELECT count(*) INTO linhas FROM public.read_audit_logs_safe(org, 10, 0, null, negocio, now() - interval '7 days', null);",
+    "SELECT count(*) INTO linhas FROM public.read_audit_logs_safe(org, 10, 0, null, negocio, null, now() - interval '30 days');",
+    "SELECT public.count_audit_logs(org, now() - interval '7 days', null, null, 'companies') INTO n;"
    ]
   },
   "scripts/sql/check-audit-triggers.sql": {
@@ -86607,7 +86903,7 @@
   },
   "src/components/lux/monitoring/AuditTrailPanel.tsx": {
    "path": "src/components/lux/monitoring/AuditTrailPanel.tsx",
-   "lines": 268,
+   "lines": 276,
    "exports": [
     "function AuditTrailPanel"
    ]
@@ -87946,7 +88242,7 @@
   },
   "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx": {
    "path": "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
-   "lines": 151,
+   "lines": 157,
    "is_test": true,
    "tests": [
     "MonitoringView com fontes reais",
@@ -87959,7 +88255,7 @@
   },
   "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx": {
    "path": "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
-   "lines": 162,
+   "lines": 168,
    "is_test": true,
    "tests": [
     "painéis de monitoramento: erro não se confunde com vazio",
@@ -88271,9 +88567,12 @@
   },
   "src/components/lux/settings/AuditLogExportPanel.tsx": {
    "path": "src/components/lux/settings/AuditLogExportPanel.tsx",
-   "lines": 99,
+   "lines": 116,
    "exports": [
     "function AuditLogExportPanel"
+   ],
+   "errors": [
+    ";\nimport { Button } from "
    ],
    "html_constraints": [
     {
@@ -88513,6 +88812,16 @@
      "field": "warmup-to",
      "rules": "type=number, min=0, max=23"
     }
+   ]
+  },
+  "src/components/lux/settings/__tests__/AuditLogExportPanel.test.tsx": {
+   "path": "src/components/lux/settings/__tests__/AuditLogExportPanel.test.tsx",
+   "lines": 43,
+   "is_test": true,
+   "tests": [
+    "AuditLogExportPanel — aviso de mascaramento",
+    "avisa que o arquivo sai mascarado quando ha regra ligada",
+    "nao avisa nada quando nenhuma regra esta ligada"
    ]
   },
   "src/components/lux/skeletons/DashboardSkeleton.tsx": {
@@ -89361,10 +89670,6 @@
    ],
    "tables": [
     {
-     "table": "audit_logs",
-     "op": "select"
-    },
-    {
      "table": "profiles",
      "op": "select"
     },
@@ -89383,6 +89688,12 @@
      "table_name"
     ]
    },
+   "rpc": [
+    "read_audit_logs_safe"
+   ],
+   "errors": [
+    "Organização não selecionada"
+   ],
    "enums": [
     {
      "name": "AUTOMATION_TABLES",
@@ -89390,7 +89701,7 @@
     }
    ],
    "rule_comments": [
-    "apenas administradores enxerguem os registros do próprio workspace."
+    "`new_data` e `metadata` — mesmo motor usado no arquivo exportado. Sem regra"
    ],
    "hooks": [
     "useAuditTables",
@@ -91724,7 +92035,7 @@
   },
   "src/hooks/usePiiRules.ts": {
    "path": "src/hooks/usePiiRules.ts",
-   "lines": 116,
+   "lines": 141,
    "exports": [
     "type PiiCategory",
     "type PiiAction",
@@ -91732,6 +92043,8 @@
     "interface PiiScanRow",
     "const PII_CATEGORY_LABEL",
     "const PII_ACTION_LABEL",
+    "function regrasAtivasPii",
+    "function resumoMascaramentoPii",
     "function usePiiRules",
     "function usePiiScan",
     "function usePiiPreview"
@@ -91755,6 +92068,9 @@
      "name": "PiiAction",
      "values": "mask | redact | hash"
     }
+   ],
+   "rule_comments": [
+    "Devolve string vazia quando nao ha regra ligada (nenhum efeito)."
    ],
    "hooks": [
     "usePiiRules",
@@ -92849,18 +93165,27 @@
   },
   "src/hooks/__tests__/useAuditTrail.test.ts": {
    "path": "src/hooks/__tests__/useAuditTrail.test.ts",
-   "lines": 149,
+   "lines": 155,
    "is_test": true,
+   "tables": [
+    {
+     "table": "audit_logs",
+     "op": "ref"
+    }
+   ],
    "tests": [
     "fetchAuditTrail",
-    "pagina via range() com base em page/pageSize (1-indexada)",
-    "filtra apenas automações com .in() no conjunto esperado",
-    "filtra por tabela específica com .eq(table_name)",
+    "lê pelo leitor mascarado com a organização ativa",
+    "pagina via _limit/_offset a partir de page/pageSize (1-indexada)",
+    "envia o período como timestamps ISO inclusivos",
+    "filtra apenas automações com o conjunto de tabelas esperado",
+    "filtra por tabela específica com um único item",
     "não filtra tabela quando table = ",
-    "filtra por ação quando diferente de ",
+    "filtra por ação somente quando diferente de ",
+    "não lê audit_logs direto — só profiles para decorar o ator",
     "junta o ator a partir de profiles e calcula total/totalPages",
     "refina por busca de ator/tabela no cliente sobre a página carregada",
-    "propaga erro da query de audit_logs"
+    "propaga erro da leitura mascarada"
    ]
   },
   "src/hooks/__tests__/useAutomationsMonitor.test.ts": {
@@ -92995,6 +93320,21 @@
     "serializes and deserializes Set values",
     "instala o escutador de armazenamento uma única vez por montagem",
     "mantém a sincronização entre abas depois de vários renders"
+   ]
+  },
+  "src/hooks/__tests__/usePiiRules.test.ts": {
+   "path": "src/hooks/__tests__/usePiiRules.test.ts",
+   "lines": 63,
+   "is_test": true,
+   "tests": [
+    "regrasAtivasPii",
+    "devolve lista vazia quando o hook ainda nao carregou",
+    "descarta regra desligada: so ela nao muda o arquivo exportado",
+    "resumoMascaramentoPii",
+    "devolve string vazia sem regra ligada (nenhum efeito no export)",
+    "conta as regras ligadas e traduz categoria e acao",
+    "nao repete a mesma acao quando varias categorias usam a mesma",
+    "cai para o valor cru quando a acao ou categoria e desconhecida"
    ]
   },
   "src/hooks/__tests__/useRateLimit.logic.test.ts": {
@@ -93313,7 +93653,7 @@
   },
   "src/integrations/supabase/types.ts": {
    "path": "src/integrations/supabase/types.ts",
-   "lines": 7588,
+   "lines": 7595,
    "exports": [
     "type Json",
     "type Database",
@@ -105285,13 +105625,44 @@
    "path": "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
    "lines": 233,
    "uses_service_role": true
+  },
+  "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql": {
+   "path": "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql",
+   "lines": 109
+  },
+  "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql": {
+   "path": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
+   "lines": 190
   }
  },
  "git": {
-  "sha": "72c71be28191aecd0840be910ccd8c7b73a140b9",
+  "sha": "9615e96eec519eb7872130907f594469e32249fb",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "9615e96",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix(dlp): export de auditoria deixa de vazar PII crua — AGUARDA APROVACAO DO DONO (#278)",
+    "files": [
+     "docs/GAPS-ENTERPRISE.md",
+     "scripts/sql/check-audit-trail-readers.sql",
+     "src/components/lux/monitoring/AuditTrailPanel.tsx",
+     "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
+     "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+     "src/components/lux/settings/AuditLogExportPanel.tsx",
+     "src/components/lux/settings/__tests__/AuditLogExportPanel.test.tsx",
+     "src/hooks/__tests__/useAuditTrail.test.ts",
+     "src/hooks/__tests__/usePiiRules.test.ts",
+     "src/hooks/useAuditLogExport.ts",
+     "src/hooks/useAuditTrail.ts",
+     "src/hooks/usePiiRules.ts",
+     "src/integrations/supabase/types.ts",
+     "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql",
+     "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+    ]
+   },
    {
     "sha": "72c71be",
     "date": "2026-11-26",
@@ -105675,31 +106046,16 @@
      "src/hooks/usePartitionAdvisories.ts",
      "src/hooks/useWebScrape.ts"
     ]
-   },
-   {
-    "sha": "59db346",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "feat(interface): rotas reais ganham entrada no menu e o status do sistema passa a ser real (etapas 063-067) (#234)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/components/lux/AppBreadcrumbs.tsx",
-     "src/components/lux/LushaIntelligenceView.tsx",
-     "src/components/lux/SettingsView.tsx",
-     "src/components/lux/__tests__/SidebarFooter.test.tsx",
-     "src/components/lux/layout/Sidebar.tsx",
-     "src/components/lux/layout/__tests__/Sidebar.test.tsx",
-     "src/components/lux/layout/nav-items.ts",
-     "src/components/lux/monitoring/MonitoringView.tsx",
-     "src/components/lux/monitoring/__tests__/MonitoringView.test.tsx",
-     "src/lib/deepLink.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    20
+    19
+   ],
+   [
+    "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
+    3
    ],
    [
     "src/pages/Monitoring.tsx",
@@ -105716,6 +106072,18 @@
    [
     "supabase/functions/gmaps-proxy/index.ts",
     3
+   ],
+   [
+    "src/components/lux/monitoring/AuditTrailPanel.tsx",
+    2
+   ],
+   [
+    "src/hooks/useAuditTrail.ts",
+    2
+   ],
+   [
+    "src/integrations/supabase/types.ts",
+    2
    ],
    [
     "src/components/lux/monitoring/ReaperHistoryPanel.tsx",
@@ -105758,23 +106126,7 @@
     2
    ],
    [
-    "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
-    2
-   ],
-   [
-    "src/components/lux/monitoring/MonitoringView.tsx",
-    2
-   ],
-   [
     "src/hooks/useOrganizations.ts",
-    2
-   ],
-   [
-    "src/hooks/useApiKeys.ts",
-    2
-   ],
-   [
-    "src/hooks/useEmailTemplates.ts",
     2
    ]
   ]

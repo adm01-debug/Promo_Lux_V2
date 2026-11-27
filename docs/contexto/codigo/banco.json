@@ -6,7 +6,7 @@
   "src/integrations/supabase/types.ts",
   "supabase/migrations"
  ],
- "migrations": 275,
+ "migrations": 277,
  "seeds": [
   "scripts/seed_promo_brindes.sql"
  ],
@@ -20304,6 +20304,11 @@
   },
   {
    "nome": "purge_soft_deleted",
+   "definida": true,
+   "usada_em": 1
+  },
+  {
+   "nome": "read_audit_logs_safe",
    "definida": true,
    "usada_em": 1
   },

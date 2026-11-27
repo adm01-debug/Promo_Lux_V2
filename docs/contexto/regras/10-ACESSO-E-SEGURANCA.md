@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `72c71be281` · branch `main` · 2026-11-26 19:52 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9615e96eec` · branch `main` · 2026-11-27 00:23 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -529,7 +529,7 @@ Middleware matcher (Next.js): nenhum
 |---|---|---|---|
 | grant | anon | execute | `get_survey_by_token`, `submit_survey_response` |
 | grant | anon, authenticated | execute | `get_public_status`, `get_public_uptime` |
-| grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +66 |
+| grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +70 |
 | grant | authenticated | insert, update | `circuit_breaker_alert_settings` |
 | grant | authenticated | insert, update, delete | `role_permissions`, `warmup_profiles` |
 | grant | authenticated | select | `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `dlq_health_snapshots`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_history`, `lusha_credit_usage_log`, `lusha_credit_usage_log`, `oracle_rate_limits`, `oracle_v2_health`, `circuit_breaker_snapshots`, `circuit_breaker_alert_settings`, `circuit_breaker_alert_history`, `vault_cookie_snapshots` … +35 |
@@ -551,7 +551,7 @@ Middleware matcher (Next.js): nenhum
 | revoke | PUBLIC, anon, authenticated | all | `pg_catalog_rls_tables`, `defer_scrape_task`, `dlq_purge_stale_network_errors`, `record_places_api_call`, `claim_web_scrape_tasks`, `complete_web_scrape_task`, `fail_web_scrape_task`, `defer_web_scrape_task`, `prune_api_request_logs`, `prune_audit_logs`, `prune_automation_execution_logs`, `prune_campaign_events`, `prune_email_sync_log`, `worker_report_batch`, `worker_should_run` … +12 |
 | revoke | PUBLIC, anon, authenticated | execute | `purge_soft_deleted`, `advance_recipient_step`, `decide_ab_winner`, `replay_web_dead_letter_batch`, `web_dlq_health_metrics`, `api_latency_percentiles`, `dlq_top_reasons`, `prune_pg_net_health_snapshots`, `pg_net_watchdog_should_notify`, `pg_net_watchdog_try_lock`, `system_recovery_health`, `normal_two_sided_p`, `ab_two_proportion_test`, `decide_ab_winner` |
 | revoke | PUBLIC, authenticated, anon | execute | `check_oracle_rate_limit`, `check_api_key_rate_limit`, `authenticate_api_key`, `public_api_me`, `public_api_events`, `public_api_list`, `public_api_list` |
-| revoke | anon | all | `v_sec_definer_anon_grants`, `v_extensions_audit`, `replay_instagram_dead_letter_batch`, `incidents`, `replay_web_dead_letter_batch`, `replay_instagram_dead_letter_batch` |
+| revoke | anon | all | `v_sec_definer_anon_grants`, `v_extensions_audit`, `replay_instagram_dead_letter_batch`, `incidents`, `replay_web_dead_letter_batch`, `replay_instagram_dead_letter_batch`, `export_audit_logs`, `count_audit_logs`, `audit_log_facets`, `read_audit_logs_safe` |
 | revoke | anon | execute | `get_dashboard_stats`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `decide_ab_winner`, `has_role`, `has_org_role`, `is_org_member`, `default_org_for_current_user`, `api_latency_stats`, `reset_circuit_breaker`, `evaluate_partition_policies`, `enqueue_scrape_task`, `replay_dead_letter` … +9 |
 | revoke | anon, authenticated | all | `qa_ingest_tokens`, `cron_http_archive` |
 | revoke | anon, authenticated | execute | `enqueue_webhook_event`, `evaluate_org_violation_alerts`, `handle_new_organization`, `handle_new_user`, `log_audit_event`, `log_deal_stage_change`, `notify_on_enrichment`, `notify_on_workflow_complete`, `prevent_user_id_change`, `process_audit_log`, `sync_suppression_from_recipient`, `advance_recipient_step`, `count_recent_org_violations`, `create_default_deal_stages`, `pg_catalog_rls_tables` … +15 |
@@ -559,7 +559,7 @@ Middleware matcher (Next.js): nenhum
 | revoke | authenticated | all | `replay_instagram_dead_letter_batch`, `replay_web_dead_letter_batch`, `replay_instagram_dead_letter_batch` |
 | revoke | authenticated | execute | `pg_columns_for_insert`, `pg_catalog_rls_tables`, `evaluate_org_violation_alerts`, `assert_service_or_admin` |
 | revoke | authenticated | insert, update, delete | `campaign_warmup_state`, `workflow_run_events` |
-| revoke | public | all | `cnpj_reserve_rate_slot`, `cnpj_claim_enrich_jobs`, `apply_sla_recommendation`, `auto_tune_queue_slas`, `log_queue_sla_change`, `auto_tune_queue_slas`, `is_ip_allowed`, `get_my_ip_status`, `touch_last_known_ip`, `list_my_sessions`, `revoke_my_session`, `revoke_other_sessions`, `export_audit_logs`, `count_audit_logs`, `audit_log_facets` … +23 |
+| revoke | public | all | `cnpj_reserve_rate_slot`, `cnpj_claim_enrich_jobs`, `apply_sla_recommendation`, `auto_tune_queue_slas`, `log_queue_sla_change`, `auto_tune_queue_slas`, `is_ip_allowed`, `get_my_ip_status`, `touch_last_known_ip`, `list_my_sessions`, `revoke_my_session`, `revoke_other_sessions`, `export_audit_logs`, `count_audit_logs`, `audit_log_facets` … +27 |
 | revoke | public | execute | `get_survey_by_token`, `submit_survey_response`, `get_public_status`, `get_public_uptime`, `prevent_workflow_run_events_update`, `claim_workflow_run`, `heartbeat_workflow_run`, `complete_workflow_step`, `fail_workflow_step`, `finish_workflow_run` |
 | revoke | public, anon | all | `compute_lead_score`, `compute_deal_prediction`, `refresh_lead_score`, `refresh_deal_prediction`, `refresh_org_scores`, `can_access`, `company_analytics_summary`, `company_growth_trend`, `company_ipc_distribution`, `company_source_distribution`, `company_sector_distribution` |
 | revoke | public, anon, authenticated | all | `update_updated_at_column`, `handle_updated_at`, `update_automation_steps_updated_at`, `increment_version`, `validate_ipc_score`, `normalize_suppression_email`, `cleanup_old_idempotency_keys`, `handle_new_organization`, `handle_new_user`, `enqueue_webhook_event`, `log_audit_event`, `process_audit_log`, `notify_on_workflow_complete`, `notify_on_enrichment`, `prevent_user_id_change` … +14 |

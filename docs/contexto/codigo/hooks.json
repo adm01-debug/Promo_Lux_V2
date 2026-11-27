@@ -495,7 +495,9 @@
     "audit_logs",
     "profiles"
    ],
-   "rpcs": [],
+   "rpcs": [
+    "read_audit_logs_safe"
+   ],
    "edges": [],
    "hooks_internos": [
     "useActiveOrganization",
@@ -1936,7 +1938,7 @@
     "usePiiRules",
     "usePiiScan"
    ],
-   "linhas": 116,
+   "linhas": 141,
    "dominio": "hooks",
    "tabelas": [],
    "rpcs": [
@@ -1953,11 +1955,13 @@
     "useQueryClient"
    ],
    "canais_realtime": [],
-   "usado_por": 1,
+   "usado_por": 3,
    "usado_por_arquivos": [
+    "src/components/lux/monitoring/AuditTrailPanel.tsx",
+    "src/components/lux/settings/AuditLogExportPanel.tsx",
     "src/components/lux/settings/PiiMaskingPanel.tsx"
    ],
-   "coberto_por_testes": 0
+   "coberto_por_testes": 4
   },
   {
    "arquivo": "src/hooks/usePlacesApiUsage.ts",

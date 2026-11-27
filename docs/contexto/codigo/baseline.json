@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "72c71be28191aecd0840be910ccd8c7b73a140b9",
+  "commit": "9615e96eec519eb7872130907f594469e32249fb",
   "branch": "main",
-  "data_commit": "2026-11-26T16:51:04-03:00",
+  "data_commit": "2026-11-26T21:18:45-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "9615e96",
+    "data": "2026-11-26",
+    "assunto": "fix(dlp): export de auditoria deixa de vazar PII crua — AGUARDA APROVACAO DO DONO (#278)"
+   },
    {
     "sha": "72c71be",
     "data": "2026-11-26",
@@ -126,18 +131,13 @@
     "sha": "068b4ca",
     "data": "2026-11-25",
     "assunto": "fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (e"
-   },
-   {
-    "sha": "44f05b1",
-    "data": "2026-11-25",
-    "assunto": "fix(interface): paineis de monitoramento distinguem falha de vazio (etapas 217-221) (#239)"
    }
   ],
-  "arquivos_mudados_7d": 425,
+  "arquivos_mudados_7d": 429,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
-    "mudancas": 168
+    "mudancas": 173
    },
    {
     "pasta": "docs/qa/05-PROGRESSO.md",
@@ -145,7 +145,7 @@
    },
    {
     "pasta": "src/integrations/supabase",
-    "mudancas": 31
+    "mudancas": 32
    },
    {
     "pasta": "supabase/functions/_shared",
@@ -161,7 +161,7 @@
    },
    {
     "pasta": "src/hooks/__tests__",
-    "mudancas": 13
+    "mudancas": 15
    },
    {
     "pasta": "supabase/functions/gmaps-proxy",
@@ -169,7 +169,7 @@
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "pasta": "scripts/automation.config.json",
@@ -211,10 +211,14 @@
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 10
+    "mudancas": 11
    },
    {
     "arquivo": "scripts/automation.config.json",
+    "mudancas": 10
+   },
+   {
+    "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 10
    },
    {
@@ -227,10 +231,6 @@
    },
    {
     "arquivo": ".github/workflows/db-migrations.yml",
-    "mudancas": 9
-   },
-   {
-    "arquivo": "src/integrations/supabase/types.ts",
     "mudancas": 9
    },
    {
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 207
+    "commits": 208
    },
    {
     "autor": "dependabot[bot]",
@@ -310,9 +310,9 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1220,
-  "arquivos_codigo": 762,
-  "linhas_codigo": 132820,
+  "arquivos_total": 1225,
+  "arquivos_codigo": 764,
+  "linhas_codigo": 133001,
   "rotas": 12,
   "rotas_http_backend": 0,
   "vistas_por_id": 23,
@@ -322,11 +322,11 @@
   "hooks": 99,
   "edge_functions": 63,
   "tabelas": 121,
-  "migrations": 275,
+  "migrations": 277,
   "cron_jobs": 44,
-  "testes": 169,
+  "testes": 171,
   "workflows": 11,
-  "scripts": 58,
+  "scripts": 59,
   "docs_md": 87
  },
  "por_pasta": {
@@ -559,20 +559,20 @@
    "linhas": 124
   },
   "src/components": {
-   "arquivos": 326,
-   "linhas": 54947
+   "arquivos": 327,
+   "linhas": 55027
   },
   "src/contexts": {
    "arquivos": 9,
    "linhas": 515
   },
   "src/hooks": {
-   "arquivos": 115,
-   "linhas": 13590
+   "arquivos": 116,
+   "linhas": 13684
   },
   "src/integrations": {
    "arquivos": 15,
-   "linhas": 9363
+   "linhas": 9370
   },
   "src/lib": {
    "arquivos": 59,
@@ -614,7 +614,7 @@
  "maiores_arquivos": [
   {
    "arquivo": "src/integrations/supabase/types.ts",
-   "linhas": 7588
+   "linhas": 7595
   },
   {
    "arquivo": "src/components/lux/LushaIntelligenceView.tsx",
@@ -813,7 +813,9 @@
    "Sidebar",
    "Toaster"
   ],
-  "scripts_orfaos": [],
+  "scripts_orfaos": [
+   "scripts/sql/check-audit-trail-readers.sql"
+  ],
   "env_usadas_nao_declaradas": [
    "DEV",
    "PROD",

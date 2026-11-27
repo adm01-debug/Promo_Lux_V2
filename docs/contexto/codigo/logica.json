@@ -374,7 +374,7 @@
    "zod_schemas": 0,
    "flags": [],
    "papeis": [],
-   "usado_por": 127,
+   "usado_por": 128,
    "usado_por_modulos": [
     "components/lux",
     "contexts",
@@ -402,7 +402,7 @@
     "TablesUpdate"
    ],
    "export_default": null,
-   "linhas": 7588,
+   "linhas": 7595,
    "tabelas": [],
    "rpcs": [],
    "edges": [],
