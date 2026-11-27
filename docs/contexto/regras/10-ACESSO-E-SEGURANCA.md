@@ -1,6 +1,6 @@
 # 10 · ACESSO E SEGURANÇA — quem pode o quê
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f727764588` · branch `main` · 2026-11-27 00:30 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e7db913ae7` · branch `main` · 2026-11-27 00:43 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## Perfis / roles identificados
@@ -529,7 +529,7 @@ Middleware matcher (Next.js): nenhum
 |---|---|---|---|
 | grant | anon | execute | `get_survey_by_token`, `submit_survey_response` |
 | grant | anon, authenticated | execute | `get_public_status`, `get_public_uptime` |
-| grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +71 |
+| grant | authenticated | execute | `get_sector_summary`, `get_dashboard_stats`, `campaign_ab_stats`, `decide_ab_winner`, `accept_org_invite`, `get_dashboard_stats`, `get_sector_summary`, `campaign_ab_stats`, `create_default_deal_stages`, `pg_catalog_rls_tables`, `pg_columns_for_insert`, `evaluate_partition_policies`, `log_automation_event`, `replay_dead_letter_batch`, `reset_circuit_breaker` … +72 |
 | grant | authenticated | insert, update | `circuit_breaker_alert_settings` |
 | grant | authenticated | insert, update, delete | `role_permissions`, `warmup_profiles` |
 | grant | authenticated | select | `db_health_snapshots`, `scrape_queue`, `scrape_dead_letter`, `dlq_health_snapshots`, `dlq_alert_history`, `api_latency_snapshots`, `api_latency_alert_history`, `lusha_credit_usage_log`, `lusha_credit_usage_log`, `oracle_rate_limits`, `oracle_v2_health`, `circuit_breaker_snapshots`, `circuit_breaker_alert_settings`, `circuit_breaker_alert_history`, `vault_cookie_snapshots` … +35 |
@@ -559,7 +559,7 @@ Middleware matcher (Next.js): nenhum
 | revoke | authenticated | all | `replay_instagram_dead_letter_batch`, `replay_web_dead_letter_batch`, `replay_instagram_dead_letter_batch` |
 | revoke | authenticated | execute | `pg_columns_for_insert`, `pg_catalog_rls_tables`, `evaluate_org_violation_alerts`, `assert_service_or_admin` |
 | revoke | authenticated | insert, update, delete | `campaign_warmup_state`, `workflow_run_events` |
-| revoke | public | all | `cnpj_reserve_rate_slot`, `cnpj_claim_enrich_jobs`, `apply_sla_recommendation`, `auto_tune_queue_slas`, `log_queue_sla_change`, `auto_tune_queue_slas`, `is_ip_allowed`, `get_my_ip_status`, `touch_last_known_ip`, `list_my_sessions`, `revoke_my_session`, `revoke_other_sessions`, `export_audit_logs`, `count_audit_logs`, `audit_log_facets` … +27 |
+| revoke | public | all | `cnpj_reserve_rate_slot`, `cnpj_claim_enrich_jobs`, `apply_sla_recommendation`, `auto_tune_queue_slas`, `log_queue_sla_change`, `auto_tune_queue_slas`, `is_ip_allowed`, `get_my_ip_status`, `touch_last_known_ip`, `list_my_sessions`, `revoke_my_session`, `revoke_other_sessions`, `export_audit_logs`, `count_audit_logs`, `audit_log_facets` … +29 |
 | revoke | public | execute | `get_survey_by_token`, `submit_survey_response`, `get_public_status`, `get_public_uptime`, `prevent_workflow_run_events_update`, `claim_workflow_run`, `heartbeat_workflow_run`, `complete_workflow_step`, `fail_workflow_step`, `finish_workflow_run` |
 | revoke | public, anon | all | `compute_lead_score`, `compute_deal_prediction`, `refresh_lead_score`, `refresh_deal_prediction`, `refresh_org_scores`, `can_access`, `company_analytics_summary`, `company_growth_trend`, `company_ipc_distribution`, `company_source_distribution`, `company_sector_distribution` |
 | revoke | public, anon, authenticated | all | `update_updated_at_column`, `handle_updated_at`, `update_automation_steps_updated_at`, `increment_version`, `validate_ipc_score`, `normalize_suppression_email`, `cleanup_old_idempotency_keys`, `handle_new_organization`, `handle_new_user`, `enqueue_webhook_event`, `log_audit_event`, `process_audit_log`, `notify_on_workflow_complete`, `notify_on_enrichment`, `prevent_user_id_change` … +14 |

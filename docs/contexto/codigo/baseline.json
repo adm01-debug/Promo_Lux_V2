@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "f727764588bbf0f9a36a7933426ae0000e03e05f",
+  "commit": "e7db913ae74a3ca2da3acac9f73afa1dd2b76568",
   "branch": "main",
-  "data_commit": "2026-11-26T21:28:52-03:00",
+  "data_commit": "2026-11-26T21:39:37-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "e7db913",
+    "data": "2026-11-26",
+    "assunto": "fix(dsar): apagamento de titular volta a funcionar (coluna gerada, NOT NULL e trilha) (#279)"
+   },
    {
     "sha": "f727764",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "9036246",
     "data": "2026-11-25",
     "assunto": "feat(interface): aplica estado de falha aos paineis de monitoramento restantes e cobre o desfazimento das permissoes (et"
-   },
-   {
-    "sha": "6d4546e",
-    "data": "2026-11-25",
-    "assunto": "feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)"
    }
   ],
-  "arquivos_mudados_7d": 431,
+  "arquivos_mudados_7d": 433,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -169,7 +169,7 @@
    },
    {
     "pasta": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 11
+    "mudancas": 12
    },
    {
     "pasta": "scripts/automation.config.json",
@@ -211,7 +211,7 @@
    },
    {
     "arquivo": "docs/GAPS-ENTERPRISE.md",
-    "mudancas": 11
+    "mudancas": 12
    },
    {
     "arquivo": "scripts/automation.config.json",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 209
+    "commits": 210
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1227,
+  "arquivos_total": 1229,
   "arquivos_codigo": 764,
   "linhas_codigo": 133001,
   "rotas": 12,
@@ -322,11 +322,11 @@
   "hooks": 99,
   "edge_functions": 63,
   "tabelas": 121,
-  "migrations": 278,
+  "migrations": 279,
   "cron_jobs": 44,
   "testes": 171,
   "workflows": 11,
-  "scripts": 60,
+  "scripts": 61,
   "docs_md": 87
  },
  "por_pasta": {
@@ -815,7 +815,8 @@
   ],
   "scripts_orfaos": [
    "scripts/sql/check-audit-trail-readers.sql",
-   "scripts/sql/check-chave-hubspot.sql"
+   "scripts/sql/check-chave-hubspot.sql",
+   "scripts/sql/check-dsar-erasure.sql"
   ],
   "env_usadas_nao_declaradas": [
    "DEV",

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f727764588` · branch `main` · 2026-11-27 00:30 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `e7db913ae7` · branch `main` · 2026-11-27 00:43 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -848,9 +848,6 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `export_subject_data` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `export_subject_data` | apenas admin da organizacao pode exportar dados de titular | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `export_subject_data` | email do titular invalido | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
-| `erase_subject_data` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
-| `erase_subject_data` | apenas admin da organizacao pode apagar dados de titular | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
-| `erase_subject_data` | email do titular invalido | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `create_dsar_request` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `create_dsar_request` | apenas admin da organizacao pode registrar pedido de titular | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
 | `list_dsar_requests` | nao autenticado | `supabase/migrations/20261122250000_dsar_lgpd.sql` |
@@ -911,6 +908,9 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `audit_log_facets` | apenas admin da organizacao pode listar facets | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
 | `read_audit_logs_safe` | nao autenticado | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
 | `read_audit_logs_safe` | apenas admin da organizacao pode ler audit log mascarado | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
+| `erase_subject_data` | nao autenticado | `supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql` |
+| `erase_subject_data` | apenas admin da organizacao pode apagar dados de titular | `supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql` |
+| `erase_subject_data` | email do titular invalido | `supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql` |
 | `get_hubspot_api_key` | Nao autenticado | `supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql` |
 | `get_hubspot_api_key` | Somente administradores da organizacao leem a chave do HubSpot | `supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql` |
 

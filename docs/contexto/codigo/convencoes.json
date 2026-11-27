@@ -29,7 +29,7 @@
   "edge_functions": "supabase/functions",
   "migrations": "supabase/migrations",
   "scripts": [
-   "scripts/sql (5)",
+   "scripts/sql (6)",
    "scripts/maintenance (4)",
    "scripts/ci (3)"
   ],
@@ -58,11 +58,11 @@
  "commits": {
   "convencao": "commitlint",
   "exemplos": [
+   "fix(dsar): apagamento de titular volta a funcionar (coluna gerada, NOT NULL e trilha) (#279)",
    "fix: chave do HubSpot deixa de ser legivel por anon (#280)",
    "fix(dlp): export de auditoria deixa de vazar PII crua — AGUARDA APROVACAO DO DONO (#278)",
    "feat(monitoramento): admin ajusta os limiares do alerta do reaper (#277)",
-   "feat(monitoramento): tela para os leads coletados no Instagram (#275)",
-   "feat(monitoramento): cron parado deixa de se confundir com nada vencido (#274)"
+   "feat(monitoramento): tela para os leads coletados no Instagram (#275)"
   ]
  },
  "pr_template": null,

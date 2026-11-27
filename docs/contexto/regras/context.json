@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "f727764588bbf0f9a36a7933426ae0000e03e05f",
+  "sha": "e7db913ae74a3ca2da3acac9f73afa1dd2b76568",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-27 00:30 UTC",
-  "files_total": 1248,
-  "code_files": 1052,
-  "code_lines": 156502
+  "generated_at": "2026-11-27 00:43 UTC",
+  "files_total": 1250,
+  "code_files": 1054,
+  "code_lines": 156813
  },
  "version": "1.3.2",
- "facts_hash": "9ef0c7a0d985690e",
+ "facts_hash": "142b4fdf7a4aa0a2",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -256,7 +256,7 @@
   "languages": {
    ".ts": 411,
    ".tsx": 324,
-   ".sql": 284,
+   ".sql": 286,
    ".mjs": 23,
    ".py": 5,
    ".js": 4,
@@ -19090,10 +19090,10 @@
     "args": "_tbl text, _org_id uuid, _email text, _token text, _masked_email text, _cols jsonb",
     "returns": "integer",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE _sets text; _n int := 0; BEGIN SELECT string_agg(format('%I = %s', c.col, c.expr), ', ' ORDER BY c.col) INTO _sets FROM ( SELECT k AS col, CASE WHEN k = 'full_name' THEN quote_literal(_token) WHEN k = 'email' THEN quote_literal(_masked_email) ELSE 'NULL' END AS expr FROM jsonb_array_elements_text(_cols) AS k ) c WHERE EXISTS ( SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = _tbl AND column_name = c.col ); IF _sets IS NULL OR _sets = '' THEN RETURN 0; END IF; IF EXISTS ( SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = _tbl AND column_name = 'updated_at' ) THEN _sets := _sets || ', updated_at = now()'; END …",
+    "body": "DECLARE _sets text; _n int := 0; BEGIN SELECT string_agg(format('%I = %s', c.col, c.expr), ', ' ORDER BY c.col) INTO _sets FROM ( SELECT ic.column_name AS col, CASE WHEN ic.column_name = 'full_name' THEN quote_literal(_token) WHEN ic.column_name = 'email' THEN quote_literal(_masked_email) WHEN ic.is_nullable = 'YES' THEN 'NULL' ELSE 'DEFAULT' END AS expr FROM jsonb_array_elements_text(_cols) AS k JOIN information_schema.columns ic ON ic.table_schema = 'public' AND ic.table_name = _tbl AND ic.column_name = k WHERE ic.is_generated = 'NEVER' ) c; IF _sets IS NULL OR _sets = '' THEN RETURN 0; END IF; IF EXISTS ( SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_nam …",
     "raises": [],
     "tables": [
      "_sets",
@@ -19134,17 +19134,19 @@
     "args": "_org_id uuid, _subject_email text, _subject_user_id uuid DEFAULT NULL, _reason text DEFAULT NULL",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE _email text; _tok text; _masked_email text; _n_stake int := 0; _n_lusha int := 0; _n_supp int := 0; _n_prof int := 0; _result jsonb; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode apagar dados de titular' USING ERRCODE = '42501'; END IF; IF _subject_email IS NULL OR position('@' in _subject_email) <= 1 THEN RAISE EXCEPTION 'email do titular invalido' USING ERRCODE = '22023'; END IF; _email := lower(btrim(_subject_email)); _tok := public.dsar_token(_email); _masked_email := _tok || '@erased.invalid'; _n_st …",
+    "body": "DECLARE _email text; _tok text; _masked_email text; _n_stake int := 0; _n_lusha int := 0; _n_supp int := 0; _n_prof int := 0; _result jsonb; _request_id uuid; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode apagar dados de titular' USING ERRCODE = '42501'; END IF; IF _subject_email IS NULL OR position('@' in _subject_email) <= 1 THEN RAISE EXCEPTION 'email do titular invalido' USING ERRCODE = '22023'; END IF; _email := lower(btrim(_subject_email)); _tok := public.dsar_token(_email); _masked_email := _tok || '@eras …",
     "raises": [
      "nao autenticado",
      "apenas admin da organizacao pode apagar dados de titular",
      "email do titular invalido"
     ],
     "tables": [
+     "_request_id",
      "audit_logs",
+     "data_subject_requests",
      "profiles"
     ]
    },
@@ -23731,6 +23733,7 @@
    "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
    "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql",
    "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
+   "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql",
    "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql",
    "src/integrations/supabase/types.ts"
   ],
@@ -29640,6 +29643,30 @@
    {
     "kind": "revoke",
     "privs": "all",
+    "object": "_dsar_pseudonymize",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "erase_subject_data",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "erase_subject_data",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
     "object": "get_hubspot_api_key",
     "objkind": "function",
     "roles": "PUBLIC",
@@ -30152,21 +30179,6 @@
     "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
    },
    {
-    "function": "erase_subject_data",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
-   },
-   {
-    "function": "erase_subject_data",
-    "msg": "apenas admin da organizacao pode apagar dados de titular",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
-   },
-   {
-    "function": "erase_subject_data",
-    "msg": "email do titular invalido",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
-   },
-   {
     "function": "create_dsar_request",
     "msg": "nao autenticado",
     "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
@@ -30465,6 +30477,21 @@
     "function": "read_audit_logs_safe",
     "msg": "apenas admin da organizacao pode ler audit log mascarado",
     "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "erase_subject_data",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "function": "erase_subject_data",
+    "msg": "apenas admin da organizacao pode apagar dados de titular",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "function": "erase_subject_data",
+    "msg": "email do titular invalido",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
    },
    {
     "function": "get_hubspot_api_key",
@@ -33668,8 +33695,8 @@
   },
   {
    "module": "scripts",
-   "files": 53,
-   "lines": 17822,
+   "files": 54,
+   "lines": 17943,
    "tables": [
     "a",
     "contacts",
@@ -33797,6 +33824,7 @@
     "scripts/sql/check-audit-trail-readers.sql",
     "scripts/sql/check-audit-triggers.sql",
     "scripts/sql/check-chave-hubspot.sql",
+    "scripts/sql/check-dsar-erasure.sql",
     "scripts/sql/check-function-grants.sql",
     "scripts/sql/check-queue-kind-coverage.sql",
     "scripts/staged-autofix/run.mjs",
@@ -34847,8 +34875,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 278,
-   "lines": 21429,
+   "files": 279,
+   "lines": 21619,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -67022,10 +67050,10 @@
     "args": "_tbl text, _org_id uuid, _email text, _token text, _masked_email text, _cols jsonb",
     "returns": "integer",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE _sets text; _n int := 0; BEGIN SELECT string_agg(format('%I = %s', c.col, c.expr), ', ' ORDER BY c.col) INTO _sets FROM ( SELECT k AS col, CASE WHEN k = 'full_name' THEN quote_literal(_token) WHEN k = 'email' THEN quote_literal(_masked_email) ELSE 'NULL' END AS expr FROM jsonb_array_elements_text(_cols) AS k ) c WHERE EXISTS ( SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = _tbl AND column_name = c.col ); IF _sets IS NULL OR _sets = '' THEN RETURN 0; END IF; IF EXISTS ( SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = _tbl AND column_name = 'updated_at' ) THEN _sets := _sets || ', updated_at = now()'; END …",
+    "body": "DECLARE _sets text; _n int := 0; BEGIN SELECT string_agg(format('%I = %s', c.col, c.expr), ', ' ORDER BY c.col) INTO _sets FROM ( SELECT ic.column_name AS col, CASE WHEN ic.column_name = 'full_name' THEN quote_literal(_token) WHEN ic.column_name = 'email' THEN quote_literal(_masked_email) WHEN ic.is_nullable = 'YES' THEN 'NULL' ELSE 'DEFAULT' END AS expr FROM jsonb_array_elements_text(_cols) AS k JOIN information_schema.columns ic ON ic.table_schema = 'public' AND ic.table_name = _tbl AND ic.column_name = k WHERE ic.is_generated = 'NEVER' ) c; IF _sets IS NULL OR _sets = '' THEN RETURN 0; END IF; IF EXISTS ( SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_nam …",
     "raises": [],
     "tables": [
      "_sets",
@@ -67066,17 +67094,19 @@
     "args": "_org_id uuid, _subject_email text, _subject_user_id uuid DEFAULT NULL, _reason text DEFAULT NULL",
     "returns": "jsonb",
     "lang": "plpgsql",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "DECLARE _email text; _tok text; _masked_email text; _n_stake int := 0; _n_lusha int := 0; _n_supp int := 0; _n_prof int := 0; _result jsonb; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode apagar dados de titular' USING ERRCODE = '42501'; END IF; IF _subject_email IS NULL OR position('@' in _subject_email) <= 1 THEN RAISE EXCEPTION 'email do titular invalido' USING ERRCODE = '22023'; END IF; _email := lower(btrim(_subject_email)); _tok := public.dsar_token(_email); _masked_email := _tok || '@erased.invalid'; _n_st …",
+    "body": "DECLARE _email text; _tok text; _masked_email text; _n_stake int := 0; _n_lusha int := 0; _n_supp int := 0; _n_prof int := 0; _result jsonb; _request_id uuid; BEGIN IF auth.uid() IS NULL THEN RAISE EXCEPTION 'nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(_org_id, auth.uid(), 'admin'::public.app_role) THEN RAISE EXCEPTION 'apenas admin da organizacao pode apagar dados de titular' USING ERRCODE = '42501'; END IF; IF _subject_email IS NULL OR position('@' in _subject_email) <= 1 THEN RAISE EXCEPTION 'email do titular invalido' USING ERRCODE = '22023'; END IF; _email := lower(btrim(_subject_email)); _tok := public.dsar_token(_email); _masked_email := _tok || '@eras …",
     "raises": [
      "nao autenticado",
      "apenas admin da organizacao pode apagar dados de titular",
      "email do titular invalido"
     ],
     "tables": [
+     "_request_id",
      "audit_logs",
+     "data_subject_requests",
      "profiles"
     ]
    },
@@ -68487,21 +68517,6 @@
     "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
    },
    {
-    "function": "erase_subject_data",
-    "msg": "nao autenticado",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
-   },
-   {
-    "function": "erase_subject_data",
-    "msg": "apenas admin da organizacao pode apagar dados de titular",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
-   },
-   {
-    "function": "erase_subject_data",
-    "msg": "email do titular invalido",
-    "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
-   },
-   {
     "function": "create_dsar_request",
     "msg": "nao autenticado",
     "src": "supabase/migrations/20261122250000_dsar_lgpd.sql"
@@ -68800,6 +68815,21 @@
     "function": "read_audit_logs_safe",
     "msg": "apenas admin da organizacao pode ler audit log mascarado",
     "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "erase_subject_data",
+    "msg": "nao autenticado",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "function": "erase_subject_data",
+    "msg": "apenas admin da organizacao pode apagar dados de titular",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "function": "erase_subject_data",
+    "msg": "email do titular invalido",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
    },
    {
     "function": "get_hubspot_api_key",
@@ -78707,6 +78737,30 @@
    {
     "kind": "revoke",
     "privs": "all",
+    "object": "_dsar_pseudonymize",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "erase_subject_data",
+    "objkind": "function",
+    "roles": "public",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "erase_subject_data",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
     "object": "get_hubspot_api_key",
     "objkind": "function",
     "roles": "PUBLIC",
@@ -82413,6 +82467,10 @@
    "path": "scripts/sql/check-chave-hubspot.sql",
    "lines": 101,
    "uses_service_role": true
+  },
+  "scripts/sql/check-dsar-erasure.sql": {
+   "path": "scripts/sql/check-dsar-erasure.sql",
+   "lines": 121
   },
   "scripts/sql/check-function-grants.sql": {
    "path": "scripts/sql/check-function-grants.sql",
@@ -105735,6 +105793,10 @@
    "path": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
    "lines": 190
   },
+  "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql": {
+   "path": "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql",
+   "lines": 190
+  },
   "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql": {
    "path": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql",
    "lines": 52,
@@ -105742,10 +105804,21 @@
   }
  },
  "git": {
-  "sha": "f727764588bbf0f9a36a7933426ae0000e03e05f",
+  "sha": "e7db913ae74a3ca2da3acac9f73afa1dd2b76568",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "e7db913",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix(dsar): apagamento de titular volta a funcionar (coluna gerada, NOT NULL e trilha) (#279)",
+    "files": [
+     "docs/GAPS-ENTERPRISE.md",
+     "scripts/sql/check-dsar-erasure.sql",
+     "supabase/migrations/20261126240000_dsar_apagamento_coluna_gerada_e_actor_id.sql"
+    ]
+   },
    {
     "sha": "f727764",
     "date": "2026-11-26",
@@ -106122,27 +106195,12 @@
      "src/hooks/useAutomationsMonitor.ts",
      "src/hooks/usePersistedFilters.ts"
     ]
-   },
-   {
-    "sha": "965bba8",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(dados): leituras e escritas por organizacao nos templates, chaves, lembretes e metas (etapas 206-210) (#236)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/hooks/useApiKeys.ts",
-     "src/hooks/useEmailTemplates.ts",
-     "src/hooks/useSalesGoals.ts",
-     "src/hooks/useSatisfaction.ts",
-     "src/hooks/useTaskReminders.ts",
-     "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    18
+    17
    ],
    [
     "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
@@ -106163,6 +106221,10 @@
    [
     "supabase/functions/gmaps-proxy/index.ts",
     3
+   ],
+   [
+    "docs/GAPS-ENTERPRISE.md",
+    2
    ],
    [
     "src/components/lux/monitoring/AuditTrailPanel.tsx",
@@ -106213,11 +106275,7 @@
     2
    ],
    [
-    "scripts/sql/check-chave-hubspot.sql",
-    1
-   ],
-   [
-    "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql",
+    "scripts/sql/check-dsar-erasure.sql",
     1
    ]
   ]
