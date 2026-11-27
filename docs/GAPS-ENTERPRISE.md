@@ -183,7 +183,7 @@ Os gaps abaixo estão priorizados em **P0** (bloqueador enterprise), **P1** (dif
 | GDPR/LGPD docs | Inexistente | DPA, Privacy Policy, ROPA, DPIA |
 | Data residency | Fixa (Lovable Cloud) | Escolher região (US/EU/BR) por org |
 | Audit log exportável | ✅ `export_audit_logs` + `count_audit_logs` + `audit_log_facets` (`20261122240000`) | Immutable, retention 5 anos, export SIEM |
-| DSAR/Right to be Forgotten | Manual | Fluxo automatizado por usuário/org |
+| DSAR/Right to be Forgotten | ✅ data_subject_requests + DsarPanel + erase_subject_data/export_subject_data (20261126240000) | Fluxo por titular ou org, prazo legal de 30 dias, apagamento por pseudonimização |
 | BYOK (encryption) | Sem opção | Chave gerenciada pelo cliente (KMS) |
 | DLP & PII masking | ✅ `pii_redaction_rules` + `pii_redact_text` + `pii_redact_jsonb` + `read_audit_logs_safe` (`20261122260000`); export mascarado (`20261126220000`) e leitores reconectados à coluna real `actor_id`, com a trilha da tela lendo o leitor mascarado (`20261126230000`) | Mascarar PII em logs e exports |
 | Pen test report | Inexistente | Relatório anual de pentest |
