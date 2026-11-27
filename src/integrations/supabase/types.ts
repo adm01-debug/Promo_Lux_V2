@@ -6216,17 +6216,18 @@ export type Database = {
       count_audit_logs: {
         Args: {
           _action?: string
+          _actor_id?: string
           _from?: string
           _org_id: string
           _table_name?: string
           _to?: string
-          _user_id?: string
         }
         Returns: number
       }
       export_audit_logs: {
         Args: {
           _action?: string
+          _actor_id?: string
           _after_created_at?: string
           _after_id?: string
           _from?: string
@@ -6234,12 +6235,11 @@ export type Database = {
           _org_id: string
           _table_name?: string
           _to?: string
-          _user_id?: string
         }
         Returns: {
           id: string
           organization_id: string
-          user_id: string
+          actor_id: string
           action: string
           table_name: string
           record_id: string
@@ -6345,19 +6345,26 @@ export type Database = {
       read_audit_logs_safe: {
         Args: {
           _action?: string
+          _from?: string
           _limit?: number
+          _offset?: number
           _org_id: string
-          _table_name?: string
+          _tables?: string[]
+          _to?: string
         }
         Returns: {
           action: string
+          actor_id: string
           created_at: string
           id: string
+          metadata: Json
           new_data: Json
           old_data: Json
+          organization_id: string
           record_id: string
           table_name: string
-          user_id: string
+          total_count: number
+          trace_id: string
         }[]
       }
       set_pii_rule: {
