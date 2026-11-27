@@ -1,15 +1,15 @@
 {
  "meta": {
-  "sha": "9615e96eec519eb7872130907f594469e32249fb",
+  "sha": "f727764588bbf0f9a36a7933426ae0000e03e05f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
-  "generated_at": "2026-11-27 00:23 UTC",
-  "files_total": 1246,
-  "code_files": 1050,
-  "code_lines": 156349
+  "generated_at": "2026-11-27 00:30 UTC",
+  "files_total": 1248,
+  "code_files": 1052,
+  "code_lines": 156502
  },
  "version": "1.3.2",
- "facts_hash": "48cec5de43782c9c",
+ "facts_hash": "9ef0c7a0d985690e",
  "stack": {
   "frameworks": [
    "React + Vite",
@@ -256,7 +256,7 @@
   "languages": {
    ".ts": 411,
    ".tsx": 324,
-   ".sql": 282,
+   ".sql": 284,
    ".mjs": 23,
    ".py": 5,
    ".js": 4,
@@ -19717,13 +19717,17 @@
    "get_hubspot_api_key": {
     "args": "p_org_id uuid",
     "returns": "text",
-    "lang": "sql",
-    "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "SELECT config->>'api_key' FROM public.org_integrations WHERE organization_id = p_org_id AND provider = 'hubspot' AND enabled = true;",
-    "raises": [],
+    "body": "DECLARE _uid uuid := auth.uid(); _key text; BEGIN IF auth.role() IS DISTINCT FROM 'service_role' THEN IF _uid IS NULL THEN RAISE EXCEPTION 'Nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(p_org_id, _uid, 'admin') THEN RAISE EXCEPTION 'Somente administradores da organizacao leem a chave do HubSpot' USING ERRCODE = '42501'; END IF; END IF; SELECT i.config ->> 'api_key' INTO _key FROM public.org_integrations i WHERE i.organization_id = p_org_id AND i.provider = 'hubspot' AND i.enabled = true; RETURN _key; END;",
+    "raises": [
+     "Nao autenticado",
+     "Somente administradores da organizacao leem a chave do HubSpot"
+    ],
     "tables": [
+     "_key",
      "org_integrations"
     ]
    },
@@ -23727,6 +23731,7 @@
    "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
    "supabase/migrations/20261126220000_export_audit_logs_mascarado.sql",
    "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
+   "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql",
    "src/integrations/supabase/types.ts"
   ],
   "rls": {
@@ -29631,6 +29636,38 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
    }
   ],
   "raises": [
@@ -30428,6 +30465,16 @@
     "function": "read_audit_logs_safe",
     "msg": "apenas admin da organizacao pode ler audit log mascarado",
     "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "get_hubspot_api_key",
+    "msg": "Nao autenticado",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
+   },
+   {
+    "function": "get_hubspot_api_key",
+    "msg": "Somente administradores da organizacao leem a chave do HubSpot",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
    }
   ],
   "seed": [],
@@ -33621,8 +33668,8 @@
   },
   {
    "module": "scripts",
-   "files": 52,
-   "lines": 17721,
+   "files": 53,
+   "lines": 17822,
    "tables": [
     "a",
     "contacts",
@@ -33749,6 +33796,7 @@
     "scripts/regras_negocio/test_generate.py",
     "scripts/sql/check-audit-trail-readers.sql",
     "scripts/sql/check-audit-triggers.sql",
+    "scripts/sql/check-chave-hubspot.sql",
     "scripts/sql/check-function-grants.sql",
     "scripts/sql/check-queue-kind-coverage.sql",
     "scripts/staged-autofix/run.mjs",
@@ -34799,8 +34847,8 @@
   },
   {
    "module": "supabase/migrations",
-   "files": 277,
-   "lines": 21377,
+   "files": 278,
+   "lines": 21429,
    "tables": [],
    "exports": [],
    "docs": [],
@@ -67601,13 +67649,17 @@
    "get_hubspot_api_key": {
     "args": "p_org_id uuid",
     "returns": "text",
-    "lang": "sql",
-    "src": "supabase/migrations/20261124040000_scim_provisioning.sql",
+    "lang": "plpgsql",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql",
     "security_definer": true,
     "search_path": true,
-    "body": "SELECT config->>'api_key' FROM public.org_integrations WHERE organization_id = p_org_id AND provider = 'hubspot' AND enabled = true;",
-    "raises": [],
+    "body": "DECLARE _uid uuid := auth.uid(); _key text; BEGIN IF auth.role() IS DISTINCT FROM 'service_role' THEN IF _uid IS NULL THEN RAISE EXCEPTION 'Nao autenticado' USING ERRCODE = '28000'; END IF; IF NOT public.has_org_role(p_org_id, _uid, 'admin') THEN RAISE EXCEPTION 'Somente administradores da organizacao leem a chave do HubSpot' USING ERRCODE = '42501'; END IF; END IF; SELECT i.config ->> 'api_key' INTO _key FROM public.org_integrations i WHERE i.organization_id = p_org_id AND i.provider = 'hubspot' AND i.enabled = true; RETURN _key; END;",
+    "raises": [
+     "Nao autenticado",
+     "Somente administradores da organizacao leem a chave do HubSpot"
+    ],
     "tables": [
+     "_key",
      "org_integrations"
     ]
    },
@@ -68748,6 +68800,16 @@
     "function": "read_audit_logs_safe",
     "msg": "apenas admin da organizacao pode ler audit log mascarado",
     "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "function": "get_hubspot_api_key",
+    "msg": "Nao autenticado",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
+   },
+   {
+    "function": "get_hubspot_api_key",
+    "msg": "Somente administradores da organizacao leem a chave do HubSpot",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
    }
   ],
   "db_generated": [],
@@ -72451,6 +72513,7 @@
    "scripts/ai-context/gerar.unit.mjs",
    "scripts/gen-round24-preflight.ts",
    "scripts/regras_negocio/generate.py",
+   "scripts/sql/check-chave-hubspot.sql",
    "scripts/sql/check-function-grants.sql",
    "scripts/supabase_snapshot/snapshot.py",
    "src/integrations/supabase/withOrg.ts",
@@ -72656,7 +72719,8 @@
    "supabase/migrations/20261125160000_auditoria_tabelas_criticas.sql",
    "supabase/migrations/20261126130000_api_publica_sem_exclusao_fisica.sql",
    "supabase/migrations/20261126180000_job_exports_retencao.sql",
-   "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql"
+   "supabase/migrations/20261126200000_dlq_replay_exige_admin.sql",
+   "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
   ],
   "security_definer_fns": [
    "_dsar_pseudonymize",
@@ -78639,6 +78703,38 @@
     "objkind": "function",
     "roles": "authenticated",
     "src": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "PUBLIC",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
+   },
+   {
+    "kind": "revoke",
+    "privs": "all",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "anon",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "authenticated",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
+   },
+   {
+    "kind": "grant",
+    "privs": "execute",
+    "object": "get_hubspot_api_key",
+    "objkind": "function",
+    "roles": "service_role",
+    "src": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
    }
   ],
   "guards": [
@@ -82312,6 +82408,11 @@
   "scripts/sql/check-audit-triggers.sql": {
    "path": "scripts/sql/check-audit-triggers.sql",
    "lines": 94
+  },
+  "scripts/sql/check-chave-hubspot.sql": {
+   "path": "scripts/sql/check-chave-hubspot.sql",
+   "lines": 101,
+   "uses_service_role": true
   },
   "scripts/sql/check-function-grants.sql": {
    "path": "scripts/sql/check-function-grants.sql",
@@ -105633,13 +105734,28 @@
   "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql": {
    "path": "supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql",
    "lines": 190
+  },
+  "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql": {
+   "path": "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql",
+   "lines": 52,
+   "uses_service_role": true
   }
  },
  "git": {
-  "sha": "9615e96eec519eb7872130907f594469e32249fb",
+  "sha": "f727764588bbf0f9a36a7933426ae0000e03e05f",
   "branch": "main",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "commits": [
+   {
+    "sha": "f727764",
+    "date": "2026-11-26",
+    "author": "adm01-debug",
+    "subject": "fix: chave do HubSpot deixa de ser legivel por anon (#280)",
+    "files": [
+     "scripts/sql/check-chave-hubspot.sql",
+     "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql"
+    ]
+   },
    {
     "sha": "9615e96",
     "date": "2026-11-26",
@@ -106021,37 +106137,12 @@
      "src/hooks/useTaskReminders.ts",
      "src/integrations/supabase/__tests__/orgScopedCallSites.test.ts"
     ]
-   },
-   {
-    "sha": "1122654",
-    "date": "2026-11-25",
-    "author": "adm01-debug",
-    "subject": "fix(hooks): erros silenciados no funil, no passo a passo e nas mutacoes (etapas 195-199) (#235)",
-    "files": [
-     "docs/qa/05-PROGRESSO.md",
-     "src/components/lux/CompaniesView.tsx",
-     "src/components/lux/__tests__/CompaniesViewDelete.test.tsx",
-     "src/hooks/__tests__/useDealsSeed.test.ts",
-     "src/hooks/__tests__/useOnboardingState.test.tsx",
-     "src/hooks/useApiKeys.ts",
-     "src/hooks/useAuditTrail.ts",
-     "src/hooks/useDeals.ts",
-     "src/hooks/useEmailAccountAuditLog.ts",
-     "src/hooks/useEmailTemplates.ts",
-     "src/hooks/useFeatureFlag.ts",
-     "src/hooks/useICPConfig.ts",
-     "src/hooks/useMembershipAuditLog.ts",
-     "src/hooks/useOnboardingState.ts",
-     "src/hooks/useOrganizations.ts",
-     "src/hooks/usePartitionAdvisories.ts",
-     "src/hooks/useWebScrape.ts"
-    ]
    }
   ],
   "hot_files": [
    [
     "docs/qa/05-PROGRESSO.md",
-    19
+    18
    ],
    [
     "src/components/lux/monitoring/__tests__/PaineisErroCarregamento.test.tsx",
@@ -106075,10 +106166,6 @@
    ],
    [
     "src/components/lux/monitoring/AuditTrailPanel.tsx",
-    2
-   ],
-   [
-    "src/hooks/useAuditTrail.ts",
     2
    ],
    [
@@ -106126,8 +106213,12 @@
     2
    ],
    [
-    "src/hooks/useOrganizations.ts",
-    2
+    "scripts/sql/check-chave-hubspot.sql",
+    1
+   ],
+   [
+    "supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql",
+    1
    ]
   ]
  }

@@ -1,6 +1,6 @@
 # 07 · REGRAS DE NEGÓCIO
 
-> Gerado automaticamente por AI Context Sync v1.3.2 · commit `9615e96eec` · branch `main` · 2026-11-27 00:23 UTC
+> Gerado automaticamente por AI Context Sync v1.3.2 · commit `f727764588` · branch `main` · 2026-11-27 00:30 UTC
 > Não edite à mão — regras humanas vão em `manual/`.
 
 ## A. Regras escritas por humanos (`manual/` — prioridade máxima, nunca sobrescrito)
@@ -911,6 +911,8 @@ Erros lançados por funções SQL (`RAISE EXCEPTION` = regra de negócio no banc
 | `audit_log_facets` | apenas admin da organizacao pode listar facets | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
 | `read_audit_logs_safe` | nao autenticado | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
 | `read_audit_logs_safe` | apenas admin da organizacao pode ler audit log mascarado | `supabase/migrations/20261126230000_auditoria_leitores_actor_id_e_trilha.sql` |
+| `get_hubspot_api_key` | Nao autenticado | `supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql` |
+| `get_hubspot_api_key` | Somente administradores da organizacao leem a chave do HubSpot | `supabase/migrations/20261126250000_chave_hubspot_sem_exposicao_anon.sql` |
 
 ## E. Estados, máquinas de estado e transições
 

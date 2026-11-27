@@ -1,7 +1,7 @@
 {
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
- "total": 59,
+ "total": 60,
  "scripts": [
   {
    "arquivo": "scripts/automation.mjs",
@@ -593,6 +593,15 @@
    "npm_scripts": [],
    "workflows": [],
    "orfao": false
+  },
+  {
+   "arquivo": "scripts/sql/check-chave-hubspot.sql",
+   "descricao": null,
+   "linhas": 101,
+   "env": [],
+   "npm_scripts": [],
+   "workflows": [],
+   "orfao": true
   },
   {
    "arquivo": "scripts/sql/check-function-grants.sql",

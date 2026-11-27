@@ -1,7 +1,7 @@
 # Contexto do projeto para agentes de IA
 
 GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.
-Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `9615e96eec519eb7872130907f594469e32249fb` (2026-11-26T21:18:45-03:00).
+Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR dela) a cada push em `main` e a cada 10 minutos pelo workflow `contexto.yml`; índice único das três fontes em `docs/contexto/00-INDEX.md`. Gere local com `node scripts/ai-context/gerar.mjs`. Commit-base: `f727764588bbf0f9a36a7933426ae0000e03e05f` (2026-11-26T21:28:52-03:00).
 
 ## Como usar (leia antes de planejar ou executar qualquer tarefa)
 1. **Tela/rota/menu** → `rotas.json` (url/vista/menu → arquivo → hooks → tabelas → edges; `rotas_http_backend` para APIs) e `modulos.json` (módulo inteiro + dependências entre módulos).
@@ -14,7 +14,7 @@ Publicado em `docs/contexto/codigo/` na branch `contexto` (gerada, nunca abra PR
 Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua tarefa; não carregue tudo.
 
 ## Stack
-- linguagens: TypeScript (735), SQL (282), Markdown (87), JSON (38), JavaScript (25), Shell (20), YAML (13), Python (5)
+- linguagens: TypeScript (735), SQL (284), Markdown (87), JSON (38), JavaScript (25), Shell (20), YAML (13), Python (5)
 - linguagem_principal: TypeScript
 - framework: React
 - backend_http: n/d
@@ -34,7 +34,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 ## Números
 | item | qtd |
 |---|---|
-| arquivos_total | 1225 |
+| arquivos_total | 1227 |
 | arquivos_codigo | 764 |
 | linhas_codigo | 133001 |
 | rotas | 12 |
@@ -46,11 +46,11 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 | hooks | 99 |
 | edge_functions | 63 |
 | tabelas | 121 |
-| migrations | 277 |
+| migrations | 278 |
 | cron_jobs | 44 |
 | testes | 171 |
 | workflows | 11 |
-| scripts | 59 |
+| scripts | 60 |
 | docs_md | 87 |
 
 ## Onde ficam as coisas
@@ -61,7 +61,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - testes: co-localizado (__tests__) (124), e2e/ (19), co-localizado (*.test) (16)
 - edge_functions: supabase/functions
 - migrations: supabase/migrations
-- scripts: scripts/maintenance (4), scripts/sql (4), scripts/ci (3)
+- scripts: scripts/sql (5), scripts/maintenance (4), scripts/ci (3)
 - docs: docs (21), (raiz) (5)
 - nomenclatura: {"componentes":"PascalCase (82%)","hooks":"use + PascalCase","servicos":"camelCase (82%)","edge_functions":"kebab-case (95%)","tabelas":"snake_case (91%)"}
 - instruções para agentes no repo: AGENTS.md, CLAUDE.md
@@ -255,14 +255,14 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - rpcs_sem_definicao: 0
 - componentes_orfaos: 19 — ex.: src/components/auth/MFAEnroll.tsx, src/components/lux/LuxImage.tsx, src/components/NavLink.tsx
 - componentes_com_nome_duplicado: 2 — ex.: Sidebar, Toaster
-- scripts_orfaos: 1 — ex.: scripts/sql/check-audit-trail-readers.sql
+- scripts_orfaos: 2 — ex.: scripts/sql/check-audit-trail-readers.sql, scripts/sql/check-chave-hubspot.sql
 - env_usadas_nao_declaradas: 7 — ex.: DEV, PROD, SUPABASE_PUBLISHABLE_KEY
 - ciclos_de_import: 6
 - possiveis_segredos_no_codigo: 2 — ex.: supabase/functions/_shared/__tests__/lusha-client.test.ts:33, supabase/functions/_shared/__tests__/lusha-client.test.ts:36
 
 ## Grafo de código (graphify)
-- 8266 nós · 17862 arestas · 721 comunidades · grafo do commit `9615e96e`
-- comunidades maiores: button.tsx (166), lucide-react (158), @tanstack/react-query (108), badge.tsx (105), snapshot.py (102), cn (99), gerar.mjs (84), withOrg.ts (78), req (75), vitest (73), ref_node_fs (72), OrganizationsView.tsx (71)
+- 8269 nós · 17863 arestas · 742 comunidades · grafo do commit `f7277645`
+- comunidades maiores: lucide-react (166), button.tsx (157), badge.tsx (125), cn (118), react (109), snapshot.py (102), utils.ts (93), db (87), gerar.mjs (80), lushaMocks.ts (73), MonitoringView.tsx (70), Index.tsx (66)
 - símbolos mais chamados: cn() (src/lib/utils.ts), useActiveOrganization() (src/contexts/active-org-context.ts), useAuth() (src/contexts/auth-context.ts), q() (scripts/supabase_snapshot/snapshot.py), useDemo() (src/contexts/demo-context.ts), getActiveOrgId() (src/integrations/supabase/withOrg.ts), .collect() (scripts/supabase_snapshot/test_snapshot.py), excluded_sql() (scripts/supabase_snapshot/snapshot.py), useToast() (src/hooks/use-toast.ts), fail() (scripts/automation.mjs), fail() (scripts/graphify-local.mjs), mockFramerMotion() (src/test/mockFramerMotion.ts)
 - consulta local: `graphify query "<pergunta>"`, `graphify path "<A>" "<B>"`, `graphify explain "<X>"`
 
@@ -382,6 +382,7 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - CHANGELOG topo: [Unreleased] - 2026-07-22
 
 ## Últimos commits
+- 2026-11-26 `f727764` fix: chave do HubSpot deixa de ser legivel por anon (#280)
 - 2026-11-26 `9615e96` fix(dlp): export de auditoria deixa de vazar PII crua — AGUARDA APROVACAO DO DONO (#278)
 - 2026-11-26 `72c71be` feat(monitoramento): admin ajusta os limiares do alerta do reaper (#277)
 - 2026-11-26 `7ea5268` feat(monitoramento): tela para os leads coletados no Instagram (#275)
@@ -396,7 +397,6 @@ Os JSONs são grandes: filtre com `grep`/`jq` pelo caminho/arquivo/tabela da sua
 - 2026-11-26 `5e6fd02` fix(seguranca): restringe a auditoria a organizacao do administrador (etapa 018) (#246)
 - 2026-11-26 `1e5a847` fix(api-publica): exclusao vira lixeira e a listagem nao devolve excluido (#255)
 - 2026-11-26 `f2a4df6` fix(supressao): so o descadastro ativo bloqueia envio (etapa 048) (#258)
-- 2026-11-26 `e739571` fix(api-publica): limite de uso passa a falhar fechado (etapa 038) (#252)
 
 ## Arquivos deste diretório
 - `docs/contexto/codigo/rotas.json`

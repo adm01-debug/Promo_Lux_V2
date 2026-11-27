@@ -2,11 +2,16 @@
  "aviso": "GERADO AUTOMATICAMENTE por scripts/ai-context/gerar.mjs — não editar à mão; será sobrescrito.",
  "format_version": 2,
  "git": {
-  "commit": "9615e96eec519eb7872130907f594469e32249fb",
+  "commit": "f727764588bbf0f9a36a7933426ae0000e03e05f",
   "branch": "main",
-  "data_commit": "2026-11-26T21:18:45-03:00",
+  "data_commit": "2026-11-26T21:28:52-03:00",
   "remote": "https://github.com/adm01-debug/Promo_Lux_V2",
   "ultimos_commits": [
+   {
+    "sha": "f727764",
+    "data": "2026-11-26",
+    "assunto": "fix: chave do HubSpot deixa de ser legivel por anon (#280)"
+   },
    {
     "sha": "9615e96",
     "data": "2026-11-26",
@@ -126,14 +131,9 @@
     "sha": "6d4546e",
     "data": "2026-11-25",
     "assunto": "feat(interface): envelopa estados de carregamento, falha e vazio nos paineis de monitoramento (etapa 226) (#241)"
-   },
-   {
-    "sha": "068b4ca",
-    "data": "2026-11-25",
-    "assunto": "fix(interface): distingue falha de vazio nos paineis de caos, detalhe de tarefa, funil, rastreio de campanha e paleta (e"
    }
   ],
-  "arquivos_mudados_7d": 429,
+  "arquivos_mudados_7d": 431,
   "pastas_mais_mudadas_30d": [
    {
     "pasta": "src/components/lux",
@@ -301,7 +301,7 @@
   "autores_30d": [
    {
     "autor": "adm01-debug",
-    "commits": 208
+    "commits": 209
    },
    {
     "autor": "dependabot[bot]",
@@ -310,7 +310,7 @@
   ]
  },
  "contagens": {
-  "arquivos_total": 1225,
+  "arquivos_total": 1227,
   "arquivos_codigo": 764,
   "linhas_codigo": 133001,
   "rotas": 12,
@@ -322,11 +322,11 @@
   "hooks": 99,
   "edge_functions": 63,
   "tabelas": 121,
-  "migrations": 277,
+  "migrations": 278,
   "cron_jobs": 44,
   "testes": 171,
   "workflows": 11,
-  "scripts": 59,
+  "scripts": 60,
   "docs_md": 87
  },
  "por_pasta": {
@@ -814,7 +814,8 @@
    "Toaster"
   ],
   "scripts_orfaos": [
-   "scripts/sql/check-audit-trail-readers.sql"
+   "scripts/sql/check-audit-trail-readers.sql",
+   "scripts/sql/check-chave-hubspot.sql"
   ],
   "env_usadas_nao_declaradas": [
    "DEV",
