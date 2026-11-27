@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Download, FileJson, FileSpreadsheet, Loader2, Database } from "lucide-react";
+import { Download, FileJson, FileSpreadsheet, Loader2, Database, ShieldCheck } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuditLogExport, type AuditFilters } from "@/hooks/useAuditLogExport";
+import { regrasAtivasPii, resumoMascaramentoPii, usePiiRules } from "@/hooks/usePiiRules";
 
 function toIso(dateStr: string, endOfDay = false): string | null {
   if (!dateStr) return null;
@@ -13,6 +15,8 @@ function toIso(dateStr: string, endOfDay = false): string | null {
 
 export function AuditLogExportPanel() {
   const { actions, tables, facetsLoading, download, isExporting } = useAuditLogExport();
+  const { data: regrasPii } = usePiiRules();
+  const regrasAtivas = regrasAtivasPii(regrasPii);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [action, setAction] = useState("");
@@ -35,6 +39,19 @@ export function AuditLogExportPanel() {
           Baixe o histórico de auditoria da organização para SIEM, auditoria externa ou retenção própria (NDJSON, JSON ou CSV).
         </p>
       </div>
+
+      {regrasAtivas.length > 0 && (
+        <Alert>
+          <ShieldCheck className="h-4 w-4" />
+          <AlertTitle>O arquivo sai com dados sensíveis mascarados</AlertTitle>
+          <AlertDescription>
+            {resumoMascaramentoPii(regrasPii)}. Vale para os campos old_data, new_data e metadata
+            nos formatos NDJSON e JSON; o CSV traz apenas identificadores (id, data, ação, tabela,
+            registro e usuário). Para exportar sem máscara, ajuste em Configurações › Mascaramento
+            de PII.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="rounded-lg border border-border/40 p-4 space-y-4">
         <div className="grid gap-3 sm:grid-cols-2">

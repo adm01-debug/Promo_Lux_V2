@@ -23,6 +23,7 @@ import {
   type AuditActionFilter,
 } from "@/hooks/useAuditTrail";
 import { PainelComEstado } from "./PainelComEstado";
+import { usePiiRules, resumoMascaramentoPii } from "@/hooks/usePiiRules";
 
 const ACTION_LABELS: Record<string, string> = {
   create: "Criação",
@@ -47,6 +48,8 @@ export function AuditTrailPanel() {
   const [filters, setFilters] = useState<AuditTrailFilters>(DEFAULT_AUDIT_FILTERS);
   const { data, isLoading, isError, error, isFetching, refetch } = useAuditTrail(filters);
   const { data: tables } = useAuditTables();
+  const { data: piiRules } = usePiiRules();
+  const mascaramento = resumoMascaramentoPii(piiRules);
 
   const rows = data?.rows ?? [];
   const totalPages = data?.totalPages ?? 1;
@@ -67,6 +70,11 @@ export function AuditTrailPanel() {
             <CardDescription>
               Quem executou cada ação e quais entidades foram alteradas — inclusive automações.
             </CardDescription>
+            {mascaramento && (
+              <p className="text-[11px] text-muted-foreground">
+                Dados sensíveis aparecem mascarados — {mascaramento}
+              </p>
+            )}
           </div>
           <Button
             variant="outline"
