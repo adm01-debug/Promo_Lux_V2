@@ -1,5 +1,6 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { db } from "@/integrations/supabase/withOrg";
+import { supabase } from "@/integrations/supabase/client";
+import { db, getActiveOrgId } from "@/integrations/supabase/withOrg";
 import { useActiveOrganization } from "@/hooks/useOrganizations";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -11,8 +12,10 @@ import type { Tables } from "@/integrations/supabase/types";
  * workflow, tarefas de raspagem etc.), resolvendo o nome/avatar de cada ator e
  * expondo filtros + paginação no servidor.
  *
- * A leitura é escopada por organização via `db` (withOrg) e a RLS garante que
- * apenas administradores enxerguem os registros do próprio workspace.
+ * A leitura passa por `read_audit_logs_safe` (SECURITY DEFINER, admin da
+ * organização), que aplica as regras de mascaramento de PII em `old_data`,
+ * `new_data` e `metadata` — mesmo motor usado no arquivo exportado. Sem regra
+ * ativa os valores voltam inalterados.
  */
 
 export type AuditActionFilter = "all" | Tables<"audit_logs">["action"];
@@ -65,37 +68,31 @@ export interface AuditTrailResult {
 
 export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<AuditTrailResult> {
   const { table, action, search, page, pageSize, dateFrom, dateTo } = filters;
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
+  const orgId = getActiveOrgId();
+  if (!orgId) throw new Error("Organização não selecionada");
+  const offset = (page - 1) * pageSize;
 
-  // 'planned' usa o planner (EXPLAIN) — respeita filtros WHERE sem executar scan.
-  // Estimativa suficiente para paginação de auditoria (dezenas de milhares de linhas).
-  let query = db
-    .from("audit_logs")
-    .select("*", { count: "planned" })
-    .order("created_at", { ascending: false });
+  const tables =
+    table === "automations"
+      ? [...AUTOMATION_TABLES]
+      : table !== "all"
+        ? [table]
+        : undefined;
 
-  if (table === "automations") {
-    query = query.in("table_name", AUTOMATION_TABLES as unknown as string[]);
-  } else if (table !== "all") {
-    query = query.eq("table_name", table);
-  }
-
-  if (action !== "all") {
-    query = query.eq("action", action);
-  }
-
-  if (dateFrom) {
-    query = query.gte("created_at", `${dateFrom}T00:00:00.000Z`);
-  }
-  if (dateTo) {
-    query = query.lte("created_at", `${dateTo}T23:59:59.999Z`);
-  }
-
-  const { data: logs, count, error } = await query.range(from, to);
+  // Leitura pelo motor de PII: os registros sao os mesmos da tabela, mas
+  // `old_data`/`new_data`/`metadata` passam pelas regras de mascaramento da org.
+  const { data: safeRows, error } = await supabase.rpc("read_audit_logs_safe", {
+    _org_id: orgId,
+    _limit: pageSize,
+    _offset: offset,
+    _action: action === "all" ? undefined : action,
+    _tables: tables,
+    _from: dateFrom ? `${dateFrom}T00:00:00.000Z` : undefined,
+    _to: dateTo ? `${dateTo}T23:59:59.999Z` : undefined,
+  });
   if (error) throw error;
 
-  const rows = logs ?? [];
+  const rows = safeRows ?? [];
   const actorIds = [...new Set(rows.map((l) => l.actor_id).filter(Boolean))] as string[];
 
   let profiles: ProfileLite[] = [];
@@ -109,8 +106,9 @@ export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<Audit
     profiles = data ?? [];
   }
 
-  let merged: AuditTrailRow[] = rows.map((log) => ({
+  let merged: AuditTrailRow[] = rows.map(({ total_count: _total, ...log }) => ({
     ...log,
+    action: log.action as Tables<"audit_logs">["action"],
     actor: profiles.find((p) => p.id === log.actor_id) ?? null,
   }));
 
@@ -125,7 +123,9 @@ export async function fetchAuditTrail(filters: AuditTrailFilters): Promise<Audit
     );
   }
 
-  const total = count ?? merged.length;
+  // Total vem do proprio leitor (page 1 sem linhas = 0; paginas seguintes existem
+  // porque a anterior tinha registros).
+  const total = rows[0]?.total_count ?? (page > 1 ? (page - 1) * pageSize : 0);
   return {
     rows: merged,
     total,
